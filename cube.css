@@ -1,0 +1,261 @@
+body {
+  overflow:hidden;
+}
+
+p {
+  font-size:24px;
+  color:#4CBB17;
+  font-weight:bold;
+  font-family:'Corben',cursive;
+  text-shadow:1px 1px black;
+  margin-top:5px;
+}
+
+#cubeFrame {
+  text-align: center;
+  -webkit-perspective:2000px;
+  -webkit-perspective-origin:50% 50%;
+  -moz-perspective:2000px;
+  -moz-perspective-origin:50% 50%;
+  -o-perspective:2000px;
+  -o-perspective-origin:50% 50%; 
+   top:0; 
+   left:0;
+}
+
+#cube {
+  position:relative;
+  height:500px;
+  width:500px;
+  margin: 0 auto 0 auto;
+  -webkit-transition:-webkit-transform 1s;
+  -webkit-transform-style:preserve-3d;
+  -webkit-transform:rotateX(90deg);
+  -moz-transition:-moz-transform 1s;
+  -moz-transform-style:preserve-3d;
+  -moz-transform:rotateX(90deg);
+}
+
+.face {
+  background:#8C8C8C;/*-webkit-linear-gradient(top,#6B6B6B,#B3B3B3);*/
+  background:#8C8C8C;/*-moz-linear-gradient(top,#6B6B6B,#B3B3B3);*/
+  position:absolute;
+  height:100%;
+  width:100%;
+  padding:0;
+  font-size:27px;
+  line-height:1em;
+  color:#fff;
+  border:2px solid white;
+  border-radius:4px;
+  -moz-border-radius:4px;
+  -webkit-transition:opacity 0.8s linear;
+  -moz-transition:opacity 0.8s linear;
+  
+   -webkit-transform-style: flat;
+ /*webkit is a bitch at z-sorting css3d-transforms. Use backface-visibility: hidden as often as you can! */
+  -webkit-backface-visibility: hidden;
+   
+   -moz-transform-style: flat;
+ /*webkit is a bitch at z-sorting css3d-transforms. Use backface-visibility: hidden as often as you can! */
+   -moz-backface-visibility: hidden;
+}
+
+#cube .top {
+  -webkit-transform:rotateX(90deg) translateZ(280px);
+  -moz-transform:rotateX(90deg) translateZ(280px);
+  -o-transform:rotateX(90deg) translateZ(280px);
+}
+
+#cube .front {
+  -webkit-transform-style:preserve-3d;
+  -webkit-transform:translateZ(280px);
+  -moz-transform-style:preserve-3d;
+  -moz-transform:translateZ(280px);
+  -o-transform:translateZ(280px);
+}
+
+#cube .right {
+  -webkit-transform:rotateY(90deg) translateZ(280px);
+  -moz-transform:rotateY(90deg) translateZ(280px);
+  -o-transform:rotateY(90deg) translateZ(280px);
+}
+
+#cube .left {
+  -webkit-transform:rotateY(-90deg) translateZ(280px);
+  -moz-transform:rotateY(-90deg) translateZ(280px);
+  -o-transform:rotateY(-90deg) translateZ(280px);
+  text-align:center;
+}
+
+#cube .bottom {
+  -webkit-transform:rotateX(-90deg) translateZ(280px);
+  -moz-transform:rotateX(-90deg) translateZ(280px);
+  -o-transform:rotateX(-90deg) translateZ(280px);
+}
+
+#iMap {
+  border:none;
+}
+
+.face_label {
+  width:100%;
+  font-size:60px;
+  font-family:'Corben',cursive;
+  text-align:center;
+  margin-top:10px;
+  font-weight:bold;
+  text-shadow:2px 2px black;
+}
+
+.content_wrapper {
+  margin:-15px auto 30px auto;
+  width:486px;
+}
+
+.time_wrapper {
+  margin:10px 0 0 0;
+  width:37%;
+  float: left;
+  text-align:center;
+  padding:20px 30px 10px 30px;
+}
+
+.sport_wrapper {
+  margin:8px 0 0 0;
+  width:31%;
+  float: left;
+  text-align:center;
+  padding:5px 5px 10px 5px;
+}
+
+.price-wrapper{
+  margin:8px 0 0 0;
+  width:47%;
+  float: left;
+  text-align:center;
+  padding:5px 5px 10px 5px;
+}
+
+#price_selector {
+  margin:30px auto 0 auto;
+  text-align:center;
+  display:none;
+}
+
+#price_from {
+  width:200px;
+  color:black;
+  font-size:25px;
+  height:30px;
+  border:2;
+  padding:4px 8px;
+  margin-bottom:20px;
+  margin-top: -20px;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  box-shadow:5px 5px 5px black;
+  -moz-box-shadow:5px 5px 5px black;
+}
+
+#price_to {
+  width:200px;
+  color:black;
+  font-size:25px;
+  height:30px;
+  border:2;
+  padding:4px 8px;
+  margin-bottom:20px;
+  margin-top: -20px;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  box-shadow:5px 5px 5px black;
+  -moz-box-shadow:5px 5px 5px black;
+}
+
+.toggle-buttons{
+	font-size:30px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin-top:10px;
+	text-align: center;
+}
+
+.activities{
+	font-size:22px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin: 4px auto 0 auto;
+	text-align: center;
+}
+
+.price-togglers{
+	font-size:35px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin-top:25px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+#all_toggler{
+	font-size:50px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin-top:20px;
+	text-align: center;
+}
+
+.images{
+	background-image: url(img/buttons.jpg);
+	height: 35px;
+	width: 100px;
+	margin: 2px auto 0 auto;
+}
+
+.images2{
+	background-image: url(img/buttons.jpg);
+	height: 35px;
+	width: 100px;
+	margin: 10px auto 0 auto;
+}
+
+.images3{
+	background-image: url(img/buttons.jpg);
+	height: 35px;
+	width: 100px;
+	margin: 15px auto 0 auto;
+}
+
+#resizer{
+display:none; 
+z-index:4;
+position: absolute; 
+width: 250px;
+height: 150px;
+margin: 175px 125px 175px 125px;
+box-shadow: 5px 5px 5px black;
+border-radius: 15px;
+}
+
+#curtain{
+display:none;
+position:absolute;
+width: 100%;
+height: 100%;
+background: black;
+opacity: 0.7;
+top:0;
+left:0;
+}
+
+
+
