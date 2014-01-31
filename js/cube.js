@@ -1,6 +1,10 @@
 var sportsToBeSubmitted = new Array();
 var daysToBeSubmitted = new Array();
 var priceToBeSubmitted = "all";
+
+// the xAngle is set to 90 degrees because initially when the cube is spawned
+// it has to be rotated on 90 degrees. Therefore initially the user sees
+// the bottom side of the cube (the central one is actually the map)
 var xAngle = 90, yAngle = 0;
 
 // the distance on which the cube will have to be translated in order to be
