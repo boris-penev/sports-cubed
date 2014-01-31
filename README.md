@@ -1,1 +1,1 @@
-# This is my README
+Website with simplistic cube design for searching sports clubs in Edinburgh
