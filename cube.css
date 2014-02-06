@@ -18,8 +18,8 @@ p {
   -moz-perspective:2000px;
   -moz-perspective-origin:50% 50%;
   -o-perspective:2000px;
-  -o-perspective-origin:50% 50%;
-   top:0;
+  -o-perspective-origin:50% 50%; 
+   top:0; 
    left:0;
 }
 
@@ -51,11 +51,11 @@ p {
   -moz-border-radius:4px;
   -webkit-transition:opacity 0.8s linear;
   -moz-transition:opacity 0.8s linear;
-
+  
    -webkit-transform-style: flat;
  /*webkit is a bitch at z-sorting css3d-transforms. Use backface-visibility: hidden as often as you can! */
   -webkit-backface-visibility: hidden;
-
+   
    -moz-transform-style: flat;
  /*webkit is a bitch at z-sorting css3d-transforms. Use backface-visibility: hidden as often as you can! */
    -moz-backface-visibility: hidden;
@@ -65,6 +65,12 @@ p {
   -webkit-transform:rotateX(90deg) translateZ(280px);
   -moz-transform:rotateX(90deg) translateZ(280px);
   -o-transform:rotateX(90deg) translateZ(280px);
+}
+
+#cube .back {
+  -webkit-transform:translateZ(-280px) rotateY(180deg);
+  -moz-transform:translateZ(-280px) rotateX(180deg) ;
+  -o-transform:translateZ(-280px) rotateX(180deg);
 }
 
 #cube .front {
@@ -173,86 +179,89 @@ p {
   -moz-box-shadow:5px 5px 5px black;
 }
 
-.toggle-buttons {
-  font-size:30px;
-  color:#4CBB17;
-  font-weight:bold;
-  font-family:'Corben',cursive;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  margin-top:10px;
-  text-align: center;
+.toggle-buttons{
+	font-size:30px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin-top:10px;
+	text-align: center;
 }
 
-.activities {
-  font-size:22px;
-  color:#4CBB17;
-  font-weight:bold;
-  font-family:'Corben',cursive;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  margin: 4px auto 0 auto;
-  text-align: center;
+.activities{
+	font-size:22px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin: 4px auto 0 auto;
+	text-align: center;
 }
 
-.price-togglers {
-  font-size:35px;
-  color:#4CBB17;
-  font-weight:bold;
-  font-family:'Corben',cursive;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  margin-top:25px;
-  margin-bottom: 10px;
-  text-align: center;
+.price-togglers{
+	font-size:35px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin-top:25px;
+	margin-bottom: 10px;
+	text-align: center;
 }
 
-#all_toggler {
-  font-size:50px;
-  color:#4CBB17;
-  font-weight:bold;
-  font-family:'Corben',cursive;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  margin-top:20px;
-  text-align: center;
+#all_toggler{
+	font-size:50px;
+	color:#4CBB17;
+	font-weight:bold;
+	font-family:'Corben',cursive;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	margin-top:20px;
+	text-align: center;
 }
 
-.images {
-  background-image: url(img/buttons.jpg);
-  height: 35px;
-  width: 100px;
-  margin: 2px auto 0 auto;
+.images{
+	background-image: url(img/buttons.jpg);
+	height: 35px;
+	width: 100px;
+	margin: 2px auto 0 auto;
 }
 
-.images2 {
-  background-image: url(img/buttons.jpg);
-  height: 35px;
-  width: 100px;
-  margin: 10px auto 0 auto;
+.images2{
+	background-image: url(img/buttons.jpg);
+	height: 35px;
+	width: 100px;
+	margin: 10px auto 0 auto;
 }
 
-.images3 {
-  background-image: url(img/buttons.jpg);
-  height: 35px;
-  width: 100px;
-  margin: 15px auto 0 auto;
+.images3{
+	background-image: url(img/buttons.jpg);
+	height: 35px;
+	width: 100px;
+	margin: 15px auto 0 auto;
 }
 
-#resizer {
-	display:none;
-	z-index:4;
-	position: absolute;
-	width: 250px;
-	height: 150px;
-	margin: 175px 125px 175px 125px;
-	box-shadow: 5px 5px 5px black;
-	border-radius: 15px;
+#resizer{
+display:none; 
+z-index:4;
+position: absolute; 
+width: 250px;
+height: 150px;
+margin: 175px 125px 175px 125px;
+box-shadow: 5px 5px 5px black;
+border-radius: 15px;
 }
 
-#curtain {
-	display:none;
-	position:absolute;
-	width: 100%;
-	height: 100%;
-	background: black;
-	opacity: 0.7;
-	top:0;
-	left:0;
+#curtain{
+display:none;
+position:absolute;
+width: 100%;
+height: 100%;
+background: black;
+opacity: 0.7;
+top:0;
+left:0;
 }
+
+
+

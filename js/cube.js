@@ -11,6 +11,9 @@ var xAngle = 90, yAngle = 0;
 // visually "resized"
 var depth;
 
+// specifies the current wall so that the others can be made invisible
+var currentWall = "bottom";
+
 // the new side of the screen which determines how far the cube will have to
 // be translated; the formula according to which the translation happens was
 // derived by Yordan and Dimitar Dimitrov (dimy93) in one sunny (or not that
@@ -159,6 +162,7 @@ $('#resizer').click(function(){
   window.location = "http://testpilot.x10.mx/cubedtouch/map.html";
 })
 
+// this is the animation showing how to use the cube [TO BE CHANGED]
 $('#how-to').click(function(){
   cubeLocked = true;
   $('#curtain').fadeIn();
@@ -526,10 +530,9 @@ $('body').keydown( function (evt){
 
 
 function keydownEvent( evt ) {
-  if((evt.keyCode==65 && isLeft() === false) ||
-     (evt.keyCode==87 && isTop() === false) ||
-     (evt.keyCode==68 && isRight() === false) ||
-     (evt.keyCode==83 && isBottom() === false)){
+  if((evt.keyCode==65 || evt.keyCode==68)    ||
+	 (evt.keyCode==87 && (isBack() === false && isTop() === false)) ||
+     (evt.keyCode==83 && (isBack() === false && isBottom() === false))){
     var pressed = false;
     if ( isFront() && ( evt.keyCode == 65 || evt.keyCode == 87 ||
                         evt.keyCode == 68 || evt.keyCode == 83 ) ) {
@@ -543,6 +546,7 @@ function keydownEvent( evt ) {
           $('#price_to').blur();
           pressed = true;
           yAngle += 90;
+		  currentWall = "left"
           zoomIn();
         }
         else if ( isRight() === true) {
@@ -551,6 +555,7 @@ function keydownEvent( evt ) {
           $('#price_to').blur();
           pressed = true;
           yAngle += 90;
+		  currentWall = "front"
           zoomIn();
         }
         else if ( isTop() === true ) {
@@ -559,6 +564,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle += 90;
+		  currentWall = "left"
           zoomIn();
         }
         else if ( isBottom() === true ) {
@@ -567,6 +573,25 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle += 90;
+		  currentWall = "left"
+          zoomIn();
+        }	
+		else if ( isLeft ( ) === true )
+        {
+          determinerAxis = "Z";
+          determinerDirection = "+";
+          pressed = true;
+          yAngle += 90;
+		  currentWall = "back"
+          zoomIn();
+        }
+		else if ( isBack ( ) === true )
+        {
+          determinerAxis = "X";
+          determinerDirection = "-";
+          pressed = true;
+          yAngle += 90;
+		  currentWall = "right"
           zoomIn();
         }
         break;
@@ -578,6 +603,7 @@ function keydownEvent( evt ) {
           determinerDirection = "+";
           pressed = true;
           xAngle -= 90;
+		  currentWall = "top"
           zoomIn();
         }
         else if ( isBottom() === true)
@@ -586,6 +612,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           xAngle -= 90;
+		  currentWall = "front"
           zoomIn();
         }
         else if ( isLeft ( ) === true )
@@ -595,6 +622,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle -= 90;
+		  currentWall = "top"
           zoomIn();
         }
         else if ( isRight ( ) === true )
@@ -604,6 +632,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle += 90;
+		  currentWall = "top"
           zoomIn();
         }
         break;
@@ -614,6 +643,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
+		  currentWall = "right"
           zoomIn();
         }
         else if ( isLeft() === true ) {
@@ -621,6 +651,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
+		  currentWall = "front"
           zoomIn();
         }
         else if ( isTop() === true ) {
@@ -629,6 +660,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle -= 90;
+		  currentWall = "right"
           zoomIn();
         }
         else if ( isBottom() === true ) {
@@ -637,6 +669,25 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle -= 90;
+		  currentWall = "right"
+          zoomIn();
+        }
+		else if ( isRight ( ) === true )
+        {
+          determinerAxis = "Z";
+          determinerDirection = "+";
+          pressed = true;
+          yAngle -= 90;
+		  currentWall = "back"
+          zoomIn();
+        }
+		else if ( isBack ( ) === true )
+        {
+          determinerAxis = "X";
+          determinerDirection = "+";
+          pressed = true;
+          yAngle -= 90;
+		  currentWall = "left"
           zoomIn();
         }
         break;
@@ -647,6 +698,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
+		  currentWall = "bottom"
           zoomIn();
         }
         else if ( isTop ( ) === true )
@@ -655,6 +707,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
+		  currentWall = "front"
           zoomIn();
         }
         else if ( isLeft ( ) === true )
@@ -664,6 +717,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle -= 90;
+		  currentWall = "bottom"
           zoomIn();
         }
         else if ( isRight ( ) === true )
@@ -673,6 +727,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle += 90;
+		  currentWall = "bottom"
           zoomIn();
         }
         break;
@@ -704,25 +759,28 @@ for(var i = 0, l = props.length; i < l; i++) {
 }
 
 
+function isBack() {
+  return ( currentWall == "back" );
+}
 
 function isLeft() {
-  return ( yAngle == 90 && xAngle == 0 );
+  return ( currentWall == "left" );
 }
 
 function isRight() {
-  return ( yAngle == -90 && xAngle == 0 );
+  return ( currentWall == "right" );
 }
 
 function isTop() {
-  return ( yAngle == 0 && xAngle == -90 );
+  return ( currentWall == "top" );
 }
 
 function isBottom() {
-  return ( yAngle == 0 && xAngle == 90 );
+  return ( currentWall == "bottom" );
 }
 
 function isFront() {
-  return ( yAngle == 0 && xAngle == 0 );
+  return ( currentWall == "front" );
 }
 
 function leftPanel() {
@@ -745,8 +803,16 @@ function topPanel() {
   return  document.getElementById('top');
 }
 
+function backPanel() {
+  return  document.getElementById('back');
+}
+
 function activityTimer( ) {
   clearInterval(interval);
+  if ( isBack() === true )
+    document.getElementById('cube').style[prop] += "translateZ(-80px)";
+  else
+    backPanel().style.opacity = 0.0;
   if ( isLeft() === true )
     document.getElementById('cube').style[prop] += "translateX(-80px)";
   else
@@ -778,6 +844,7 @@ function showAllPanels() {
   frontPanel().style.opacity = 1.0;
   topPanel().style.opacity = 1.0;
   bottomPanel().style.opacity = 1.0;
+  backPanel().style.opacity = 1.0
 }
 
 function zoomIn ( )
