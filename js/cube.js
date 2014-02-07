@@ -46,6 +46,14 @@ var props = 'transform WebkitTransform MozTransform OTransform msTransform'.spli
             prop, el = document.createElement('div'), inactivity = 1000,
             interval = setInterval( function(){activityTimer();}, inactivity );
 
+// Determine browser
+for(var i = 0, l = props.length; i < l; i++) {
+  if(typeof el.style[props[i]] !== "undefined") {
+    prop = props[i];
+    break;
+  }
+}
+
 // this function adjusts the cube (translates it) so that it is resized
 // every time the orientation of the screen changes
 function adjust(){
@@ -64,42 +72,43 @@ function adjust(){
   // Determining the side that will say how big the cube will be and how much
   // we will go away from the screen in order to see it as such; the cube is
   // never resized - it all comes from the perspective
-  if(height>width){
-  determiningSide = width;
+  if (height > width){
+    determiningSide = width;
 
-  // It's 620 because when one of the sides that is 500px is translated 360px
-  // towards us (280 + 80)it becomes as if it is 610px. We add 10px for both up
-  // and bottom margins.
-  if(determiningSide<620){
-    $('#cube').css('margin-left', "-"+(250-determiningSide/2)+"px");
+    // It's 620 because when one of the sides that is 500px is translated
+    // 360px towards us (280 + 80)it becomes as if it is 610px. We add 10px
+    // for both up and bottom margins.
+    if (determiningSide < 620) {
+      $('#cube').css('margin-left', "-" + (250 - determiningSide / 2) + "px");
+    }
   }
-  }
-  else{
+  else {
     determiningSide = height;
-    if(determiningSide<620){
-      $('#cube').css('margin-top', "-"+(250-determiningSide/2)+"px");
-  }}
+    if (determiningSide < 620){
+      $('#cube').css('margin-top', "-" + (250 - determiningSide / 2) + "px");
+    }
+  }
 
   // Here is the GOLDEN FORMULA according to which happens the calculation of
-  // the distance of translation; we use 610 because in the beginning the side of
-  // the cube is 500px but after we translate it 360px towards us on the Y axis
-  // in order to get the 3D effect it seems as it is 610px.
-  depth = 2000*(610/(determiningSide) - 1);
+  // the distance of translation; we use 610 because in the beginning the
+  // side of the cube is 500px but after we translate it 360px towards us on
+  // the Y axis in order to get the 3D effect it seems as it is 610px.
+  depth = 2000 * (610 / determiningSide - 1);
 
   if (depth < 0){
     depth = 0;
-  // depth=Math.abs(depth);
-  // determinerDirection = "+";
-  // currentDeterminerDirection = "-"
+    // depth=Math.abs(depth);
+    // determinerDirection = "+";
+    // currentDeterminerDirection = "-"
   }
   else{
-  // determinerDirection = "-";
-  // currentDeterminerDirection = "+"
+    // determinerDirection = "-";
+    // currentDeterminerDirection = "+"
   }
 
   // the actual translation
   document.getElementById('cube').style[prop] += "translate" + determinerAxis +
-      "(" + determinerDirection + "" + depth + "px)";
+                              "(" + determinerDirection + "" + depth + "px)";
 }
 
 function frontpanel(){
@@ -113,24 +122,24 @@ $(document).ready(function() {
   if(sessionStorage.isComingFromMap === "yes"){
     sessionStorage.isComingFromMap = "no";
     var days = sessionStorage.days.split(",");
-    if(days.length === 7){
+    if (days.length === 7){
       $("#whole_toggler > a").trigger("click");
     }
-    else{
-      for(var x in days){
+    else {
+      for (var x in days){
         $("#" + days[x] + "_toggler > a").trigger("click");
       }
     }
 
     var sports = sessionStorage.sports.split(",");
-    for(var x in sports){
+    for (var x in sports){
       $("#" + sports[x].replace(" ", "") + "_toggler > a").trigger("click");
     }
 
     var price = sessionStorage.price;
       $('#'+price+'_toggler > a').trigger("click");
   }
-  else{
+  else {
     sessionStorage.sports = null;
     sessionStorage.days = null;
     sessionStorage.price = null;
@@ -142,8 +151,8 @@ $(document).ready(function() {
   $('#bigWrapper').css('left', "0");
 
   windowHeight = $(window).height();
-  document.getElementById('cube').style[prop] = "rotateX(" + xAngle +
-                                                "deg) rotateY("+yAngle+"deg)";
+  document.getElementById('cube').style[prop] =
+                          "rotateX(" + xAngle + "deg) rotateY("+yAngle+"deg)";
   determinerAxis = "Y";
   determinerDirection = "-";
   currentDeterminerAxis = "Y";
@@ -293,7 +302,7 @@ $('.toggle-buttons > a').click(function(){
   var btn = $(this).parent().text();
   var clicked = $(this).data('clicked');
   if(btn === "Whole week"){
-  switch(clicked){
+    switch(clicked){
     case "no":
       $('.toggle-buttons > a > div').css('background-position','0px -35px');
       $('.toggle-buttons > a').data('clicked','yes');
@@ -302,7 +311,8 @@ $('.toggle-buttons > a').click(function(){
       $('.toggle-buttons > a > div').css('background-position','0px 0px');
       $('.toggle-buttons > a').data('clicked','no');
       break;
-  }}
+    }
+  }
   else{
     switch(clicked){
     case "no":
@@ -315,7 +325,7 @@ $('.toggle-buttons > a').click(function(){
       $("#whole_toggler").find("div").css('background-position','0px 0px');
       $("#whole_toggler > a").data('clicked','no');
       break;
-  }
+    }
   }
 })
 
@@ -323,9 +333,9 @@ $('.toggle-buttons > a').click(function(){
 $(window).resize(function() {
 
 // reseting the perpective and returning the center of the cube at (0,0,0)
-  document.getElementById('cube').style[prop] += "translate" +
-          currentDeterminerAxis + "(" + currentDeterminerDirection + ""
-          + depth +"px)";
+  document.getElementById('cube').style[prop] +=
+          "translate" + currentDeterminerAxis +
+          "(" + currentDeterminerDirection + "" + depth +"px)";
   adjust();
   $('#bigWrapper').css('width', $(window).width());
   $('#bigWrapper').css('height', $(window).height());
@@ -340,29 +350,37 @@ $(document).bind('touchmove', function(e) { e.preventDefault();});
 //detecting touch gestures on the screen (body)
 Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragleft dragright",
   function(event) {
-  if(cubeLocked === false){
-    event.gesture.stopDetect();
-    gesturePerformed(event.type);
+    if (cubeLocked === false){
+      event.gesture.stopDetect();
+      gesturePerformed(event.type);
     }
-    });
+  });
 
 // the equavelent of keydownEvent() but for the gestures
-function gesturePerformed(type){
-  //var type;
-  if(type=="swipedown" || type=="dragdown"){type = "swipedown"}
-  else if(type=="swipeleft" || type=="dragleft"){type = "swipeleft"}
-  else if(type=="swiperight" || type=="dragright"){type = "swiperight"}
-  else if(type=="swipeup" || type=="dragup"){type = "swipeup"}
-  if((type=="swiperight" && isLeft() === false) ||
-     (type=="swipedown" && isTop() === false) ||
-     (type=="swipeleft" && isRight() === false) ||
-     (type=="swipeup" && isBottom() === false)){
-
+function gesturePerformed(type)
+{
+  if (type=="swipedown" || type=="dragdown") {
+    type = "swipedown";
+  }
+  else if (type=="swipeleft" || type=="dragleft") {
+    type = "swipeleft";
+  }
+  else if (type=="swiperight" || type=="dragright"){
+    type = "swiperight";
+  }
+  else if (type=="swipeup" || type=="dragup"){
+    type = "swipeup";
+  }
+  if((type == "swiperight" && isLeft()) ||
+     (type == "swipedown" && isTop())   ||
+     (type == "swipeleft" && isRight()) ||
+     (type == "swipeup" && isBottom()))
+  {
     var pressed = false;
     $('#resizer').delay(800).fadeOut(500);
     switch(type) {
       case "swiperight": // left
-        if ( isFront() === true) {
+        if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "+";
           $('#price_to').blur();
@@ -370,7 +388,7 @@ function gesturePerformed(type){
           yAngle += 90;
           zoomIn();
         }
-        else if ( isRight() === true) {
+        else if ( isRight()) {
           determinerAxis = "Z";
           determinerDirection = "-";
           $('#price_to').blur();
@@ -378,7 +396,7 @@ function gesturePerformed(type){
           yAngle += 90;
           zoomIn();
         }
-        else if ( isTop() === true ) {
+        else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "+";
           pressed = true;
@@ -386,7 +404,7 @@ function gesturePerformed(type){
           yAngle += 90;
           zoomIn();
         }
-        else if ( isBottom() === true ) {
+        else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "+";
           pressed = true;
@@ -397,7 +415,7 @@ function gesturePerformed(type){
         break;
 
       case "swipedown": // up
-        if ( isFront() === true)
+        if ( isFront() )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
@@ -405,7 +423,7 @@ function gesturePerformed(type){
           xAngle -= 90;
           zoomIn();
         }
-        else if ( isBottom() === true)
+        else if ( isBottom())
         {
           determinerAxis = "Z";
           determinerDirection = "-";
@@ -413,7 +431,7 @@ function gesturePerformed(type){
           xAngle -= 90;
           zoomIn();
         }
-        else if ( isLeft ( ) === true )
+        else if ( isLeft ( ) )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
@@ -422,7 +440,7 @@ function gesturePerformed(type){
           yAngle -= 90;
           zoomIn();
         }
-        else if ( isRight ( ) === true )
+        else if ( isRight ( ) )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
@@ -434,21 +452,21 @@ function gesturePerformed(type){
         break;
 
       case "swipeleft": // right
-        if ( isFront() === true) {
+        if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
           zoomIn();
         }
-        else if ( isLeft() === true ) {
+        else if ( isLeft() ) {
           determinerAxis = "Z";
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
           zoomIn();
         }
-        else if ( isTop() === true ) {
+        else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "-";
           pressed = true;
@@ -456,7 +474,7 @@ function gesturePerformed(type){
           yAngle -= 90;
           zoomIn();
         }
-        else if ( isBottom() === true ) {
+        else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "-";
           pressed = true;
@@ -467,14 +485,14 @@ function gesturePerformed(type){
         break;
 
       case "swipeup": // down
-        if ( isFront() === true) {
+        if ( isFront() ) {
           determinerAxis = "Y";
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
           zoomIn();
         }
-        else if ( isTop ( ) === true )
+        else if ( isTop ( ) )
         {
           determinerAxis = "Z";
           determinerDirection = "-";
@@ -482,7 +500,7 @@ function gesturePerformed(type){
           xAngle += 90;
           zoomIn();
         }
-        else if ( isLeft ( ) === true )
+        else if ( isLeft ( ) )
         {
           determinerAxis = "Y";
           determinerDirection = "-";
@@ -491,7 +509,7 @@ function gesturePerformed(type){
           yAngle -= 90;
           zoomIn();
         }
-        else if ( isRight ( ) === true )
+        else if ( isRight ( ) )
         {
           determinerAxis = "Y";
           determinerDirection = "-";
@@ -502,19 +520,21 @@ function gesturePerformed(type){
         }
         break;
     }
-    if ( pressed === true )
-      document.getElementById('cube').style[prop] += "translate" +
-            currentDeterminerAxis + "(" + currentDeterminerDirection + "" +
-            depth+"px)";
-    document.getElementById('cube').style[prop] = "rotateX(" + xAngle +
-      "deg) rotateY(" + yAngle + "deg)";
-    document.getElementById('cube').style[prop] += "translate" + determinerAxis
-        + "(" + determinerDirection + "" + depth + "px)";
+    if ( pressed ) {
+      document.getElementById('cube').style[prop] +=
+              "translate" + currentDeterminerAxis +
+              "(" + currentDeterminerDirection + "" + depth+"px)";
+    }
+    document.getElementById('cube').style[prop] =
+            "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
+    document.getElementById('cube').style[prop] +=
+            "translate" + determinerAxis +
+            "(" + determinerDirection + "" + depth + "px)";
     currentDeterminerAxis = determinerAxis;
     if (determinerDirection === "+"){
       currentDeterminerDirection = "-";
     }
-    else{
+    else {
       currentDeterminerDirection = "+";
     }
   }
@@ -530,9 +550,10 @@ $('body').keydown( function (evt){
 
 
 function keydownEvent( evt ) {
-  if((evt.keyCode==65 || evt.keyCode==68)    ||
-	 (evt.keyCode==87 && (isBack() === false && isTop() === false)) ||
-     (evt.keyCode==83 && (isBack() === false && isBottom() === false))){
+  if ( evt.keyCode == 65 || evt.keyCode == 68 ||
+      (evt.keyCode == 87 && !isBack() && !isTop() ) ||
+      (evt.keyCode == 83 && !isBack() && !isBottom() ) )
+  {
     var pressed = false;
     if ( isFront() && ( evt.keyCode == 65 || evt.keyCode == 87 ||
                         evt.keyCode == 68 || evt.keyCode == 83 ) ) {
@@ -540,247 +561,240 @@ function keydownEvent( evt ) {
     }
     switch(evt.keyCode) {
       case 65: // left
-        if ( isFront() === true) {
+        if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "+";
           $('#price_to').blur();
           pressed = true;
           yAngle += 90;
-		  currentWall = "left"
+          currentWall = "left"
           zoomIn();
         }
-        else if ( isRight() === true) {
+        else if ( isRight() ) {
           determinerAxis = "Z";
           determinerDirection = "-";
           $('#price_to').blur();
           pressed = true;
           yAngle += 90;
-		  currentWall = "front"
+          currentWall = "front"
           zoomIn();
         }
-        else if ( isTop() === true ) {
+        else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "+";
           pressed = true;
           xAngle += 90;
           yAngle += 90;
-		  currentWall = "left"
+          currentWall = "left"
           zoomIn();
         }
-        else if ( isBottom() === true ) {
+        else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "+";
           pressed = true;
           xAngle -= 90;
           yAngle += 90;
-		  currentWall = "left"
+          currentWall = "left"
           zoomIn();
-        }	
-		else if ( isLeft ( ) === true )
+        }
+        else if ( isLeft ( ) )
         {
           determinerAxis = "Z";
           determinerDirection = "+";
           pressed = true;
           yAngle += 90;
-		  currentWall = "back"
+          currentWall = "back"
           zoomIn();
         }
-		else if ( isBack ( ) === true )
+        else if ( isBack ( ) )
         {
           determinerAxis = "X";
           determinerDirection = "-";
           pressed = true;
           yAngle += 90;
-		  currentWall = "right"
+          currentWall = "right"
           zoomIn();
         }
         break;
 
       case 87: // up
-        if ( isFront() === true)
+        if ( isFront() )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
           pressed = true;
           xAngle -= 90;
-		  currentWall = "top"
+          currentWall = "top"
           zoomIn();
         }
-        else if ( isBottom() === true)
+        else if ( isBottom() )
         {
           determinerAxis = "Z";
           determinerDirection = "-";
           pressed = true;
           xAngle -= 90;
-		  currentWall = "front"
+          currentWall = "front"
           zoomIn();
         }
-        else if ( isLeft ( ) === true )
+        else if ( isLeft () )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
           pressed = true;
           xAngle -= 90;
           yAngle -= 90;
-		  currentWall = "top"
+          currentWall = "top"
           zoomIn();
         }
-        else if ( isRight ( ) === true )
+        else if ( isRight () )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
           pressed = true;
           xAngle -= 90;
           yAngle += 90;
-		  currentWall = "top"
+          currentWall = "top"
           zoomIn();
         }
         break;
 
       case 68: // right
-        if ( isFront() === true) {
+        if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
-		  currentWall = "right"
+          currentWall = "right"
           zoomIn();
         }
-        else if ( isLeft() === true ) {
+        else if ( isLeft() ) {
           determinerAxis = "Z";
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
-		  currentWall = "front"
+          currentWall = "front"
           zoomIn();
         }
-        else if ( isTop() === true ) {
+        else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
           yAngle -= 90;
-		  currentWall = "right"
+          currentWall = "right"
           zoomIn();
         }
-        else if ( isBottom() === true ) {
+        else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "-";
           pressed = true;
           xAngle -= 90;
           yAngle -= 90;
-		  currentWall = "right"
+          currentWall = "right"
           zoomIn();
         }
-		else if ( isRight ( ) === true )
+        else if ( isRight () )
         {
           determinerAxis = "Z";
           determinerDirection = "+";
           pressed = true;
           yAngle -= 90;
-		  currentWall = "back"
+          currentWall = "back"
           zoomIn();
         }
-		else if ( isBack ( ) === true )
+        else if ( isBack () )
         {
           determinerAxis = "X";
           determinerDirection = "+";
           pressed = true;
           yAngle -= 90;
-		  currentWall = "left"
+          currentWall = "left"
           zoomIn();
         }
         break;
 
       case 83: // down
-        if ( isFront() === true) {
+        if ( isFront() ) {
           determinerAxis = "Y";
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
-		  currentWall = "bottom"
+          currentWall = "bottom"
           zoomIn();
         }
-        else if ( isTop ( ) === true )
+        else if ( isTop () )
         {
           determinerAxis = "Z";
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
-		  currentWall = "front"
+          currentWall = "front"
           zoomIn();
         }
-        else if ( isLeft ( ) === true )
+        else if ( isLeft () )
         {
           determinerAxis = "Y";
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
           yAngle -= 90;
-		  currentWall = "bottom"
+          currentWall = "bottom"
           zoomIn();
         }
-        else if ( isRight ( ) === true )
+        else if ( isRight () )
         {
           determinerAxis = "Y";
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
           yAngle += 90;
-		  currentWall = "bottom"
+          currentWall = "bottom"
           zoomIn();
         }
         break;
     }
-    if ( pressed === true )
-      document.getElementById('cube').style[prop] += "translate" +
-          currentDeterminerAxis  + "(" + currentDeterminerDirection + "" +
-          depth + "px)";
-    document.getElementById('cube').style[prop] = "rotateX(" + xAngle +
-          "deg) rotateY(" + yAngle + "deg)";
-    document.getElementById('cube').style[prop] += "translate" + determinerAxis
-          + "(" + determinerDirection + "" + depth + "px)";
+    if ( pressed ) {
+      document.getElementById('cube').style[prop] +=
+            "translate" + currentDeterminerAxis  + "(" +
+            currentDeterminerDirection + "" + depth + "px)";
+    }
+    document.getElementById('cube').style[prop] =
+            "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
+    document.getElementById('cube').style[prop] +=
+            "translate" + determinerAxis +
+            "(" + determinerDirection + "" + depth + "px)";
     currentDeterminerAxis = determinerAxis;
     if (determinerDirection === "+"){
       currentDeterminerDirection = "-";
     }
-    else{
+    else {
       currentDeterminerDirection = "+";
     }
   }
 }
 
-// NEEDINFO: Document this
-for(var i = 0, l = props.length; i < l; i++) {
-  if(typeof el.style[props[i]] !== "undefined") {
-    prop = props[i];
-    break;
-  }
-}
-
-
 function isBack() {
-  return ( currentWall == "back" );
+  return currentWall == "back";
 }
 
 function isLeft() {
-  return ( currentWall == "left" );
+  return currentWall == "left";
 }
 
 function isRight() {
-  return ( currentWall == "right" );
+  return currentWall == "right";
 }
 
 function isTop() {
-  return ( currentWall == "top" );
+  return currentWall == "top";
 }
 
 function isBottom() {
-  return ( currentWall == "bottom" );
+  return currentWall == "bottom";
 }
 
 function isFront() {
-  return ( currentWall == "front" );
+  return currentWall == "front";
 }
 
 function leftPanel() {
@@ -809,27 +823,27 @@ function backPanel() {
 
 function activityTimer( ) {
   clearInterval(interval);
-  if ( isBack() === true )
+  if ( isBack() )
     document.getElementById('cube').style[prop] += "translateZ(-80px)";
   else
     backPanel().style.opacity = 0.0;
-  if ( isLeft() === true )
+  if ( isLeft() )
     document.getElementById('cube').style[prop] += "translateX(-80px)";
   else
     leftPanel().style.opacity = 0.0;
-  if ( isRight() === true  )
+  if ( isRight()  )
     document.getElementById('cube').style[prop] += "translateX(80px)";
   else
     rightPanel().style.opacity = 0.0;
-  if ( isFront() === true )
+  if ( isFront() )
     document.getElementById('cube').style[prop] += "translateZ(80px)";
   else
     frontPanel().style.opacity = 0.0;
-  if ( isTop() === true )
+  if ( isTop() )
     document.getElementById('cube').style[prop] += "translateY(-80px)";
   else
     topPanel().style.opacity = 0.0;
-  if ( isBottom() === true )
+  if ( isBottom() )
     document.getElementById('cube').style[prop] += "translateY(80px)";
   else
     bottomPanel().style.opacity = 0.0;
@@ -857,11 +871,10 @@ function zoomIn ( )
 
 function isNumberKey(evt)
 {
-   var charCode = (evt.which) ? evt.which : event.keyCode;
-// 46 is decimal point, 48 is 0, 57 is 9
-   // if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-   if (charCode > 31 && (charCode < 48 || charCode > 57))
-      return false;
-
-   return true;
+  var charCode = (evt.which) ? evt.which : event.keyCode;
+  // 46 is decimal point, 48 is 0, 57 is 9
+  // if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+  if (charCode > 31 && (charCode < 48 || charCode > 57))
+    return false;
+  return true;
 }
