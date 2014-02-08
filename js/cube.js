@@ -36,19 +36,21 @@ var determinerDirection;
 
 // used to manage the problem with the resizing of the default android
 // browser when in landscape mode and when the address bar hides
-var windowHeight
+var windowHeight;
 
 var cubeLocked = false;
 
 var whole, monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
-var props = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
-            prop, el = document.createElement('div'), inactivity = 1000,
-            interval = setInterval( function(){activityTimer();}, inactivity );
+var props = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
+var prop;
+var el = document.createElement('div');
+var inactivity = 1000;
+var interval = setInterval(function(){activityTimer();}, inactivity);
 
 // Determine browser
-for(var i = 0, l = props.length; i < l; i++) {
-  if(typeof el.style[props[i]] !== "undefined") {
+for (var i = 0, l = props.length; i < l; i++) {
+  if (typeof el.style[props[i]] !== "undefined") {
     prop = props[i];
     break;
   }
@@ -62,12 +64,12 @@ function adjust(){
 
   // aligning the cube equally from the left and the righr of the screen; 500
   // is the side of the cube
-  $('#cube').css('margin-top', ((height-500)/2)+"px");
+  $('#cube').css('margin-top', ((height - 500) / 2) + "px");
 
   // this is still just the alingment; next is the "resizement"; if we use 620
   // for the alignment the cube won't be in the center; this is because initialy
   // it is 500px and after that the side seems to be like 610px;
-  $('#cube').css('margin-left', ((width-500)/2)+"px");
+  $('#cube').css('margin-left', ((width - 500) / 2) + "px");
 
   // Determining the side that will say how big the cube will be and how much
   // we will go away from the screen in order to see it as such; the cube is
@@ -101,7 +103,7 @@ function adjust(){
     // determinerDirection = "+";
     // currentDeterminerDirection = "-"
   }
-  else{
+  else {
     // determinerDirection = "-";
     // currentDeterminerDirection = "+"
   }
@@ -119,7 +121,7 @@ function frontpanel(){
 
 $(document).ready(function() {
 
-  if(sessionStorage.isComingFromMap === "yes"){
+  if (sessionStorage.isComingFromMap === "yes"){
     sessionStorage.isComingFromMap = "no";
     var days = sessionStorage.days.split(",");
     if (days.length === 7){
@@ -209,11 +211,11 @@ $('#how-to').click(function(){
 function clickPriceToggler(obj){
   var btn = obj.parent().text().toLowerCase().replace(" ", "");
   var state = obj.data('clicked');
-  if(state === "yes"){
+  if (state === "yes"){
     $("#"+btn+" > a > div").css('background-position','0px -35px');
     $("#"+btn+" > a").data('clicked','yes');
   }
-  else{
+  else {
     $(".price-togglers > a > div").css('background-position','0px 0px');
     $(".price-togglers > a").data('clicked','no');
     $("#"+btn+"_toggler > a > div").css('background-position','0px -35px');
@@ -229,21 +231,21 @@ $('.price-togglers > a').click(function(){
 $('.price-togglers').click(function(){
   var state = $(this).find('a').data('clicked');
   var price = $(this).text().toLowerCase().replace(" ", "");
-  if(state === "yes"){
+  if (state === "yes"){
     priceToBeSubmitted = price;
   }
-  else{
+  else {
     priceToBeSubmitted = null;
   }
 })
 
 function clickSportsToggler(obj){
   var state = obj.data('clicked');
-  if(state === "yes"){
+  if (state === "yes"){
     obj.find("div").css('background-position','0px 0px');
     obj.data('clicked', 'no');
   }
-  else{
+  else {
     obj.find("div").css('background-position','0px -35px');
     obj.data('clicked', 'yes');
   }
@@ -258,7 +260,7 @@ $('.activities > a').click(function(){
 // populating the browser's storage
 $('.activities').click(function(){
   var state = $(this).find('a').data('clicked');
-  if(state === "yes"){
+  if (state === "yes"){
     var sport = $(this).text().toLowerCase();
     sportsToBeSubmitted.push(sport);
   }
@@ -270,22 +272,22 @@ $('.activities').click(function(){
 })
 
 function clickDaysTogglers(state, day){
-  if(state === "yes"){
-    if(day === "whole week"){
+  if (state === "yes"){
+    if (day === "whole week"){
       var length = daysToBeSubmitted.length;
       daysToBeSubmitted.splice(0, length);
       daysToBeSubmitted.push("monday", "tuesday", "wednesday",
                              "thursday", "friday", "saturday", "sunday");
     }
-    else{
+    else {
       daysToBeSubmitted.push(day);
     }
   }
-  else{
-    if(day === "whole week"){
+  else {
+    if (day === "whole week"){
       daysToBeSubmitted.splice(0, 7);
     }
-    else{
+    else {
       var index = daysToBeSubmitted.indexOf(day);
       daysToBeSubmitted.splice(index, 1);
     }
@@ -301,8 +303,8 @@ var day = $(this).text().toLowerCase();
 $('.toggle-buttons > a').click(function(){
   var btn = $(this).parent().text();
   var clicked = $(this).data('clicked');
-  if(btn === "Whole week"){
-    switch(clicked){
+  if (btn === "Whole week"){
+    switch (clicked){
     case "no":
       $('.toggle-buttons > a > div').css('background-position','0px -35px');
       $('.toggle-buttons > a').data('clicked','yes');
@@ -313,8 +315,8 @@ $('.toggle-buttons > a').click(function(){
       break;
     }
   }
-  else{
-    switch(clicked){
+  else {
+    switch (clicked){
     case "no":
       $(this).find("div").css('background-position','0px -35px');
       $(this).data('clicked','yes');
@@ -359,26 +361,28 @@ Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragle
 // the equavelent of keydownEvent() but for the gestures
 function gesturePerformed(type)
 {
-  if (type=="swipedown" || type=="dragdown") {
+  if (type == "swipedown" || type == "dragdown") {
     type = "swipedown";
   }
-  else if (type=="swipeleft" || type=="dragleft") {
+  else if (type == "swipeleft" || type == "dragleft") {
     type = "swipeleft";
   }
-  else if (type=="swiperight" || type=="dragright"){
+  else if (type == "swiperight" || type == "dragright"){
     type = "swiperight";
   }
-  else if (type=="swipeup" || type=="dragup"){
+  else if (type == "swipeup" || type == "dragup"){
     type = "swipeup";
   }
-  if((type == "swiperight" && isLeft()) ||
-     (type == "swipedown" && isTop())   ||
-     (type == "swipeleft" && isRight()) ||
-     (type == "swipeup" && isBottom()))
+  // NEEDINFO: What is this doing and why is it here
+  // BUG: Swipes do not work for me, is it because of this?
+  if ((type == "swiperight" && isLeft()  ) ||
+      (type == "swipedown"  && isTop ()  ) ||
+      (type == "swipeleft"  && isRight() ) ||
+      (type == "swipeup"    && isBottom()) )
   {
     var pressed = false;
     $('#resizer').delay(800).fadeOut(500);
-    switch(type) {
+    switch (type) {
       case "swiperight": // left
         if ( isFront() ) {
           determinerAxis = "X";
@@ -518,6 +522,17 @@ function gesturePerformed(type)
           yAngle += 90;
           zoomIn();
         }
+        else if ( isBottom() ) {
+          // TODO: Not tested, need swipe working
+          // Currently the wall is disappearing
+          // Should I add currentWall = "left" ?
+          determinerAxis = "X";
+          determinerDirection = "-";
+          pressed = true;
+          xAngle -= 90;
+          yAngle += 180;
+          zoomIn();
+        }
         break;
     }
     if ( pressed ) {
@@ -543,23 +558,25 @@ function gesturePerformed(type)
 // detecting when a key is pressed and passing this key to the keydownEvent
 // function
 $('body').keydown( function (evt){
-  if(cubeLocked === false){
+  if (cubeLocked === false){
     keydownEvent(evt);
     }
 });
 
-
+// 65 is left
+// 68 is right
+// 87 is up
+// 83 is down
 function keydownEvent( evt ) {
   if ( evt.keyCode == 65 || evt.keyCode == 68 ||
-      (evt.keyCode == 87 && !isBack() && !isTop() ) ||
-      (evt.keyCode == 83 && !isBack() && !isBottom() ) )
+       evt.keyCode == 87 || evt.keyCode == 83 )
   {
     var pressed = false;
     if ( isFront() && ( evt.keyCode == 65 || evt.keyCode == 87 ||
                         evt.keyCode == 68 || evt.keyCode == 83 ) ) {
       $('#resizer').delay(800).fadeOut(500);
     }
-    switch(evt.keyCode) {
+    switch (evt.keyCode) {
       case 65: // left
         if ( isFront() ) {
           determinerAxis = "X";
@@ -567,7 +584,7 @@ function keydownEvent( evt ) {
           $('#price_to').blur();
           pressed = true;
           yAngle += 90;
-          currentWall = "left"
+          currentWall = "left";
           zoomIn();
         }
         else if ( isRight() ) {
@@ -576,7 +593,7 @@ function keydownEvent( evt ) {
           $('#price_to').blur();
           pressed = true;
           yAngle += 90;
-          currentWall = "front"
+          currentWall = "front";
           zoomIn();
         }
         else if ( isTop() ) {
@@ -585,7 +602,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle += 90;
-          currentWall = "left"
+          currentWall = "left";
           zoomIn();
         }
         else if ( isBottom() ) {
@@ -594,7 +611,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle += 90;
-          currentWall = "left"
+          currentWall = "left";
           zoomIn();
         }
         else if ( isLeft ( ) )
@@ -603,7 +620,7 @@ function keydownEvent( evt ) {
           determinerDirection = "+";
           pressed = true;
           yAngle += 90;
-          currentWall = "back"
+          currentWall = "back";
           zoomIn();
         }
         else if ( isBack ( ) )
@@ -612,7 +629,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           yAngle += 90;
-          currentWall = "right"
+          currentWall = "right";
           zoomIn();
         }
         break;
@@ -624,7 +641,16 @@ function keydownEvent( evt ) {
           determinerDirection = "+";
           pressed = true;
           xAngle -= 90;
-          currentWall = "top"
+          currentWall = "top";
+          zoomIn();
+        }
+        else if ( isTop() ) {
+          determinerAxis = "X";
+          determinerDirection = "+";
+          pressed = true;
+          xAngle += 90;
+          yAngle += 180;
+          currentWall = "back";
           zoomIn();
         }
         else if ( isBottom() )
@@ -633,7 +659,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           xAngle -= 90;
-          currentWall = "front"
+          currentWall = "front";
           zoomIn();
         }
         else if ( isLeft () )
@@ -643,7 +669,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle -= 90;
-          currentWall = "top"
+          currentWall = "top";
           zoomIn();
         }
         else if ( isRight () )
@@ -653,7 +679,17 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle += 90;
-          currentWall = "top"
+          currentWall = "top";
+          zoomIn();
+        }
+        else if ( isBack ( ) )
+        {
+          determinerAxis = "X";
+          determinerDirection = "-";
+          pressed = true;
+          xAngle -= 90;
+          yAngle += 180;
+          currentWall = "top";
           zoomIn();
         }
         break;
@@ -664,7 +700,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
-          currentWall = "right"
+          currentWall = "right";
           zoomIn();
         }
         else if ( isLeft() ) {
@@ -672,7 +708,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           yAngle -= 90;
-          currentWall = "front"
+          currentWall = "front";
           zoomIn();
         }
         else if ( isTop() ) {
@@ -681,7 +717,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle -= 90;
-          currentWall = "right"
+          currentWall = "right";
           zoomIn();
         }
         else if ( isBottom() ) {
@@ -690,7 +726,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle -= 90;
           yAngle -= 90;
-          currentWall = "right"
+          currentWall = "right";
           zoomIn();
         }
         else if ( isRight () )
@@ -699,7 +735,7 @@ function keydownEvent( evt ) {
           determinerDirection = "+";
           pressed = true;
           yAngle -= 90;
-          currentWall = "back"
+          currentWall = "back";
           zoomIn();
         }
         else if ( isBack () )
@@ -708,7 +744,7 @@ function keydownEvent( evt ) {
           determinerDirection = "+";
           pressed = true;
           yAngle -= 90;
-          currentWall = "left"
+          currentWall = "left";
           zoomIn();
         }
         break;
@@ -719,7 +755,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
-          currentWall = "bottom"
+          currentWall = "bottom";
           zoomIn();
         }
         else if ( isTop () )
@@ -728,7 +764,7 @@ function keydownEvent( evt ) {
           determinerDirection = "-";
           pressed = true;
           xAngle += 90;
-          currentWall = "front"
+          currentWall = "front";
           zoomIn();
         }
         else if ( isLeft () )
@@ -738,7 +774,7 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle -= 90;
-          currentWall = "bottom"
+          currentWall = "bottom";
           zoomIn();
         }
         else if ( isRight () )
@@ -748,7 +784,26 @@ function keydownEvent( evt ) {
           pressed = true;
           xAngle += 90;
           yAngle += 90;
-          currentWall = "bottom"
+          currentWall = "bottom";
+          zoomIn();
+        }
+        else if ( isBottom() ) {
+          determinerAxis = "X";
+          determinerDirection = "+";
+          pressed = true;
+          xAngle -= 90;
+          yAngle += 180;
+          currentWall = "back";
+          zoomIn();
+        }
+        else if ( isBack ( ) )
+        {
+          determinerAxis = "X";
+          determinerDirection = "-";
+          pressed = true;
+          xAngle += 90;
+          yAngle += 180;
+          currentWall = "bottom";
           zoomIn();
         }
         break;
