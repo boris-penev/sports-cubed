@@ -13,6 +13,8 @@ p {
 
 #cubeFrame {
   text-align: center;
+  perspective:2000px;
+  perspective-origin:50% 50%;
   -webkit-perspective:2000px;
   -webkit-perspective-origin:50% 50%;
   -moz-perspective:2000px;
@@ -28,6 +30,9 @@ p {
   height:500px;
   width:500px;
   margin: 0 auto 0 auto;
+  transition:transform 1s;
+  transform-style:preserve-3d;
+  transform:rotateX(90deg);
   -webkit-transition:-webkit-transform 1s;
   -webkit-transform-style:preserve-3d;
   -webkit-transform:rotateX(90deg);
@@ -38,7 +43,7 @@ p {
 
 .face {
   background:#8C8C8C;/*-webkit-linear-gradient(top,#6B6B6B,#B3B3B3);*/
-  background:#8C8C8C;/*-moz-linear-gradient(top,#6B6B6B,#B3B3B3);*/
+/*  background:#8C8C8C;*/ /*-moz-linear-gradient(top,#6B6B6B,#B3B3B3);*/
   position:absolute;
   height:100%;
   width:100%;
@@ -49,31 +54,37 @@ p {
   border:2px solid white;
   border-radius:4px;
   -moz-border-radius:4px;
+  transition:opacity 0.8s linear;
   -webkit-transition:opacity 0.8s linear;
   -moz-transition:opacity 0.8s linear;
 
+  transform-style: flat;
+  backface-visibility: hidden;
   -webkit-transform-style: flat;
   /* webkit is a bitch at z-sorting css3d-transforms.
    * Use backface-visibility: hidden as often as you can! */
   -webkit-backface-visibility: hidden;
-
   -moz-transform-style: flat;
   -moz-backface-visibility: hidden;
 }
 
 #cube .top {
+  transform:rotateX(90deg) translateZ(280px);
   -webkit-transform:rotateX(90deg) translateZ(280px);
   -moz-transform:rotateX(90deg) translateZ(280px);
   -o-transform:rotateX(90deg) translateZ(280px);
 }
 
 #cube .back {
+  transform:translateZ(-280px) rotateY(180deg);
   -webkit-transform:translateZ(-280px) rotateY(180deg);
   -moz-transform:translateZ(-280px) rotateX(180deg) ;
   -o-transform:translateZ(-280px) rotateX(180deg);
 }
 
 #cube .front {
+  transform-style:preserve-3d;
+  transform:translateZ(280px);
   -webkit-transform-style:preserve-3d;
   -webkit-transform:translateZ(280px);
   -moz-transform-style:preserve-3d;
@@ -82,12 +93,14 @@ p {
 }
 
 #cube .right {
+  transform:rotateY(90deg) translateZ(280px);
   -webkit-transform:rotateY(90deg) translateZ(280px);
   -moz-transform:rotateY(90deg) translateZ(280px);
   -o-transform:rotateY(90deg) translateZ(280px);
 }
 
 #cube .left {
+  transform:rotateY(-90deg) translateZ(280px);
   -webkit-transform:rotateY(-90deg) translateZ(280px);
   -moz-transform:rotateY(-90deg) translateZ(280px);
   -o-transform:rotateY(-90deg) translateZ(280px);
@@ -95,6 +108,7 @@ p {
 }
 
 #cube .bottom {
+  transform:rotateX(-90deg) translateZ(280px);
   -webkit-transform:rotateX(-90deg) translateZ(280px);
   -moz-transform:rotateX(-90deg) translateZ(280px);
   -o-transform:rotateX(-90deg) translateZ(280px);
