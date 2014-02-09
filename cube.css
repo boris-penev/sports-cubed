@@ -78,8 +78,8 @@ p {
 #cube .back {
   transform:translateZ(-280px) rotateY(180deg);
   -webkit-transform:translateZ(-280px) rotateY(180deg);
-  -moz-transform:translateZ(-280px) rotateX(180deg) ;
-  -o-transform:translateZ(-280px) rotateX(180deg);
+  -moz-transform:translateZ(-280px) rotateY(180deg) ;
+  -o-transform:translateZ(-280px) rotateY(180deg);
 }
 
 #cube .front {
