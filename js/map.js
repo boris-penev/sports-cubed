@@ -66,13 +66,14 @@ else{
 //alert("sports="+aaa+"&days="+bbb+"&price="+price);
 request.open("GET","http://testpilot.x10.mx/sports/query.php?sports=" +
              aaa + "&days=" + bbb + "&price=" + price,true);
-request.send(null);
-request.onreadystatechange=function()
+request.send (null);
+request.onreadystatechange = function()
 {
-  if (request.readyState==4 && request.status==200){
+  if (request.readyState==4 && request.status==200)
+  {
     data = JSON.parse(request.responseText);
     //alert(request.responseText);
-// creating the map
+    // creating the map
     var myLatlng = new google.maps.LatLng(55.970, -3.150);
 
     var mapOptions = {
@@ -88,7 +89,8 @@ request.onreadystatechange=function()
     var i = 0;
 
     //creating the markers
-    for(var obj in data){
+    for(var obj in data)
+    {
       var myLatlng = new google.maps.LatLng(data[i].latitude,
                                             data[i].longtitude);
       var marker = new google.maps.Marker({
