@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	
     <title>Sports Cubed</title>
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/jquery.hammer.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="cube.css"/>
-  </head>
-  <body style=" background: linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); background: -webkit-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); background: -moz-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B)">
-    <div id="curtain">
-    </div>
-    <div id="bigWrapper" style="overflow: hidden;top:0; left:0;">
+	
+	<!--[if !IE]><!-->
+		<link rel="stylesheet" type="text/css" href="cube.css"/>
+	<!--<![endif]-->
+    
+</head>
+  
+<body>
+
+	<!-- Dims the screen for the tutorial -->
+    <div id="curtain"></div>
+	
+	<!-- This is the wrapper for all the content that is resized when the screen dimensions are changed
+         TO DO: TRY TO REMOVE IT AND LEAVE ONLY THE CUBE FRAME	-->
+    <div id="bigWrapper">
+	
+	  <!-- Cube frame is used for the perspective and 3D transformations -->
       <div id="cubeFrame">
+	    
+		<!-- This is the actual cube positioned in the Cube frame
+		     The sides are named assuming that we are facing the one with the Map link -->
         <div id="cube">
+		
+		<!-- Back side of the cube containing the Activities filter -->
         <div class="face back" id = "back">
-          <div id="activities-explanation" style=" display:none; position:absolute">
-            <img src="img/activities-expl.jpg" style="position: absolute;"/>
-            <img id="next-activities" src="img/next.jpg" style="position: absolute; margin: 420px 0 0 0"/>
+		
+          <div id="activities-explanation" class="tutorial-explanation">
+            <img src="img/activities-expl.jpg" />
+            <img id="next-activities" class="tutorial-button" src="img/next.jpg" />
           </div>
+		  
           <div><img src="img/Activities_label.jpg"></div>
+		  
           <div class="content_wrapper">
             <div class="sport_wrapper">
               <div class="activities" id="football_toggler">Football<br/><a href=# data-clicked="no"><div class="images"></div></a></div>
@@ -48,70 +67,93 @@
             </div>
           </div>
 
-
+		<!-- Front side of the cube containing the link to the map with results -->
         </div>
 
         <div class="face front" id = "front">
-          <div id="map-explanation" style=" display:none; position:absolute; z-index:5">
-            <img src="img/map-expl.jpg" style="position: absolute;"/>
-            <img id="next-final" src="img/ok.jpg" style="position: absolute; margin: 420px 0 0 0"/>
+          <div id="map-explanation">
+            <img src="img/map-expl.jpg"/>
+            <img id="next-final" class="tutorial-button" src="img/ok.jpg" />
           </div>
           <div id="resizer"><img src="img/mapExpand2.png"></div>
           <img src="img/map-screen.jpg" style="z-index:1; margin-top:5px;">
         </div>
 
+		<!-- Top side of the cube containing the prospective advertisements -->
         <div class="face top" id = "top">
           <img src="img/advertise-screen.jpg" style="margin-top:5px;">
         </div>
 
+		<!-- Left side of the cube containing the Price filter -->
         <div class="face left" id = "left">
-          <div id="price-explanation" style=" display:none; position:absolute">
-            <img src="img/price-expl.jpg" style="position: absolute;"/>
-            <img id="next-price" src="img/next.jpg" style="position: absolute; margin: 420px 0 0 0"/>
+		
+          <div id="price-explanation" class="tutorial-explanation">
+            <img src="img/price-expl.jpg"/>
+            <img id="next-price" class="tutorial-button" src="img/next.jpg" />
           </div>
+		  
           <div><img src="img/Price_label.jpg"></div>
+		  
               <div class="price-togglers" id="all_toggler">All<br/><a href=# data-clicked="no"><div class="images3"></div></a></div>
+			  
               <div class="price-wrapper">
                 <div class="price-togglers" id="free_toggler">Free<br/><a href=# data-clicked="no"><div class="images3"></div></a></div>
                 <div class="price-togglers" id="below35_toggler">Below 35<br/><a href=# data-clicked="no"><div class="images3"></div></a></div>
               </div>
+			  
               <div class="price-wrapper">
-              <div class="price-togglers" id="below20_toggler">Below 20<br/><a href=# data-clicked="no"><div class="images3"></div></a></div>
-              <div class="price-togglers" id="below50_toggler">Below 50<br/><a href=# data-clicked="no"><div class="images3"></div></a></div>
+                <div class="price-togglers" id="below20_toggler">Below 20<br/><a href=# data-clicked="no"><div class="images3"></div></a></div>
+                <div class="price-togglers" id="below50_toggler">Below 50<br/><a href=# data-clicked="no"><div class="images3"></div></a></div>
               </div>
 
         </div>
 
+		<!-- Right side of the cube containing the Time (days) filter -->
         <div class="face right" id = "right">
-          <div id="time-explanation" style=" display:none; position:absolute">
-            <img src="img/time-expl.jpg" style="position: absolute;"/>
-            <img id="next-time" src="img/next.jpg" style="position: absolute; margin: 420px 0 0 0"/>
+		
+          <div id="time-explanation" class="tutorial-explanation" >
+            <img src="img/time-expl.jpg"/>
+            <img id="next-time" class="tutorial-button" src="img/next.jpg" />
           </div>
+		  
           <div><img src="img/Time_label.jpg"></div>
+		  
           <div class="time_wrapper">
             <div class="toggle-buttons" id="whole_toggler">Whole week<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
             <div class="toggle-buttons" id="monday_toggler">Monday<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
             <div class="toggle-buttons" id="tuesday_toggler">Tuesday<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
             <div class="toggle-buttons" id="wednesday_toggler">Wednesday<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
           </div>
+		  
           <div class="time_wrapper">
             <div class="toggle-buttons" id="thursday_toggler">Thursday<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
             <div class="toggle-buttons" id="friday_toggler">Friday<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
             <div class="toggle-buttons" id="saturday_toggler">Saturday<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
             <div class="toggle-buttons" id="sunday_toggler">Sunday<br/><a href=# data-clicked="no"><div class="images2"></div></a></div>
           </div>
+		  
         </div>
+		
+		<!-- Bottom side of the cube containing the Intro screen -->
         <div class="face bottom" id = "bottom">
-          <div style="left:0; position:absolute">
-            <img src="img/intro-expl.jpg" id="intro-explanation" style=" display:none; position: absolute;"/>
-            <img id="start-intro" src="img/intro-start.jpg" style=" display:none; position: absolute; margin: 420px 0 0 0"/>
-          </div>
+		
+          <img src="img/intro-expl.jpg" id="intro-explanation"  class="tutorial-explanation" />
+          <img id="start-intro" src="img/intro-start.jpg" />
+		  
           <img src="img/intro-image.jpg" style="width:500px; height: 430px;">
-          <a href="#" id="how-to"><img src="img/how-to.jpg" style="width:300px; height: 37px; border-radius: 10px; margin: 10px; auto 0 auto;"></a>
+          <a href="#" id="how-to"><img src="img/how-to.jpg"></a>
+		  
         </div>
+		
       </div>
+	  
     </div>
+	
+    </div>
+		
+	<script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.hammer.min.js"></script>
     <script type="text/javascript" src="js/cube.js"></script>
-    </div>
-  </body>
+	
+</body>
 </html>

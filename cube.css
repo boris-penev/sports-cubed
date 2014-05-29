@@ -1,5 +1,8 @@
 body {
   overflow:hidden;
+  background: linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); 
+  background: -webkit-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); 
+  background: -moz-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
 }
 
 p {
@@ -9,6 +12,12 @@ p {
   font-family:'Corben',cursive;
   text-shadow:1px 1px black;
   margin-top:5px;
+}
+
+#bigWrapper {
+  overflow: hidden;
+  top:0; 
+  left:0;
 }
 
 #cubeFrame {
@@ -21,8 +30,8 @@ p {
   -moz-perspective-origin:50% 50%;
   -o-perspective:2000px;
   -o-perspective-origin:50% 50%;
-   top:0;
-   left:0;
+  top:0;
+  left:0;
 }
 
 #cube {
@@ -114,8 +123,37 @@ p {
   -o-transform:rotateX(-90deg) translateZ(280px);
 }
 
-#iMap {
-  border:none;
+.tutorial-explanation{
+  display:none; 
+  position:absolute;
+}
+
+.tutorial-explanation img{
+  position:absolute;
+}
+
+.tutorial-button{
+  position: absolute; 
+  margin: 420px 0 0 0;
+}
+
+#start-intro{
+  display:none; 
+  position: absolute; 
+  margin: 420px 0 0 0;
+}
+
+#map-explanation{
+  display:none; 
+  position:absolute; 
+  z-index:5;
+}
+
+#how-to img{
+  width:300px; 
+  height: 37px; 
+  border-radius: 10px; 
+  margin: 10px; auto 0 auto;
 }
 
 .face_label {
