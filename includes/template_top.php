@@ -60,7 +60,7 @@
 	<link rel="stylesheet" type="text/css" href="ext/jquery/fancybox/jquery.fancybox-1.3.4.css" />
 	<script type="text/javascript" src="ext/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 	<link rel="stylesheet" type="text/css" href="ext/960gs/<?php echo ((stripos(HTML_PARAMS, 'dir="rtl"') !== false) ? 'rtl_' : ''); ?>960_24_col.css" />
-	<!-- <link rel="stylesheet" type="text/css" href="stylesheet.css" /> -->
+	<link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
 

@@ -158,7 +158,7 @@
 	</table>
 	-->
 
-		<table style="margin-top:20px" border="1">
+		<table style="margin: 20px auto 0 auto" border="1">
 		<thead>
 			<tr>
 				<th style="padding-bottom:10px;text-align:center">Sports:</th>
