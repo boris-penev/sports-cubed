@@ -1,5 +1,12 @@
 syntax: glob
-img/*
+img
 *.jpg
 *.png
+*.gif
+images
+.DS_Store
+*.zip
+*.tar.gzip
+*.tar.bzip2
+*.rar
 configure.php
