@@ -642,8 +642,8 @@
   function cleanClubosport ( $club )
   {
     $query = "delete from clubosport where club_id = {$club} "
-           . 'and (isnull(opening_time) or isnull(closing_time)) '
-           . 'and isnull(price_member) and isnull(price_nonmember);' . PHP_EOL;
+           . 'and (opening_time is null or closing_time is null) '
+           . 'and price_member is null and price_nonmember is null;' . PHP_EOL;
 #   echoQuery ( $query );
     return ( $query == '' )
       ? wh_db_query ( $query ) : null;
