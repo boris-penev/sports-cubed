@@ -1,12 +1,25 @@
 syntax: glob
+
+# images
 img
+images
 *.jpg
 *.png
 *.gif
-images
+
+# os x folder info file
 .DS_Store
+
+# archives
 *.zip
 *.tar.gzip
 *.tar.bzip2
 *.rar
+
+# configuration file
 configure.php
+
+# Eclipse files and folders
+.settings
+.buildpath
+.project
