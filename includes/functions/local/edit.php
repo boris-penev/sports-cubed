@@ -111,15 +111,9 @@
             $prices['nonmember'] = $price_nonmember;
           }
         }
-        if ( count ( $times ) && count ( $prices ) ) {
-          setSportsTimePriceAll ( $club_id, $sport_id, $times, $prices );
-        }
-        elseif ( count ( $times ) ) {
-          setSportsTimeAll ( $club_id, $sport_id, $times );
-        }
-        elseif ( count ( $prices ) ) {
-          setSportsPriceAll ( $club_id, $sport_id, $prices );
-        }
+        $times  = buildTimesArrayAll  ($times);
+        $prices = buildPricesArrayAll ($prices)
+        setSportsTimePriceAll ( $club_id, $sport_id, $times, $prices );
       }
       elseif ( $select_days_view == 'working' )
       {

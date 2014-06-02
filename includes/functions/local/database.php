@@ -648,4 +648,27 @@
     return ( $query == '' )
       ? wh_db_query ( $query ) : null;
   }
+
+  function buildTimesArrayAll ($times)
+  {
+    if ( ! wh_not_null ($times['open']) || ! wh_not_null ($times['close']) )
+    {
+      $times['open'] = 'null';
+      $times['close'] = 'null';
+    }
+    return $times;
+  }
+
+  function buildPricesArrayAll ($prices)
+  {
+    if ( ! wh_not_null ($prices['member']) )
+    {
+      $prices['member'] = 'null';
+    }
+    if ( ! wh_not_null ($prices['nonmember']) )
+    {
+      $prices['nonmember'] = 'null';
+    }
+    return $prices;
+  }
 ?>
