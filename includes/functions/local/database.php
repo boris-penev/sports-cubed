@@ -489,45 +489,106 @@
     return wh_db_query ( $query );
   }
 
-  function setSportsTimePriceAll ( $club, $sport, $times, $prices )
+  function setSportsTimeAll ( $club, $sport, $times )
   {
-    $query = "delete from clubosport where club_id = {$club} "
-           . "and day_id between 1 and 8;" . PHP_EOL;
-    for ($i = 1; $i < 8; ++$i)
-    {
-      if ( ! is_array ( $times[$i] ) ) {
-        continue;
-      }
-      if ( wh_not_null ( $times[$i]['open'] ) && wh_not_null ( $times[$i]['close'] ) )
-      {
-        $query .= 'insert into clubosport ( club_id, sport_id, day_id, opening_time, closing_time ) ';
-        $query .= "values ( {$club}, {$sport}, {$i}, {$times[$i]['open']}, {$times[$i]['close']} );" . PHP_EOL;
-      }
-    }
+    $query = 'update clubosport set opening_time=null, closing_time=null '
+           . "where club_id = {$club};" . PHP_EOL;
+    $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
+            . 'opening_time, closing_time ) ';
+    $query .= "values ( {$club}, {$sport}, 8, "
+            . "{$times['open']}, {$times['close']} )";
+    $query .= ' on duplicate key update opening_time=values(opening_time), '
+            . 'closing_time=values(closing_time);' . PHP_EOL;
 #   echoQuery ( $query );
     return ( $query == '' )
       ? wh_db_query ( $query ) : null;
   }
 
-  //not done
+  function setSportsPriceAll ( $club, $sport, $prices )
+  {
+    $query = 'update clubosport set price_member=null, price_nonmember=null '
+           . "where club_id = {$club};" . PHP_EOL;
+    $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
+            . 'price_member, price_nonmember ) ';
+    $query .= "values ( {$club}, {$sport}, 8, "
+            . "{$prices['member']}, {$prices['nonmember']} )";
+    $query .= ' on duplicate key update price_member=values(price_member), '
+            . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
+#   echoQuery ( $query );
+    return ( $query == '' )
+      ? wh_db_query ( $query ) : null;
+  }
+
+  function setSportsTimePriceAll ( $club, $sport, $times, $prices )
+  {
+    $query = "delete from clubosport where club_id = {$club} "
+           . "and day_id <> 8;" . PHP_EOL;
+    $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
+            . 'opening_time, closing_time, price_member, price_nonmember ) ';
+    $query .= "values ( {$club}, {$sport}, 8, "
+            . "{$times['open']}, {$times['close']}, "
+            . "{$prices['member']}, {$prices['nonmember']} )";
+    $query .= ' on duplicate key update opening_time=values(opening_time), '
+            . 'closing_time=values(closing_time), '
+            . 'price_member=values(price_member), '
+            . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
+#   echoQuery ( $query );
+    return ( $query == '' )
+      ? wh_db_query ( $query ) : null;
+  }
+
   function setSportsTimeWorking ( $club, $sport, $times )
   {
-    //INSERT INTO clubosport (club_id, sport_id, day_id, price_nonmember)
-    //VALUES (102, 1, 2, 60)
-    //ON DUPLICATE KEY UPDATE price_nonmember=60
+    $query = 'update clubosport set opening_time=null, closing_time=null '
+           . "where club_id = {$club} and day_id not in (9, 10);" . PHP_EOL;
+    $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
+            . 'opening_time, closing_time ) values';
+    $query .= " ( {$club}, {$sport}, 9, "
+            . "{$times['working']['open']}, {$times['working']['close']} ),"
+            . " ( {$club}, {$sport}, 10, "
+            . "{$times['weekend']['open']}, {$times['weekend']['close']} )";
+    $query .= ' on duplicate key update opening_time=values(opening_time), '
+            . 'closing_time=values(closing_time);' . PHP_EOL;
+#   echoQuery ( $query );
+    return ( $query == '' )
+      ? wh_db_query ( $query ) : null;
+  }
+
+  function setSportsPriceWorking ( $club, $sport, $prices )
+  {
+    $query = 'update clubosport set price_member=null, price_nonmember=null '
+           . "where club_id = {$club} and day_id not in (9, 10);" . PHP_EOL;
+    $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
+            . 'price_member, price_nonmember ) values';
+    $query .= "values ( {$club}, {$sport}, 9, {$prices['working']['member']}, "
+            . "{$prices['working']['nonmember']} ),"
+            . " ( {$club}, {$sport}, 10, {$prices['weekend']['member']}, "
+            . "{$prices['weekend']['nonmember']} )";
+    $query .= ' on duplicate key update price_member=values(price_member), '
+            . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
+#   echoQuery ( $query );
+    return ( $query == '' )
+      ? wh_db_query ( $query ) : null;
+  }
+
+  function setSportsTimePriceWorking ( $club, $sport, $times, $prices )
+  {
     $query = "delete from clubosport where club_id = {$club} "
-           . "and day_id between 1 and 8;" . PHP_EOL;
-    for ($i = 1; $i < 8; ++$i)
-    {
-      if ( ! is_array ( $times[$i] ) ) {
-        continue;
-      }
-      if ( wh_not_null ( $times[$i]['open'] ) && wh_not_null ( $times[$i]['close'] ) )
-      {
-        $query .= 'insert into clubosport ( club_id, sport_id, day_id, opening_time, closing_time ) ';
-        $query .= "values ( {$club}, {$sport}, {$i}, {$times[$i]['open']}, {$times[$i]['close']} );" . PHP_EOL;
-      }
-    }
+           . 'and day_id not in (9, 10);' . PHP_EOL;
+    $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
+            . 'opening_time, closing_time, price_member, price_nonmember ) ';
+    $query .= " ( {$club}, {$sport}, 9, "
+            . "{$times['working']['open']}, {$times['working']['close']},"
+            . "{$prices['working']['member']}, "
+            . "{$prices['working']['nonmember']} ),"
+            . " ( {$club}, {$sport}, 10, "
+            . "{$times['weekend']['open']}, {$times['weekend']['close']},"
+            . "{$prices['weekend']['member']}, "
+            . "{$prices['weekend']['nonmember']} )";
+    $query .= ' on duplicate key update opening_time=values(opening_time), '
+            . 'closing_time=values(closing_time), '
+            . 'price_member=values(price_member), '
+            . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
 #   echoQuery ( $query );
     return ( $query == '' )
       ? wh_db_query ( $query ) : null;
@@ -550,9 +611,10 @@
       if ( wh_not_null ( $times[$i]['open'] ) && wh_not_null ( $times[$i]['close'] ) )
       {
         $query .= " ( {$club}, {$sport}, {$i}, {$times[$i]['open']}, "
-                . "{$times[$i]['close']} )";
+                . "{$times[$i]['close']} ),";
       }
     }
+    rtrim($query, ',');
     $query .= ' on duplicate key update opening_time=values(opening_time), '
             . 'closing_time=values(closing_time)' . PHP_EOL;
 #   echoQuery ( $query );
@@ -575,8 +637,9 @@
         continue;
       }
         $query .= " ( {$club}, {$sport}, {$i}, {$prices[$i]['member']}, "
-                . "{$prices[$i]['nonmember']} )";
+                . "{$prices[$i]['nonmember']} ),";
     }
+    rtrim($query, ',');
     $query .= ' on duplicate key update price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember)' . PHP_EOL;
 #   echoQuery ( $query );
@@ -603,9 +666,10 @@
       if ( wh_not_null ( $times[$i]['open'] ) && wh_not_null ( $times[$i]['close'] ) )
       {
         $query .= " ( {$club}, {$sport}, {$i}, {$times[$i]['open']}, "
-                . "{$times[$i]['close']} )";
+                . "{$times[$i]['close']} ),";
       }
     }
+    rtrim($query, ',');
     $query .= ' on duplicate key update opening_time=values(opening_time), '
             . 'closing_time=values(closing_time)' . PHP_EOL;
 
@@ -621,18 +685,19 @@
         && wh_not_null ( $prices[$i]['nonmember'] ) )
       {
         $query .= " ( {$club}, {$sport}, {$i}, {$prices[$i]['member']}, "
-                . "{$prices[$i]['nonmember']} )";
+                . "{$prices[$i]['nonmember']} ),";
       }
       elseif ( wh_not_null ( $prices[$i]['member'] ) )
       {
-        $query .= " ( {$club}, {$sport}, {$i}, {$prices[$i]['member']}, null )";
+        $query .= " ( {$club}, {$sport}, {$i}, {$prices[$i]['member']}, null ),";
       }
       elseif ( wh_not_null ( $prices[$i]['nonmember'] ) )
       {
         $query .= " ( {$club}, {$sport}, {$i}, null, "
-                . "{$prices[$i]['nonmember']} )";
+                . "{$prices[$i]['nonmember']} ),";
       }
     }
+    rtrim($query, ',');
     $query .= ' on duplicate key update price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember)' . PHP_EOL;
 #   echoQuery ( $query );
