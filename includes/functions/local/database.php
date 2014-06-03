@@ -509,6 +509,7 @@
       ? wh_db_query ( $query ) : null;
   }
 
+  //not done
   function setSportsTimeWorking ( $club, $sport, $times )
   {
     //INSERT INTO clubosport (club_id, sport_id, day_id, price_nonmember)
@@ -670,5 +671,16 @@
       $prices['nonmember'] = 'null';
     }
     return $prices;
+  }
+
+  //not done
+  function buildTimesArrayWorking ($times)
+  {
+    if ( ! wh_not_null ($times['open']) || ! wh_not_null ($times['close']) )
+    {
+      $times['open'] = 'null';
+      $times['close'] = 'null';
+    }
+    return $times;
   }
 ?>

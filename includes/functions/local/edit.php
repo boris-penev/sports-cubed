@@ -68,14 +68,17 @@
     while ( $sport = wh_db_fetch_object_custom($sports_query) )
     {
       $sport_id = $sport->id;
-      $select_days_view_time = wh_db_post_input_string ( "selectDaysViewTime{$sport_id}" );
-      $select_days_view_price = wh_db_post_input_string ( "selectDaysViewPrice{$sport_id}" );
+      $select_days_view_time =
+          wh_db_post_input_string ( "selectDaysViewTime{$sport_id}" );
+      $select_days_view_price =
+          wh_db_post_input_string ( "selectDaysViewPrice{$sport_id}" );
       $select_days_view = ( $select_days_view_time == $select_days_view_price )
         ? $select_days_view_time : null;
+      //TODO Times and prices arrays are not always used but should be
+      $times = array();
+      $prices = array();
       if ( $select_days_view == 'all' )
       {
-        $times = array();
-        $prices = array();
         $time_open = wh_db_post_input_string ( "timeOpenAll{$sport_id}" );
         $time_close = wh_db_post_input_string ( "timeCloseAll{$sport_id}" );
         $price_member = wh_db_post_input_string ( "priceMemberAll{$sport_id}" );
@@ -112,7 +115,7 @@
           }
         }
         $times  = buildTimesArrayAll  ($times);
-        $prices = buildPricesArrayAll ($prices)
+        $prices = buildPricesArrayAll ($prices);
         setSportsTimePriceAll ( $club_id, $sport_id, $times, $prices );
       }
       elseif ( $select_days_view == 'working' )
@@ -125,6 +128,8 @@
         $price_member_weekend = wh_db_post_input_string ( "priceMemberWeekend{$sport_id}" );
         $price_nonmember_working = wh_db_post_input_string ( "priceNonmemberWorking{$sport_id}" );
         $price_nonmember_weekend = wh_db_post_input_string ( "priceNonmemberWeekend{$sport_id}" );
+        $times  = buildTimesArrayWorking  ($times);
+        $prices = buildPricesArrayWorking ($prices);
         setSportsTimePriceWorking ( $club_id, $sport_id, $times, $prices );
       }
       elseif ( $select_days_view == 'separately' )
@@ -166,12 +171,9 @@
             }
           }
         }
-        if ( count ( $times ) ) {
-          setSportsTimeSeparately ( $club_id, $sport_id, $times );
-        }
-        if ( count ( $prices ) ) {
-          setSportsPriceSeparately ( $club_id, $sport_id, $prices );
-        }
+        $times  = buildTimesArraySeparately  ($times);
+        $prices = buildPricesArraySeparately ($prices);
+        setSportsTimePriceSeparately ( $club_id, $sport_id, $times, $prices );
       }
       else
       {
@@ -207,9 +209,8 @@
               $times[$i]['close'] = $time_close;
             }
           }
-          if ( count ( $times ) ) {
-            setSportsTimeSeparately ( $club_id, $sport_id, $times );
-          }
+          $times  = buildTimesArraySeparately  ($times);
+          setSportsTimeSeparately ( $club_id, $sport_id, $times );
         }
         if ( $select_days_view_price == 'all' )
         {
@@ -247,24 +248,26 @@
               }
             }
           }
-          if ( count ( $prices ) ) {
-            setSportsPriceSeparately ( $club_id, $sport_id, $prices );
-          }
+          $prices = buildPricesArraySeparately ($prices);
+          setSportsPriceSeparately ( $club_id, $sport_id, $prices );
         }
       }
     }
+    wh_db_free_result($sports_query);
     //INSERT INTO clubosport (club_id, sport_id, day_id, price_nonmember)
     //VALUES (102, 1, 2, 60)
     //ON DUPLICATE KEY UPDATE price_nonmember=60
 
     cleanClubosport ($club_id);
 
+    // Reading post request to fill input elements of the form
     $time_open = wh_db_post_input_string ( 'time_open' );
 
     // previous to PHP 5.1.0 you would compare with -1, instead of false
     //if (($timestamp = strtotime($time_open)) === false) {
     if ( wh_not_null ($time_open) && strtotime($time_open) === false ) {
-      wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Opening time is not a valid time</strong>' );
+      wh_define ( 'TEXT_ERROR',
+        '<strong style="color: #FF0000">Opening time is not a valid time</strong>' );
       return;
     }
     //else {
@@ -274,7 +277,8 @@
     $time_close = wh_db_post_input_string ( 'time_close' );
 
     if ( wh_not_null ($time_close) && strtotime($time_close) === false ) {
-      wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Closing time is not a valid time</strong>' );
+      wh_define ( 'TEXT_ERROR',
+        '<strong style="color: #FF0000">Closing time is not a valid time</strong>' );
       return;
     }
 
@@ -282,7 +286,8 @@
 
     if ( wh_not_null ($price_member) && ! is_numeric ( $price_member ) )
     {
-      wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Members price is not numeric</strong>' );
+      wh_define ( 'TEXT_ERROR',
+        '<strong style="color: #FF0000">Members price is not numeric</strong>' );
       return;
     }
 
@@ -290,7 +295,8 @@
 
     if ( wh_not_null ($price_nonmember) && ! is_numeric ( $price_nonmember ) )
     {
-      wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Non members price is not numeric</strong>' );
+      wh_define ( 'TEXT_ERROR',
+        '<strong style="color: #FF0000">Non members price is not numeric</strong>' );
       return;
     }
 
@@ -428,7 +434,7 @@
     $sport_search = wh_db_get_input_string ( 'sport_search' );
     $id = wh_db_post_input_string ( 'id' );
 
-//Return the actual query, not the last query - no use for it now
+// Return the actual query, not the last query - no use for it now
 #   $url_query = parse_url ( $_SERVER['REQUEST_URI'], PHP_URL_QUERY );
 #   parse_str ( $url_query, $get_vars );
 #   var_dump ( $club_search );
@@ -438,7 +444,7 @@
 #   var_dump ( $url_query );
 #   die ();
 
-//Should check what club and sport were selected previously
+// Should check what club and sport were selected previously
 
     if ( wh_not_null ( $club_search ) && wh_not_null ( $sport_search ) &&
       $club_search != 0 && $sport_search != 0 && wh_null ( $action ) )
@@ -505,7 +511,6 @@
 #       $club -> sports = getSportsByClub ( $club->id );
 
       }
-      wh_db_free_result ( $row_obj );
 #     var_dump ( $club );
 #     die();
     }
@@ -518,8 +523,7 @@
       while ( $row_obj = wh_db_fetch_object_custom ( $club_query ) ) {
         $clubs [ $row_obj->id ] = $row_obj->name;
       }
-      unset ( $club_query );
-      wh_db_free_result ($row_obj);
+      wh_db_free_result ($club_query);
 #     var_dump ( $clubs );
 #     die ();
     }
@@ -531,8 +535,7 @@
       while ( $row_obj = wh_db_fetch_object_custom ( $club_query ) ) {
         $clubs [ $row_obj->id ] = $row_obj->name;
       }
-      unset ( $club_query );
-      wh_db_free_result ($row_obj);
+      wh_db_free_result ($club_query);
 #     var_dump ( $clubs );
 #     die ();
     }
