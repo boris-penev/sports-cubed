@@ -66,8 +66,8 @@ function adjust(){
   // is the side of the cube
   $('#cube').css('margin-top', ((height - 500) / 2) + "px");
 
-  // this is still just the alingment; next is the "resizement"; if we use 620
-  // for the alignment the cube won't be in the center; this is because initialy
+  // this is still just the alignment; next is the "resizement"; if we use 620
+  // for the alignment the cube won't be in the centre; this is because initially
   // it is 500px and after that the side seems to be like 610px;
   $('#cube').css('margin-left', ((width - 500) / 2) + "px");
 

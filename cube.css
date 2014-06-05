@@ -14,12 +14,15 @@ p {
   margin-top:5px;
 }
 
+/*** The wrapper that contains everything and is resized respectively to the screen,
+makes the application responsive ***/
 #bigWrapper {
   overflow: hidden;
   top:0; 
   left:0;
 }
 
+/*** Responsible for creating the perspective and the 3D effects ***/
 #cubeFrame {
   text-align: center;
   perspective:2000px;
@@ -34,6 +37,7 @@ p {
   left:0;
 }
 
+/*** The cube with its sides following ***/
 #cube {
   position:relative;
   height:500px;
@@ -42,17 +46,18 @@ p {
   transition:transform 1s;
   transform-style:preserve-3d;
   transform:rotateX(90deg);
+  
   -webkit-transition:-webkit-transform 1s;
   -webkit-transform-style:preserve-3d;
   -webkit-transform:rotateX(90deg);
+  
   -moz-transition:-moz-transform 1s;
   -moz-transform-style:preserve-3d;
   -moz-transform:rotateX(90deg);
 }
 
 .face {
-  background:#8C8C8C;/*-webkit-linear-gradient(top,#6B6B6B,#B3B3B3);*/
-/*  background:#8C8C8C;*/ /*-moz-linear-gradient(top,#6B6B6B,#B3B3B3);*/
+  background:#8C8C8C;
   position:absolute;
   height:100%;
   width:100%;
@@ -70,8 +75,6 @@ p {
   transform-style: flat;
   backface-visibility: hidden;
   -webkit-transform-style: flat;
-  /* webkit is a bitch at z-sorting css3d-transforms.
-   * Use backface-visibility: hidden as often as you can! */
   -webkit-backface-visibility: hidden;
   -moz-transform-style: flat;
   -moz-backface-visibility: hidden;
@@ -123,6 +126,7 @@ p {
   -o-transform:rotateX(-90deg) translateZ(280px);
 }
 
+/*** These are the cards and the button from the tutorial with explanations ***/
 .tutorial-explanation{
   display:none; 
   position:absolute;
@@ -153,22 +157,7 @@ p {
   width:300px; 
   height: 37px; 
   border-radius: 10px; 
-  margin: 10px; auto 0 auto;
-}
-
-.face_label {
-  width:100%;
-  font-size:60px;
-  font-family:'Corben',cursive;
-  text-align:center;
-  margin-top:10px;
-  font-weight:bold;
-  text-shadow:2px 2px black;
-}
-
-.content_wrapper {
-  margin:-15px auto 30px auto;
-  width:486px;
+  margin: 10px auto 0 auto;
 }
 
 .time_wrapper {
@@ -180,14 +169,14 @@ p {
 }
 
 .sport_wrapper {
-  margin:8px 0 0 0;
+  margin:-15px 0 0 0;
   width:31%;
   float: left;
   text-align:center;
   padding:5px 5px 10px 5px;
 }
 
-.price-wrapper {
+.price_wrapper {
   margin:8px 0 0 0;
   width:47%;
   float: left;
@@ -195,42 +184,7 @@ p {
   padding:5px 5px 10px 5px;
 }
 
-#price_selector {
-  margin:30px auto 0 auto;
-  text-align:center;
-  display:none;
-}
-
-#price_from {
-  width:200px;
-  color:black;
-  font-size:25px;
-  height:30px;
-  border:2;
-  padding:4px 8px;
-  margin-bottom:20px;
-  margin-top: -20px;
-  border-radius:5px;
-  -moz-border-radius:5px;
-  box-shadow:5px 5px 5px black;
-  -moz-box-shadow:5px 5px 5px black;
-}
-
-#price_to {
-  width:200px;
-  color:black;
-  font-size:25px;
-  height:30px;
-  border:2;
-  padding:4px 8px;
-  margin-bottom:20px;
-  margin-top: -20px;
-  border-radius:5px;
-  -moz-border-radius:5px;
-  box-shadow:5px 5px 5px black;
-  -moz-box-shadow:5px 5px 5px black;
-}
-
+/*** time-togglers ***/
 .toggle-buttons {
   font-size:30px;
   color:#4CBB17;
@@ -241,6 +195,7 @@ p {
   text-align: center;
 }
 
+/*** activities-togglers ***/
 .activities {
   font-size:22px;
   color:#4CBB17;
@@ -262,6 +217,7 @@ p {
   text-align: center;
 }
 
+/*** the button All on the price filter ***/
 #all_toggler {
   font-size:50px;
   color:#4CBB17;
@@ -272,27 +228,29 @@ p {
   text-align: center;
 }
 
-.images {
+/*** the yes/no buttons on the 3 filters ***/
+.yes-no-button-sports {
   background-image: url(img/buttons.jpg);
   height: 35px;
   width: 100px;
   margin: 2px auto 0 auto;
 }
 
-.images2 {
+.yes-no-button-time {
   background-image: url(img/buttons.jpg);
   height: 35px;
   width: 100px;
   margin: 10px auto 0 auto;
 }
 
-.images3 {
+.yes-no-button-price {
   background-image: url(img/buttons.jpg);
   height: 35px;
   width: 100px;
   margin: 15px auto 0 auto;
 }
 
+/*** button leading to the map with results ***/
 #resizer {
   display:none;
   z-index:4;
@@ -304,6 +262,7 @@ p {
   border-radius: 15px;
 }
 
+/*** the curtain that dims the screen for the tutorial ***/
 #curtain {
   display:none;
   position:absolute;
