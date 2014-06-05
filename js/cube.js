@@ -1,3 +1,5 @@
+// These remember which buttons on the 3 filters have been clicked and are passed
+// to the browser's storage when going to the map
 var sportsToBeSubmitted = new Array();
 var daysToBeSubmitted = new Array();
 var priceToBeSubmitted = "all";
@@ -108,14 +110,13 @@ function adjust(){
     // currentDeterminerDirection = "+"
   }
 
-  // the actual translation
+  // the actual transition
   document.getElementById('cube').style[prop] += "translate" + determinerAxis +
                               "(" + determinerDirection + "" + depth + "px)";
 }
 
 function frontpanel(){
   $('#resizer').delay(700).fadeIn(1000);
-//  $('#map').delay(700).fadeIn(1000);
 }
 
 
@@ -208,6 +209,12 @@ $('#how-to').click(function(){
   })
 })
 
+// toggling the yes-no-button for prices
+$('.price-togglers > a').click(function(){
+  var obj = $(this);
+  clickPriceToggler(obj);
+})
+
 function clickPriceToggler(obj){
   var btn = obj.parent().text().toLowerCase().replace(" ", "");
   var state = obj.data('clicked');
@@ -223,11 +230,8 @@ function clickPriceToggler(obj){
   }
 }
 
-$('.price-togglers > a').click(function(){
-  var obj = $(this);
-  clickPriceToggler(obj);
-})
-
+// setting what will be saved in the browser storage as price once we go to
+// the map
 $('.price-togglers').click(function(){
   var state = $(this).find('a').data('clicked');
   var price = $(this).text().toLowerCase().replace(" ", "");
@@ -237,6 +241,12 @@ $('.price-togglers').click(function(){
   else {
     priceToBeSubmitted = null;
   }
+})
+
+// toggling the yes-no-buttons for the activities
+$('.activities > a').click(function(){
+  var obj = $(this);
+  clickSportsToggler(obj);
 })
 
 function clickSportsToggler(obj){
@@ -251,13 +261,8 @@ function clickSportsToggler(obj){
   }
 }
 
-$('.activities > a').click(function(){
-  var obj = $(this);
-  clickSportsToggler(obj);
-})
-
-// detecting whether the activity or the weekday checkbox is clicked and
-// populating the browser's storage
+// setting what will be saved in the browser storage as clicked activities once
+// we go to the map
 $('.activities').click(function(){
   var state = $(this).find('a').data('clicked');
   if (state === "yes"){
@@ -269,6 +274,14 @@ $('.activities').click(function(){
     var index = sportsToBeSubmitted.indexOf(sport);
     sportsToBeSubmitted.splice(index, 1);
   }
+})
+
+// setting what will be saved in the browser storage as days once we go to
+// the map
+$('.toggle-buttons').click(function(){
+var state = $(this).find('a').data('clicked');
+var day = $(this).text().toLowerCase();
+ clickDaysTogglers(state, day);
 })
 
 function clickDaysTogglers(state, day){
@@ -294,12 +307,7 @@ function clickDaysTogglers(state, day){
   }
 }
 
-$('.toggle-buttons').click(function(){
-var state = $(this).find('a').data('clicked');
-var day = $(this).text().toLowerCase();
- clickDaysTogglers(state, day);
-})
-
+// toggling the yes-no-buttons for the days
 $('.toggle-buttons > a').click(function(){
   var btn = $(this).parent().text();
   var clicked = $(this).data('clicked');
@@ -331,7 +339,7 @@ $('.toggle-buttons > a').click(function(){
   }
 })
 
-
+// triggered if the screen dimensions change
 $(window).resize(function() {
 
 // reseting the perpective and returning the center of the cube at (0,0,0)
@@ -373,47 +381,55 @@ function gesturePerformed(type)
   else if (type == "swipeup" || type == "dragup"){
     type = "swipeup";
   }
-  // NEEDINFO: What is this doing and why is it here
-  // BUG: Swipes do not work for me, is it because of this?
-  if ((type == "swiperight" && isLeft()  ) ||
-      (type == "swipedown"  && isTop ()  ) ||
-      (type == "swipeleft"  && isRight() ) ||
-      (type == "swipeup"    && isBottom()) )
-  {
-    var pressed = false;
+  
     $('#resizer').delay(800).fadeOut(500);
+	
     switch (type) {
       case "swiperight": // left
         if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "+";
-          $('#price_to').blur();
-          pressed = true;
           yAngle += 90;
+          currentWall = "left";
           zoomIn();
         }
-        else if ( isRight()) {
+        else if ( isRight() ) {
           determinerAxis = "Z";
           determinerDirection = "-";
-          $('#price_to').blur();
-          pressed = true;
           yAngle += 90;
+          currentWall = "front";
           zoomIn();
         }
         else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "+";
-          pressed = true;
           xAngle += 90;
           yAngle += 90;
+          currentWall = "left";
           zoomIn();
         }
         else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           yAngle += 90;
+          currentWall = "left";
+          zoomIn();
+        }
+        else if ( isLeft ( ) )
+        {
+          determinerAxis = "Z";
+          determinerDirection = "+";
+          yAngle += 90;
+          currentWall = "back";
+          zoomIn();
+        }
+        else if ( isBack ( ) )
+        {
+          determinerAxis = "X";
+          determinerDirection = "-";
+          yAngle += 90;
+          currentWall = "right";
           zoomIn();
         }
         break;
@@ -423,34 +439,51 @@ function gesturePerformed(type)
         {
           determinerAxis = "Y";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
+          currentWall = "top";
           zoomIn();
         }
-        else if ( isBottom())
+        else if ( isTop() ) {
+          determinerAxis = "Z";
+          determinerDirection = "+";
+          xAngle += 90;
+          yAngle += 180;
+          currentWall = "back";
+          zoomIn();
+        }
+        else if ( isBottom() )
         {
           determinerAxis = "Z";
           determinerDirection = "-";
-          pressed = true;
           xAngle -= 90;
+          currentWall = "front";
           zoomIn();
         }
-        else if ( isLeft ( ) )
+        else if ( isLeft () )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           yAngle -= 90;
+          currentWall = "top";
           zoomIn();
         }
-        else if ( isRight ( ) )
+        else if ( isRight () )
         {
           determinerAxis = "Y";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           yAngle += 90;
+          currentWall = "top";
+          zoomIn();
+        }
+        else if ( isBack ( ) )
+        {
+          determinerAxis = "Y";
+          determinerDirection = "+";
+          xAngle -= 90;
+          yAngle += 180;
+          currentWall = "top";
           zoomIn();
         }
         break;
@@ -459,31 +492,47 @@ function gesturePerformed(type)
         if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "-";
-          pressed = true;
           yAngle -= 90;
+          currentWall = "right";
           zoomIn();
         }
         else if ( isLeft() ) {
           determinerAxis = "Z";
           determinerDirection = "-";
-          pressed = true;
           yAngle -= 90;
+          currentWall = "front";
           zoomIn();
         }
         else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           yAngle -= 90;
+          currentWall = "right";
           zoomIn();
         }
         else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "-";
-          pressed = true;
           xAngle -= 90;
           yAngle -= 90;
+          currentWall = "right";
+          zoomIn();
+        }
+        else if ( isRight () )
+        {
+          determinerAxis = "Z";
+          determinerDirection = "+";
+          yAngle -= 90;
+          currentWall = "back";
+          zoomIn();
+        }
+        else if ( isBack () )
+        {
+          determinerAxis = "X";
+          determinerDirection = "+";
+          yAngle -= 90;
+          currentWall = "left";
           zoomIn();
         }
         break;
@@ -492,54 +541,60 @@ function gesturePerformed(type)
         if ( isFront() ) {
           determinerAxis = "Y";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
+          currentWall = "bottom";
           zoomIn();
         }
-        else if ( isTop ( ) )
+        else if ( isTop () )
         {
           determinerAxis = "Z";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
+          currentWall = "front";
           zoomIn();
         }
-        else if ( isLeft ( ) )
+        else if ( isLeft () )
         {
           determinerAxis = "Y";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           yAngle -= 90;
+          currentWall = "bottom";
           zoomIn();
         }
-        else if ( isRight ( ) )
+        else if ( isRight () )
         {
           determinerAxis = "Y";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           yAngle += 90;
+          currentWall = "bottom";
           zoomIn();
         }
         else if ( isBottom() ) {
-          // TODO: Not tested, need swipe working
-          // Currently the wall is disappearing
-          // Should I add currentWall = "left" ?
-          determinerAxis = "X";
-          determinerDirection = "-";
-          pressed = true;
+          determinerAxis = "Z";
+          determinerDirection = "+";
           xAngle -= 90;
           yAngle += 180;
+          currentWall = "back";
+          zoomIn();
+        }
+        else if ( isBack ( ) )
+        {
+          determinerAxis = "Y";
+          determinerDirection = "-";
+          xAngle += 90;
+          yAngle += 180;
+          currentWall = "bottom";
           zoomIn();
         }
         break;
     }
-    if ( pressed ) {
-      document.getElementById('cube').style[prop] +=
+	
+    document.getElementById('cube').style[prop] +=
               "translate" + currentDeterminerAxis +
               "(" + currentDeterminerDirection + "" + depth+"px)";
-    }
+			  
     document.getElementById('cube').style[prop] =
             "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
     document.getElementById('cube').style[prop] +=
@@ -552,7 +607,6 @@ function gesturePerformed(type)
     else {
       currentDeterminerDirection = "+";
     }
-  }
 }
 
 // detecting when a key is pressed and passing this key to the keydownEvent
@@ -571,7 +625,6 @@ function keydownEvent( evt ) {
   if ( evt.keyCode == 65 || evt.keyCode == 68 ||
        evt.keyCode == 87 || evt.keyCode == 83 )
   {
-    var pressed = false;
     if ( isFront() && ( evt.keyCode == 65 || evt.keyCode == 87 ||
                         evt.keyCode == 68 || evt.keyCode == 83 ) ) {
       $('#resizer').delay(800).fadeOut(500);
@@ -581,8 +634,6 @@ function keydownEvent( evt ) {
         if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "+";
-          $('#price_to').blur();
-          pressed = true;
           yAngle += 90;
           currentWall = "left";
           zoomIn();
@@ -590,8 +641,6 @@ function keydownEvent( evt ) {
         else if ( isRight() ) {
           determinerAxis = "Z";
           determinerDirection = "-";
-          $('#price_to').blur();
-          pressed = true;
           yAngle += 90;
           currentWall = "front";
           zoomIn();
@@ -599,7 +648,6 @@ function keydownEvent( evt ) {
         else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "+";
-          pressed = true;
           xAngle += 90;
           yAngle += 90;
           currentWall = "left";
@@ -608,7 +656,6 @@ function keydownEvent( evt ) {
         else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           yAngle += 90;
           currentWall = "left";
@@ -618,7 +665,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Z";
           determinerDirection = "+";
-          pressed = true;
           yAngle += 90;
           currentWall = "back";
           zoomIn();
@@ -627,7 +673,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "X";
           determinerDirection = "-";
-          pressed = true;
           yAngle += 90;
           currentWall = "right";
           zoomIn();
@@ -639,15 +684,13 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Y";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           currentWall = "top";
           zoomIn();
         }
         else if ( isTop() ) {
-          determinerAxis = "X";
+          determinerAxis = "Z";
           determinerDirection = "+";
-          pressed = true;
           xAngle += 90;
           yAngle += 180;
           currentWall = "back";
@@ -657,7 +700,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Z";
           determinerDirection = "-";
-          pressed = true;
           xAngle -= 90;
           currentWall = "front";
           zoomIn();
@@ -666,7 +708,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Y";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           yAngle -= 90;
           currentWall = "top";
@@ -676,7 +717,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Y";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           yAngle += 90;
           currentWall = "top";
@@ -684,9 +724,8 @@ function keydownEvent( evt ) {
         }
         else if ( isBack ( ) )
         {
-          determinerAxis = "X";
-          determinerDirection = "-";
-          pressed = true;
+          determinerAxis = "Y";
+          determinerDirection = "+";
           xAngle -= 90;
           yAngle += 180;
           currentWall = "top";
@@ -698,7 +737,6 @@ function keydownEvent( evt ) {
         if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "-";
-          pressed = true;
           yAngle -= 90;
           currentWall = "right";
           zoomIn();
@@ -706,7 +744,6 @@ function keydownEvent( evt ) {
         else if ( isLeft() ) {
           determinerAxis = "Z";
           determinerDirection = "-";
-          pressed = true;
           yAngle -= 90;
           currentWall = "front";
           zoomIn();
@@ -714,7 +751,6 @@ function keydownEvent( evt ) {
         else if ( isTop() ) {
           determinerAxis = "X";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           yAngle -= 90;
           currentWall = "right";
@@ -723,7 +759,6 @@ function keydownEvent( evt ) {
         else if ( isBottom() ) {
           determinerAxis = "X";
           determinerDirection = "-";
-          pressed = true;
           xAngle -= 90;
           yAngle -= 90;
           currentWall = "right";
@@ -733,7 +768,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Z";
           determinerDirection = "+";
-          pressed = true;
           yAngle -= 90;
           currentWall = "back";
           zoomIn();
@@ -742,7 +776,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "X";
           determinerDirection = "+";
-          pressed = true;
           yAngle -= 90;
           currentWall = "left";
           zoomIn();
@@ -753,7 +786,6 @@ function keydownEvent( evt ) {
         if ( isFront() ) {
           determinerAxis = "Y";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           currentWall = "bottom";
           zoomIn();
@@ -762,7 +794,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Z";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           currentWall = "front";
           zoomIn();
@@ -771,7 +802,6 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Y";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           yAngle -= 90;
           currentWall = "bottom";
@@ -781,16 +811,14 @@ function keydownEvent( evt ) {
         {
           determinerAxis = "Y";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           yAngle += 90;
           currentWall = "bottom";
           zoomIn();
         }
         else if ( isBottom() ) {
-          determinerAxis = "X";
+          determinerAxis = "Z";
           determinerDirection = "+";
-          pressed = true;
           xAngle -= 90;
           yAngle += 180;
           currentWall = "back";
@@ -798,9 +826,8 @@ function keydownEvent( evt ) {
         }
         else if ( isBack ( ) )
         {
-          determinerAxis = "X";
+          determinerAxis = "Y";
           determinerDirection = "-";
-          pressed = true;
           xAngle += 90;
           yAngle += 180;
           currentWall = "bottom";
@@ -808,11 +835,10 @@ function keydownEvent( evt ) {
         }
         break;
     }
-    if ( pressed ) {
-      document.getElementById('cube').style[prop] +=
+
+    document.getElementById('cube').style[prop] +=
             "translate" + currentDeterminerAxis  + "(" +
             currentDeterminerDirection + "" + depth + "px)";
-    }
     document.getElementById('cube').style[prop] =
             "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
     document.getElementById('cube').style[prop] +=
