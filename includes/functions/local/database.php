@@ -147,10 +147,12 @@
     {
       array_push ( $days, 10 );
     }
-//Not needed - the input doesn't currently contain 9 or 10
+    // Not needed - the input doesn't currently contain 9 or 10
 #   if ( in_array ( 10, $days ) ) {
 #     array_push ( $days, 6, 7 );
 #   }
+    // If all days are selected, simply return false
+    // This means there is no need for days check in queries
     $real_days = array_intersect ( $days, range(1, 7) );
     if ( $real_days == range (1, 7) ) {
       return false;
@@ -167,6 +169,8 @@
     return $days;
   }
 
+  /* Replaces value in array, using a reference to the array
+   */
   function array_replace_value(&$ar, $value, $replacement)
   {
     if ( ( $key = array_search($value, $ar) ) !== false )
@@ -174,7 +178,6 @@
       $ar[$key] = $replacement;
     }
   }
-
 
   function getClubs ( )
   {
@@ -664,6 +667,8 @@
       ? wh_db_query ( $query ) : null;
   }
 
+  /* Deletes empty entries from clubosport
+   */
   function cleanClubosport ( $club )
   {
     $query = "delete from clubosport where club_id = {$club} "
@@ -674,102 +679,4 @@
       ? wh_db_query ( $query ) : null;
   }
 
-  function buildTimesArrayAll ($times)
-  {
-    if ( ! wh_not_null ($times['open']) || ! wh_not_null ($times['close']) )
-    {
-      $times['open'] = 'null';
-      $times['close'] = 'null';
-    }
-    return $times;
-  }
-
-  function buildPricesArrayAll ($prices)
-  {
-    if ( ! wh_not_null ($prices['member']) )
-    {
-      $prices['member'] = 'null';
-    }
-    if ( ! wh_not_null ($prices['nonmember']) )
-    {
-      $prices['nonmember'] = 'null';
-    }
-    return $prices;
-  }
-
-  function buildTimesArrayWorking ($times)
-  {
-    if ( ! is_array($times['working'])
-        || ! wh_not_null ($times['working']['open'])
-        || ! wh_not_null ($times['working']['close']) )
-    {
-      $times['working']['open'] = 'null';
-      $times['working']['close'] = 'null';
-    }
-    if ( ! is_array($times['weekend'])
-        || ! wh_not_null ($times['weekend']['open'])
-        || ! wh_not_null ($times['weekend']['close']) )
-    {
-      $times['weekend']['open'] = 'null';
-      $times['weekend']['close'] = 'null';
-    }
-    return $times;
-  }
-
-  function buildPricesArrayWorking ($times)
-  {
-    if ( ! is_array($prices['working'])
-        || ! wh_not_null ($prices['working']['member']) )
-    {
-      $prices['working']['member'] = 'null';
-    }
-    if ( ! is_array($prices['working'])
-        || ! wh_not_null ($prices['working']['nonmember']) )
-    {
-      $prices['working']['nonmember'] = 'null';
-    }
-    if ( ! is_array($prices['weekend'])
-        || ! wh_not_null ($prices['weekend']['member']) )
-    {
-      $prices['weekend']['member'] = 'null';
-    }
-    if ( ! is_array($prices['weekend'])
-        || ! wh_not_null ($prices['weekend']['nonmember']) )
-    {
-      $prices['weekend']['nonmember'] = 'null';
-    }
-    return $prices;
-  }
-
-  function buildTimesArraySeparately ($times)
-  {
-    for ($i = 1; $i < 8; ++$i)
-    {
-      if ( ! is_array($times[$i])
-        || ! wh_not_null ($times[$i]['open']) || ! wh_not_null ($times[$i]['close']) )
-      {
-        $times[$i]['open'] = 'null';
-        $times[$i]['close'] = 'null';
-      }
-    }
-    return $times;
-  }
-
-  function buildPricesArraySeparately ($times)
-  {
-    for ($i = 1; $i < 8; ++$i)
-    {
-      if ( ! is_array($prices[$i])
-          || ! wh_not_null ($prices[$i]['member']) )
-      {
-        $prices['member'] = 'null';
-      }
-      if ( ! is_array($prices[$i])
-          || ! wh_not_null ($prices[$i]['nonmember']) )
-      {
-        $prices['nonmember'] = 'null';
-      }
-    }
-    return $prices;
-  }
 ?>

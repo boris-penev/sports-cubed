@@ -74,16 +74,14 @@
           wh_db_post_input_string ( "selectDaysViewPrice{$sport_id}" );
       $select_days_view = ( $select_days_view_time == $select_days_view_price )
         ? $select_days_view_time : null;
-      //TODO Times and prices arrays are not always used but should be
       $times = array();
       $prices = array();
-      if ( $select_days_view == 'all' )
+
+      // Build times array
+      if ( $select_days_view_time == 'all' )
       {
         $time_open = wh_db_post_input_string ( "timeOpenAll{$sport_id}" );
         $time_close = wh_db_post_input_string ( "timeCloseAll{$sport_id}" );
-        $price_member = wh_db_post_input_string ( "priceMemberAll{$sport_id}" );
-        $price_nonmember = wh_db_post_input_string ( "priceNonmemberAll{$sport_id}" );
-
         //set variables to null if zeroes
         if ( $time_open == '00:00:00' ) {
           $time_open = null;
@@ -91,173 +89,182 @@
         if ( $time_close == '00:00:00' ) {
           $time_close = null;
         }
-        if ( $price_member != null && (float) $price_member == 0.0 ) {
-          $price_member = null;
+        if ( wh_not_null ( $time_open ) && wh_not_null ( $time_close ) ) {
+          $times = [ 'open' => $time_open, 'close' => $time_close ];
+        } else {
+          $times = [ 'open' => null, 'close' => null ];
         }
-        if ( $price_nonmember != null && (float) $price_nonmember == 0.0 ) {
-          $price_nonmember = null;
+      }
+      elseif ( $select_days_view_time == 'working' )
+      {
+        $time_open_working =
+          wh_db_post_input_string ( "timeOpenWorking{$sport_id}" );
+        $time_close_working =
+          wh_db_post_input_string ( "timeCloseWorking{$sport_id}" );
+        $time_open_weekend =
+          wh_db_post_input_string ( "timeOpenWeekend{$sport_id}" );
+        $time_close_weekend =
+          wh_db_post_input_string ( "timeCloseWeekend{$sport_id}" );
+
+        //set variables to null if zeroes
+        if ( $time_open_working == '00:00:00' ) {
+          $time_open_working = null;
+        }
+        if ( $time_close_working == '00:00:00' ) {
+          $time_close_working = null;
+        }
+        if ( $time_open_weekend == '00:00:00' ) {
+          $time_open_weekend = null;
+        }
+        if ( $time_close_weekend == '00:00:00' ) {
+          $time_close_weekend = null;
         }
 
-        if ( wh_not_null ( $time_open ) && wh_not_null ( $time_close ) )
-        {
-#         $times = array();
-          $times['open'] = $time_open;
-          $times['close'] = $time_close;
+        if ( wh_not_null ( $time_open_working )
+              && wh_not_null ( $time_close_working ) ) {
+          $times['working'] =
+            [ 'open' => $time_open_working, 'close' => $time_close_working ];
+        } else {
+          $times['working'] = [ 'open' => null, 'close' => null ];
         }
-        if ( wh_not_null ( $price_member ) || wh_not_null ( $price_nonmember ) )
-        {
-#         $prices = array();
-          if ( wh_not_null ( $price_member ) ) {
-            $prices['member'] = $price_member;
-          }
-          if ( wh_not_null ( $price_nonmember ) ) {
-            $prices['nonmember'] = $price_nonmember;
-          }
+        if ( wh_not_null ( $time_open_weekend )
+              && wh_not_null ( $time_close_weekend ) ) {
+          $times['weekend'] =
+            [ 'open' => $time_open_weekend, 'close' => $time_close_weekend ];
+        } else {
+          $times['weekend'] = [ 'open' => null, 'close' => null ];
         }
-        $times  = buildTimesArrayAll  ($times);
-        $prices = buildPricesArrayAll ($prices);
-        setSportsTimePriceAll ( $club_id, $sport_id, $times, $prices );
       }
-      elseif ( $select_days_view == 'working' )
+      elseif ( $select_days_view_time == 'separately' )
       {
-        $time_open_working = wh_db_post_input_string ( "timeOpenWorking{$sport_id}" );
-        $time_open_weekend = wh_db_post_input_string ( "timeOpenWeekend{$sport_id}" );
-        $time_close_working = wh_db_post_input_string ( "timeCloseWorking{$sport_id}" );
-        $time_close_weekend = wh_db_post_input_string ( "timeCloseWeekend{$sport_id}" );
-        $price_member_working = wh_db_post_input_string ( "priceMemberWorking{$sport_id}" );
-        $price_member_weekend = wh_db_post_input_string ( "priceMemberWeekend{$sport_id}" );
-        $price_nonmember_working = wh_db_post_input_string ( "priceNonmemberWorking{$sport_id}" );
-        $price_nonmember_weekend = wh_db_post_input_string ( "priceNonmemberWeekend{$sport_id}" );
-        $times  = buildTimesArrayWorking  ($times);
-        $prices = buildPricesArrayWorking ($prices);
-        setSportsTimePriceWorking ( $club_id, $sport_id, $times, $prices );
-      }
-      elseif ( $select_days_view == 'separately' )
-      {
-        $times = array();
-        $prices = array();
         for ($i = 1; $i < 8; ++$i)
         {
-          $time_open = wh_db_post_input_string ( "timeOpenDay{$i}_{$sport_id}" );
-          $time_close = wh_db_post_input_string ( "timeCloseDay{$i}_{$sport_id}" );
-          $price_member = wh_db_post_input_string ( "priceMemberDay{$i}_{$sport_id}" );
-          $price_nonmember = wh_db_post_input_string ( "priceNonmemberDay{$i}_{$sport_id}" );
+          $time_open =
+            wh_db_post_input_string ( "timeOpenDay{$i}_{$sport_id}" );
+          $time_close =
+            wh_db_post_input_string ( "timeCloseDay{$i}_{$sport_id}" );
+
+          //set variables to null if zeroes
           if ( $time_open == '00:00:00' ) {
             $time_open = null;
           }
           if ( $time_close == '00:00:00' ) {
             $time_close = null;
           }
+          if ( wh_not_null ( $time_open ) && wh_not_null ( $time_close ) ) {
+            $times[$i] = [ 'open' => $time_open, 'close' => $time_close ];
+          } else {
+            $times[$i] = [ 'open' => null, 'close' => null ];
+          }
+        }
+      }
+      // Build prices array
+      if ( $select_days_view_price == 'all' )
+      {
+        $price_member =
+          wh_db_post_input_string ( "priceMemberAll{$sport_id}" );
+        $price_nonmember =
+          wh_db_post_input_string ( "priceNonmemberAll{$sport_id}" );
+        //set variables to null if zeroes
+        if ( $price_member != null && (float) $price_member == 0.0 ) {
+          $price_member = null;
+        }
+        if ( $price_nonmember != null && (float) $price_nonmember == 0.0 ) {
+          $price_nonmember = null;
+        }
+        $prices = [
+          'member' => wh_not_null($price_member) ? $price_member : null,
+          'nonmember' => wh_not_null($price_nonmember) ?
+            $price_nonmember : null ];
+      }
+      elseif ( $select_days_view_price == 'working' )
+      {
+        $prices['working']['member'] =
+          wh_db_post_input_string ( "priceMemberWorking{$sport_id}" );
+        $prices['working']['nonmember'] =
+          wh_db_post_input_string ( "priceNonmemberWorking{$sport_id}" );
+        $prices['weekend']['member'] =
+          wh_db_post_input_string ( "priceMemberWeekend{$sport_id}" );
+        $prices['weekend']['nonmember'] =
+          wh_db_post_input_string ( "priceNonmemberWeekend{$sport_id}" );
+
+        //set variables to null if zeroes
+        if ( $prices['working']['member'] != null
+              && (float) $prices['working']['member'] == 0.0 ) {
+          $prices['working']['member'] = null;
+        }
+        if ( $prices['working']['nonmember'] != null
+              && (float) $prices['working']['nonmember'] == 0.0 ) {
+          $prices['working']['nonmember'] = null;
+        }
+        if ( $prices['weekend']['member'] != null
+              && (float) $prices['weekend']['member'] == 0.0 ) {
+          $prices['weekend']['member'] = null;
+        }
+        if ( $prices['weekend']['nonmember'] != null
+              && (float) $prices['weekend']['nonmember'] == 0.0 ) {
+          $prices['weekend']['nonmember'] = null;
+        }
+      }
+      elseif ( $select_days_view_price == 'separately' )
+      {
+        for ($i = 1; $i < 8; ++$i)
+        {
+          $price_member =
+            wh_db_post_input_string ( "priceMemberDay{$i}_{$sport_id}" );
+          $price_nonmember =
+            wh_db_post_input_string ( "priceNonmemberDay{$i}_{$sport_id}" );
+
+          //set variables to null if zeroes
           if ( $price_member != null && (float) $price_member == 0.0 ) {
             $price_member = null;
           }
           if ( $price_nonmember != null && (float) $price_nonmember == 0.0 ) {
             $price_nonmember = null;
           }
-          if ( wh_not_null ( $time_open ) && wh_not_null ( $time_close ) )
-          {
-            $times[$i] = array();
-            $times[$i]['open'] = $time_open;
-            $times[$i]['close'] = $time_close;
-          }
-          if ( wh_not_null ( $price_member ) || wh_not_null ( $price_nonmember ) )
-          {
-            $prices[$i] = array();
-            if ( wh_not_null ( $price_member ) ) {
-              $prices[$i]['member'] = $price_member;
-            }
-            if ( wh_not_null ( $price_nonmember ) ) {
-              $prices[$i]['nonmember'] = $price_nonmember;
-            }
-          }
+          $prices[$i] = [
+            'member' => wh_not_null($price_member) ? $price_member : null,
+            'nonmember' => wh_not_null($price_nonmember) ?
+              $price_nonmember : null ];
         }
-        $times  = buildTimesArraySeparately  ($times);
-        $prices = buildPricesArraySeparately ($prices);
+      }
+      // Set times and prices when both schedules identical
+      if ( $select_days_view == 'all' ) {
+        setSportsTimePriceAll ( $club_id, $sport_id, $times, $prices );
+      }
+      elseif ( $select_days_view == 'working' ) {
+        setSportsTimePriceWorking ( $club_id, $sport_id, $times, $prices );
+      }
+      elseif ( $select_days_view == 'separately' ) {
         setSportsTimePriceSeparately ( $club_id, $sport_id, $times, $prices );
       }
       else
       {
-        if ( $select_days_view_time == 'all' )
-        {
-          $time_open = wh_db_post_input_string ( "timeOpenAll{$sport_id}" );
-          $time_close = wh_db_post_input_string ( "timeCloseAll{$sport_id}" );
+        // Set times
+        if ( $select_days_view_time == 'all' ) {
+          setSportsTimeAll ( $club_id, $sport_id, $times );
         }
-        elseif ( $select_days_view_time == 'working' )
-        {
-          $time_open_working = wh_db_post_input_string ( "timeOpenWorking{$sport_id}" );
-          $time_open_weekend = wh_db_post_input_string ( "timeOpenWeekend{$sport_id}" );
-          $time_close_working = wh_db_post_input_string ( "timeCloseWorking{$sport_id}" );
-          $time_close_weekend = wh_db_post_input_string ( "timeCloseWeekend{$sport_id}" );
+        elseif ( $select_days_view_time == 'working' ) {
+          setSportsTimeWorking ( $club_id, $sport_id, $times );
         }
-        elseif ( $select_days_view_time == 'separately' )
-        {
-          $times = array();
-          for ($i = 1; $i < 8; ++$i)
-          {
-            $time_open = wh_db_post_input_string ( "timeOpenDay{$i}_{$sport_id}" );
-            $time_close = wh_db_post_input_string ( "timeCloseDay{$i}_{$sport_id}" );
-            if ( $time_open == '00:00:00' ) {
-              $time_open = null;
-            }
-            if ( $time_close == '00:00:00' ) {
-              $time_close = null;
-            }
-            if ( wh_not_null ( $time_open ) && wh_not_null ( $time_close ) )
-            {
-              $times[$i] = array();
-              $times[$i]['open'] = $time_open;
-              $times[$i]['close'] = $time_close;
-            }
-          }
-          $times  = buildTimesArraySeparately  ($times);
+        elseif ( $select_days_view_time == 'separately' ) {
           setSportsTimeSeparately ( $club_id, $sport_id, $times );
         }
-        if ( $select_days_view_price == 'all' )
-        {
-          $price_member = wh_db_post_input_string ( "priceMemberAll{$sport_id}" );
-          $price_nonmember = wh_db_post_input_string ( "priceNonmemberAll{$sport_id}" );
+        // Set prices
+        if ( $select_days_view_price == 'all' ) {
+          setSportsPriceAll ( $club_id, $sport_id, $prices );
         }
-        elseif ( $select_days_view_price == 'working' )
-        {
-          $price_member_working = wh_db_post_input_string ( "priceMemberWorking{$sport_id}" );
-          $price_member_weekend = wh_db_post_input_string ( "priceMemberWeekend{$sport_id}" );
-          $price_nonmember_working = wh_db_post_input_string ( "priceNonmemberWorking{$sport_id}" );
-          $price_nonmember_weekend = wh_db_post_input_string ( "priceNonmemberWeekend{$sport_id}" );
+        elseif ( $select_days_view_price == 'working' ) {
+          setSportsPriceWorking ( $club_id, $sport_id, $prices );
         }
-        elseif ( $select_days_view_price == 'separately' )
-        {
-          $prices = array();
-          for ($i = 1; $i < 8; ++$i)
-          {
-            $price_member = wh_db_post_input_string ( "priceMemberDay{$i}_{$sport_id}" );
-            $price_nonmember = wh_db_post_input_string ( "priceNonmemberDay{$i}_{$sport_id}" );
-            if ( $price_member != null && (float) $price_member == 0.0 ) {
-              $price_member = null;
-            }
-            if ( $price_nonmember != null && (float) $price_nonmember == 0.0 ) {
-              $price_nonmember = null;
-            }
-            if ( wh_not_null ( $price_member ) || wh_not_null ( $price_nonmember ) )
-            {
-              $prices[$i] = array();
-              if ( wh_not_null ( $price_member ) ) {
-                $prices[$i]['member'] = $price_member;
-              }
-              if ( wh_not_null ( $price_nonmember ) ) {
-                $prices[$i]['nonmember'] = $price_nonmember;
-              }
-            }
-          }
-          $prices = buildPricesArraySeparately ($prices);
+        elseif ( $select_days_view_price == 'separately' ) {
           setSportsPriceSeparately ( $club_id, $sport_id, $prices );
         }
       }
-    }
+    } //end while $sport = wh_db_fetch...
     wh_db_free_result($sports_query);
-    //INSERT INTO clubosport (club_id, sport_id, day_id, price_nonmember)
-    //VALUES (102, 1, 2, 60)
-    //ON DUPLICATE KEY UPDATE price_nonmember=60
 
+    // Delete empty entries from clubosport
     cleanClubosport ($club_id);
 
     // Reading post request to fill input elements of the form
