@@ -495,7 +495,7 @@
   function setSportsTimeAll ( $club, $sport, $times )
   {
     $query = 'update clubosport set opening_time=null, closing_time=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'opening_time, closing_time ) ';
     $query .= "values ( {$club}, {$sport}, 8, "
@@ -510,7 +510,7 @@
   function setSportsPriceAll ( $club, $sport, $prices )
   {
     $query = 'update clubosport set price_member=null, price_nonmember=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'price_member, price_nonmember ) ';
     $query .= "values ( {$club}, {$sport}, 8, "
@@ -526,7 +526,7 @@
   {
     $query = 'update clubosport set opening_time=null, closing_time=null, '
            . 'price_member=null, price_nonmember=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'opening_time, closing_time, price_member, price_nonmember ) ';
     $query .= "values ( {$club}, {$sport}, 8, "
@@ -545,7 +545,7 @@
   function setSportsTimeWorking ( $club, $sport, $times )
   {
     $query = 'update clubosport set opening_time=null, closing_time=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'opening_time, closing_time ) values';
     $query .= " ( {$club}, {$sport}, 9, "
@@ -562,7 +562,7 @@
   function setSportsPriceWorking ( $club, $sport, $prices )
   {
     $query = 'update clubosport set price_member=null, price_nonmember=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'price_member, price_nonmember ) values';
     $query .= "values ( {$club}, {$sport}, 9, {$prices['working']['member']}, "
@@ -580,7 +580,7 @@
   {
     $query = 'update clubosport set opening_time=null, closing_time=null, '
            . 'price_member=null, price_nonmember=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'opening_time, closing_time, price_member, price_nonmember ) ';
     $query .= " ( {$club}, {$sport}, 9, "
@@ -606,7 +606,7 @@
   function setSportsTimeSeparately ( $club, $sport, $times )
   {
     $query = 'update clubosport set opening_time=null, closing_time=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'opening_time, closing_time ) values';
     for ($i = 1; $i < 8; ++$i)
@@ -625,7 +625,7 @@
   function setSportsPriceSeparately ( $club, $sport, $prices )
   {
     $query = 'update clubosport set price_member=null, price_nonmember=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
                 . 'price_member, price_nonmember ) values';
     for ($i = 1; $i < 8; ++$i)
@@ -645,7 +645,7 @@
   {
     $query = 'update clubosport set opening_time=null, closing_time=null, '
            . 'price_member=null, price_nonmember=null '
-           . "where club_id = {$club};" . PHP_EOL;
+           . "where club_id = {$club} and sport_id = {$sport};" . PHP_EOL;
 
     $query .= 'insert into clubosport ( club_id, sport_id, day_id, '
             . 'opening_time, closing_time, price_member, price_nonmember ) '
