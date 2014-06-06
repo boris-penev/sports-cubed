@@ -79,7 +79,9 @@
   </form>
 
 <?php
-		if ( ! is_null  ( $club ) )
+		if ( ! is_null  ( $club )
+        && ! is_null ( $club->id ) && is_numeric ( $club->id )
+        && wh_db_fetch_object_custom ( getClubByName ($club->name) ) != false )
 		{
 #			$name = wh_db_post_input_string ( 'club_search' );
 #			getClubByName ( $name );

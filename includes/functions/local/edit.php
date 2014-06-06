@@ -231,6 +231,7 @@
       // Set times and prices when both schedules identical
       if ( $select_days_view == 'all' ) {
         $is_it_true = setSportsTimePriceAll ( $club_id, $sport_id, $times, $prices );
+        //BUG Not working for some reason, the code here is for testing purposes
         if ($is_it_true === true)
         {
           $i_am_happy = true;
