@@ -62,6 +62,95 @@
     $phone = wh_db_post_input_string ( 'phone' );
 
     //TODO Limit length for not only comment but also email, phone and others
+    
+    // Setting global schedules and prices for club
+    // It there are individual schedules/prices, they will be active instead
+/*     $time_open = wh_db_post_input_string ( 'time_open_global' );
+    
+    // previous to PHP 5.1.0 you would compare with -1, instead of false
+    //if (($timestamp = strtotime($time_open)) === false) {
+    if ( wh_not_null ($time_open) && strtotime($time_open) === false ) {
+      wh_define ( 'TEXT_ERROR',
+      '<strong style="color: #FF0000">Opening time is not a valid time</strong>' );
+      return;
+    }
+    //else {
+    //die ("$time_open == " . date('l dS \o\f F Y h:i:s A', $timestamp));
+    //}
+    
+    $time_close = wh_db_post_input_string ( 'time_close_global' );
+    
+    if ( wh_not_null ($time_close) && strtotime($time_close) === false ) {
+      wh_define ( 'TEXT_ERROR',
+      '<strong style="color: #FF0000">Closing time is not a valid time</strong>' );
+      return;
+    }
+    
+    $price_member = wh_db_post_input_string ( 'price_member_global' );
+    
+    if ( wh_not_null ($price_member) && ! is_numeric ( $price_member ) )
+    {
+      wh_define ( 'TEXT_ERROR',
+      '<strong style="color: #FF0000">Members price is not numeric</strong>' );
+      return;
+    }
+    
+    $price_nonmember = wh_db_post_input_string ( 'price_nonmember_global' );
+    
+    if ( wh_not_null ($price_nonmember) && ! is_numeric ( $price_nonmember ) )
+    {
+      wh_define ( 'TEXT_ERROR',
+      '<strong style="color: #FF0000">Non members price is not numeric</strong>' );
+      return;
+    }
+    
+    $everyday = wh_db_post_input_prepare ( 'everyday' );
+    if ( $everyday != true )
+    {
+      $days = array ( );
+      if ( wh_db_post_input_check ( 'monday' ) )
+        $days ['monday'] = 1;
+      if ( wh_db_post_input_check ( 'tuesday' ) )
+        $days ['tuesday'] = 2;
+      if ( wh_db_post_input_check ( 'wednesday' ) )
+        $days ['wednesday'] = 3;
+      if ( wh_db_post_input_check ( 'thursday' ) )
+        $days ['thursday'] = 4;
+      if ( wh_db_post_input_check ( 'friday' ) )
+        $days ['friday'] = 5;
+      if ( wh_db_post_input_check ( 'saturday' ) )
+        $days ['saturday'] = 6;
+      if ( wh_db_post_input_check ( 'sunday' ) )
+        $days ['sunday'] = 7;
+    }
+    $sports = wh_db_post_input_prepare_array ( 'sports' );
+    
+    // as of PHP 5.4
+    $data = [
+      "name" => $name,
+      "address" => $address,
+      "postcode" => $postcode,
+      "latitude" => $latitude,
+      "longtitude" => $longtitude,
+      "comment" => $comment,
+      "email" => $email,
+      "phone" => $phone
+    ]; */
+    
+    // as of PHP 5.4
+    $data = [
+      "name" => $name,
+      "address" => $address,
+      "postcode" => $postcode,
+      "latitude" => $latitude,
+      "longtitude" => $longtitude,
+      "comment" => $comment,
+      "email" => $email,
+      "phone" => $phone
+    ];
+    
+    wh_db_perform ( 'clubs', $data, 'update', "id = '{$club_id}'"  );
+    unset ( $data );
 
     $sports_query = getSports ();
 
@@ -272,82 +361,6 @@
     // Delete empty entries from clubosport
     cleanClubosport ($club_id);
 
-    // Reading post request to fill input elements of the form
-    $time_open = wh_db_post_input_string ( 'time_open' );
-
-    // previous to PHP 5.1.0 you would compare with -1, instead of false
-    //if (($timestamp = strtotime($time_open)) === false) {
-    if ( wh_not_null ($time_open) && strtotime($time_open) === false ) {
-      wh_define ( 'TEXT_ERROR',
-        '<strong style="color: #FF0000">Opening time is not a valid time</strong>' );
-      return;
-    }
-    //else {
-      //die ("$time_open == " . date('l dS \o\f F Y h:i:s A', $timestamp));
-    //}
-
-    $time_close = wh_db_post_input_string ( 'time_close' );
-
-    if ( wh_not_null ($time_close) && strtotime($time_close) === false ) {
-      wh_define ( 'TEXT_ERROR',
-        '<strong style="color: #FF0000">Closing time is not a valid time</strong>' );
-      return;
-    }
-
-    $price_member = wh_db_post_input_string ( 'price_member' );
-
-    if ( wh_not_null ($price_member) && ! is_numeric ( $price_member ) )
-    {
-      wh_define ( 'TEXT_ERROR',
-        '<strong style="color: #FF0000">Members price is not numeric</strong>' );
-      return;
-    }
-
-    $price_nonmember = wh_db_post_input_string ( 'price_nonmember' );
-
-    if ( wh_not_null ($price_nonmember) && ! is_numeric ( $price_nonmember ) )
-    {
-      wh_define ( 'TEXT_ERROR',
-        '<strong style="color: #FF0000">Non members price is not numeric</strong>' );
-      return;
-    }
-
-    $everyday = wh_db_post_input_prepare ( 'everyday' );
-    if ( $everyday != true )
-    {
-      $days = array ( );
-      if ( wh_db_post_input_check ( 'monday' ) )
-        $days ['monday'] = 1;
-      if ( wh_db_post_input_check ( 'tuesday' ) )
-        $days ['tuesday'] = 2;
-      if ( wh_db_post_input_check ( 'wednesday' ) )
-        $days ['wednesday'] = 3;
-      if ( wh_db_post_input_check ( 'thursday' ) )
-        $days ['thursday'] = 4;
-      if ( wh_db_post_input_check ( 'friday' ) )
-        $days ['friday'] = 5;
-      if ( wh_db_post_input_check ( 'saturday' ) )
-        $days ['saturday'] = 6;
-      if ( wh_db_post_input_check ( 'sunday' ) )
-        $days ['sunday'] = 7;
-    }
-    $sports = wh_db_post_input_prepare_array ( 'sports' );
-
-    // as of PHP 5.4
-    $data = [
-#     "id" => $club_id,
-      "name" => $name,
-      "address" => $address,
-      "postcode" => $postcode,
-      "latitude" => $latitude,
-      "longtitude" => $longtitude,
-      "comment" => $comment,
-      "email" => $email,
-      "phone" => $phone
-    ];
-
-    wh_db_perform ( 'clubs', $data, 'update', "id = '{$club_id}'"  );
-    unset ( $data );
 
     //foreach do not check if sports is null
 /*
