@@ -193,7 +193,7 @@ makes the application responsive ***/
 }
 
 /*** time-togglers ***/
-.toggle-buttons {
+.time-togglers {
   font-size:30px;
   color:#4CBB17;
   font-weight:bold;
@@ -203,8 +203,8 @@ makes the application responsive ***/
   text-align: center;
 }
 
-/*** activities-togglers ***/
-.activities {
+/*** sports-togglers ***/
+.sports-togglers {
   font-size:22px;
   color:#4CBB17;
   font-weight:bold;
@@ -259,7 +259,7 @@ makes the application responsive ***/
 }
 
 /*** button leading to the map with results ***/
-#resizer {
+#linkToMap {
   display:none;
   z-index:4;
   position: absolute;

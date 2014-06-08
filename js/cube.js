@@ -20,7 +20,6 @@ var currentWall = "bottom";
 // be translated; the formula according to which the translation happens was
 // derived by Yordan and Dimitar Dimitrov (dimy93) in one sunny (or not that
 // much actually) afternoon can be seen in the adjust() function
-// Later Boris (bob) reflowed this comment in 6 am and was appalled
 var determiningSide;
 
 // used to reverse the adjust function, applied before another adjustment
@@ -40,17 +39,14 @@ var determinerDirection;
 // browser when in landscape mode and when the address bar hides
 var windowHeight;
 
+// used to lock cube when demonstrating the tutorial
 var cubeLocked = false;
 
-var whole, monday, tuesday, wednesday, thursday, friday, saturday, sunday;
-
+// Determine browser
 var props = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
 var prop;
 var el = document.createElement('div');
-var inactivity = 1000;
-var interval = setInterval(function(){activityTimer();}, inactivity);
 
-// Determine browser
 for (var i = 0, l = props.length; i < l; i++) {
   if (typeof el.style[props[i]] !== "undefined") {
     prop = props[i];
@@ -58,8 +54,17 @@ for (var i = 0, l = props.length; i < l; i++) {
   }
 }
 
+// setting the interval at which activityTimer() is going to be executed
+var inactivity = 1000;
+var interval = setInterval(function(){activityTimer();}, inactivity);
+
 // this function adjusts the cube (translates it) so that it is resized
 // every time the orientation of the screen changes
+// by default every side of the cube is 500px and every time the screen size is
+// <500px adjust() helps the cube not to go out of the screen. Instead of literally
+// resizing everything we just translate the cube in depth ("away" from the user)
+// making it look smaller and fitting the screen. The result is having
+// responsive website
 function adjust(){
   var height = $(window).height();
   var width = $(window).width();
@@ -101,13 +106,6 @@ function adjust(){
 
   if (depth < 0){
     depth = 0;
-    // depth=Math.abs(depth);
-    // determinerDirection = "+";
-    // currentDeterminerDirection = "-"
-  }
-  else {
-    // determinerDirection = "-";
-    // currentDeterminerDirection = "+"
   }
 
   // the actual transition
@@ -115,13 +113,13 @@ function adjust(){
                               "(" + determinerDirection + "" + depth + "px)";
 }
 
-function frontpanel(){
-  $('#resizer').delay(700).fadeIn(1000);
-}
-
 
 $(document).ready(function() {
 
+// check if we are coming from the map and "click" on the filters that the user
+// had already selected
+// in this way we remember his/her preferences and they don't have to input them
+// again at each transition between the map and the cube
   if (sessionStorage.isComingFromMap === "yes"){
     sessionStorage.isComingFromMap = "no";
     var days = sessionStorage.days.split(",");
@@ -148,6 +146,8 @@ $(document).ready(function() {
     sessionStorage.price = null;
     $('#all_toggler > a').trigger("click");
   }
+  
+  // set some default properties and rotate the cube to the Bottom (Intro) side
   $('#bigWrapper').css('width', "100%");
   $('#bigWrapper').css('height', "100%");
   $('#bigWrapper').css('position', "absolute");
@@ -160,13 +160,14 @@ $(document).ready(function() {
   determinerDirection = "-";
   currentDeterminerAxis = "Y";
   currentDeterminerDirection = "+";
+  
   adjust();
-  whole = monday = tuesday = wednesday = thursday =
-    friday = saturday = sunday = false;
 
 })
 
-$('#resizer').click(function(){
+// using the HTML5 web storage instead of cookies to remember the user's
+// preferences when going from the cube to the map and backwards
+$('#linkToMap').click(function(){
   sessionStorage.sports = sportsToBeSubmitted;
   sessionStorage.days = daysToBeSubmitted;
   sessionStorage.price = priceToBeSubmitted;
@@ -243,8 +244,8 @@ $('.price-togglers').click(function(){
   }
 })
 
-// toggling the yes-no-buttons for the activities
-$('.activities > a').click(function(){
+// toggling the yes-no-buttons for the sports-togglers
+$('.sports-togglers > a').click(function(){
   var obj = $(this);
   clickSportsToggler(obj);
 })
@@ -261,9 +262,9 @@ function clickSportsToggler(obj){
   }
 }
 
-// setting what will be saved in the browser storage as clicked activities once
+// setting what will be saved in the browser storage as clicked sports-togglers once
 // we go to the map
-$('.activities').click(function(){
+$('.sports-togglers').click(function(){
   var state = $(this).find('a').data('clicked');
   if (state === "yes"){
     var sport = $(this).text().toLowerCase();
@@ -278,13 +279,13 @@ $('.activities').click(function(){
 
 // setting what will be saved in the browser storage as days once we go to
 // the map
-$('.toggle-buttons').click(function(){
+$('.time-togglers').click(function(){
 var state = $(this).find('a').data('clicked');
 var day = $(this).text().toLowerCase();
- clickDaysTogglers(state, day);
+ clickTimeTogglers(state, day);
 })
 
-function clickDaysTogglers(state, day){
+function clickTimeTogglers(state, day){
   if (state === "yes"){
     if (day === "whole week"){
       var length = daysToBeSubmitted.length;
@@ -308,18 +309,18 @@ function clickDaysTogglers(state, day){
 }
 
 // toggling the yes-no-buttons for the days
-$('.toggle-buttons > a').click(function(){
+$('.time-togglers > a').click(function(){
   var btn = $(this).parent().text();
   var clicked = $(this).data('clicked');
   if (btn === "Whole week"){
     switch (clicked){
     case "no":
-      $('.toggle-buttons > a > div').css('background-position','0px -35px');
-      $('.toggle-buttons > a').data('clicked','yes');
+      $('.time-togglers > a > div').css('background-position','0px -35px');
+      $('.time-togglers > a').data('clicked','yes');
       break;
     case "yes":
-      $('.toggle-buttons > a > div').css('background-position','0px 0px');
-      $('.toggle-buttons > a').data('clicked','no');
+      $('.time-togglers > a > div').css('background-position','0px 0px');
+      $('.time-togglers > a').data('clicked','no');
       break;
     }
   }
@@ -381,8 +382,7 @@ function gesturePerformed(type)
   else if (type == "swipeup" || type == "dragup"){
     type = "swipeup";
   }
-  
-    $('#resizer').delay(800).fadeOut(500);
+    $('#linkToMap').delay(500).fadeOut(800);
 	
     switch (type) {
       case "swiperight": // left
@@ -591,15 +591,22 @@ function gesturePerformed(type)
         break;
     }
 	
+	// check the beginning of the document for the variables that follow
+	// when we rotate the cube and it is moved inwards to make it fit the screen
+	// first we move it outwards
     document.getElementById('cube').style[prop] +=
-              "translate" + currentDeterminerAxis +
-              "(" + currentDeterminerDirection + "" + depth+"px)";
-			  
+            "translate" + currentDeterminerAxis  + "(" +
+            currentDeterminerDirection + "" + depth + "px)";
+			
+	// then we rotate it
     document.getElementById('cube').style[prop] =
             "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
+	
+	// then move it inwards by the respective axis
     document.getElementById('cube').style[prop] +=
             "translate" + determinerAxis +
             "(" + determinerDirection + "" + depth + "px)";
+			
     currentDeterminerAxis = determinerAxis;
     if (determinerDirection === "+"){
       currentDeterminerDirection = "-";
@@ -609,7 +616,7 @@ function gesturePerformed(type)
     }
 }
 
-// detecting when a key is pressed and passing this key to the keydownEvent
+// detecting when a key is pressed and passing this key to the keydownEvent 
 // function
 $('body').keydown( function (evt){
   if (cubeLocked === false){
@@ -625,10 +632,8 @@ function keydownEvent( evt ) {
   if ( evt.keyCode == 65 || evt.keyCode == 68 ||
        evt.keyCode == 87 || evt.keyCode == 83 )
   {
-    if ( isFront() && ( evt.keyCode == 65 || evt.keyCode == 87 ||
-                        evt.keyCode == 68 || evt.keyCode == 83 ) ) {
-      $('#resizer').delay(800).fadeOut(500);
-    }
+    $('#linkToMap').delay(500).fadeOut(800);
+	  
     switch (evt.keyCode) {
       case 65: // left
         if ( isFront() ) {
@@ -766,6 +771,7 @@ function keydownEvent( evt ) {
         }
         else if ( isRight () )
         {
+		  alert("breakPoint");
           determinerAxis = "Z";
           determinerDirection = "+";
           yAngle -= 90;
@@ -835,15 +841,25 @@ function keydownEvent( evt ) {
         }
         break;
     }
-
+	
+	// check the beginning of the document for the variables that follow
+	// when we rotate the cube and it is moved inwards to make it fit the screen
+	// first we move it outwards
+	//console.log(prop)
+	//console.log(document.getElementById('cube').style[prop]);
     document.getElementById('cube').style[prop] +=
             "translate" + currentDeterminerAxis  + "(" +
             currentDeterminerDirection + "" + depth + "px)";
+			
+	// then we rotate it
     document.getElementById('cube').style[prop] =
             "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
+	
+	// then move it inwards by the respective axis
     document.getElementById('cube').style[prop] +=
             "translate" + determinerAxis +
             "(" + determinerDirection + "" + depth + "px)";
+			
     currentDeterminerAxis = determinerAxis;
     if (determinerDirection === "+"){
       currentDeterminerDirection = "-";
@@ -854,6 +870,7 @@ function keydownEvent( evt ) {
   }
 }
 
+// methods used to verify which side we are facing (currentWall)
 function isBack() {
   return currentWall == "back";
 }
@@ -878,84 +895,84 @@ function isFront() {
   return currentWall == "front";
 }
 
-function leftPanel() {
+// methods that return the specified sides/panels
+function getLeftPanel() {
   return document.getElementById('left');
 }
 
-function rightPanel() {
+function getRightPanel() {
   return document.getElementById('right');
 }
 
-function bottomPanel() {
+function getBottomPanel() {
   return document.getElementById('bottom');
 }
 
-function frontPanel() {
+function getFrontPanel() {
   return document.getElementById('front');
 }
 
-function topPanel() {
+function getTopPanel() {
   return  document.getElementById('top');
 }
 
-function backPanel() {
+function getBackPanel() {
   return  document.getElementById('back');
 }
 
+// executed when the user is facing the Front (Map) side of the cube
+function frontpanel(){
+  $('#linkToMap').delay(500).fadeIn(800);
+}
+
+// checks which side we are facing and zooms it by making all other sides 
+// invisible; if the side is the Front one we also show the Map button
 function activityTimer( ) {
   clearInterval(interval);
   if ( isBack() )
     document.getElementById('cube').style[prop] += "translateZ(-80px)";
   else
-    backPanel().style.opacity = 0.0;
+    getBackPanel().style.opacity = 0.0;
   if ( isLeft() )
     document.getElementById('cube').style[prop] += "translateX(-80px)";
   else
-    leftPanel().style.opacity = 0.0;
+    getLeftPanel().style.opacity = 0.0;
   if ( isRight()  )
     document.getElementById('cube').style[prop] += "translateX(80px)";
   else
-    rightPanel().style.opacity = 0.0;
-  if ( isFront() )
+    getRightPanel().style.opacity = 0.0;
+  if ( isFront() ) {
     document.getElementById('cube').style[prop] += "translateZ(80px)";
+	frontpanel();
+  }
   else
-    frontPanel().style.opacity = 0.0;
+    getFrontPanel().style.opacity = 0.0;
   if ( isTop() )
     document.getElementById('cube').style[prop] += "translateY(-80px)";
   else
-    topPanel().style.opacity = 0.0;
+    getTopPanel().style.opacity = 0.0;
   if ( isBottom() )
     document.getElementById('cube').style[prop] += "translateY(80px)";
   else
-    bottomPanel().style.opacity = 0.0;
-  if ( isFront() ) {
-    frontpanel();
-  }
+    getBottomPanel().style.opacity = 0.0;
 }
 
+// making all the sides visible before deciding which one to hide and which one 
+// not, according to which side we are facing (activityTimer)
 function showAllPanels() {
-  leftPanel().style.opacity = 1.0;
-  rightPanel().style.opacity = 1.0;
-  frontPanel().style.opacity = 1.0;
-  topPanel().style.opacity = 1.0;
-  bottomPanel().style.opacity = 1.0;
-  backPanel().style.opacity = 1.0
+  getLeftPanel().style.opacity = 1.0;
+  getRightPanel().style.opacity = 1.0;
+  getFrontPanel().style.opacity = 1.0;
+  getTopPanel().style.opacity = 1.0;
+  getBottomPanel().style.opacity = 1.0;
+  getBackPanel().style.opacity = 1.0
 }
 
+// zooming the side we are currently facing by moving it 80px "towards" the user
+// the method is executed each time we move from 1 side to another
 function zoomIn ( )
 {
-  //document.getElementById('cube').style.width = "500px";
   clearInterval(interval);
   showAllPanels();
   interval = setInterval(function(){activityTimer();}, inactivity);
-}
-
-function isNumberKey(evt)
-{
-  var charCode = (evt.which) ? evt.which : event.keyCode;
-  // 46 is decimal point, 48 is 0, 57 is 9
-  // if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-  if (charCode > 31 && (charCode < 48 || charCode > 57))
-    return false;
-  return true;
 }
