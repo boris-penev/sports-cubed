@@ -18,8 +18,9 @@ var currentWall = "bottom";
 
 // the new side of the screen which determines how far the cube will have to
 // be translated; the formula according to which the translation happens was
-// derived by Yordan and Dimitar Dimitrov (dimy93) in one sunny (or not that
-// much actually) afternoon can be seen in the adjust() function
+// derived by Yordan and Dimitar (dimy93) in one sunny (or not that
+// much actually) afternoon and it can be seen in the adjust() function
+// Later Boris (bob) reflowed this comment in 6 am and was appalled
 var determiningSide;
 
 // used to reverse the adjust function, applied before another adjustment
@@ -61,21 +62,21 @@ var interval = setInterval(function(){activityTimer();}, inactivity);
 // this function adjusts the cube (translates it) so that it is resized
 // every time the orientation of the screen changes
 // by default every side of the cube is 500px and every time the screen size is
-// <500px adjust() helps the cube not to go out of the screen. Instead of literally
-// resizing everything we just translate the cube in depth ("away" from the user)
-// making it look smaller and fitting the screen. The result is having
-// responsive website
+// <500px adjust() helps the cube not to go out of the screen. Instead of
+// literally resizing everything we just translate the cube in depth ("away"
+// from the user) making it look smaller and fitting the screen. The result is
+// having a responsive website
 function adjust(){
   var height = $(window).height();
   var width = $(window).width();
 
-  // aligning the cube equally from the left and the righr of the screen; 500
-  // is the side of the cube
+  // aligning the cube equally from the left and the righr of the screen;
+  // 500 is the side of the cube
   $('#cube').css('margin-top', ((height - 500) / 2) + "px");
 
   // this is still just the alignment; next is the "resizement"; if we use 620
-  // for the alignment the cube won't be in the centre; this is because initially
-  // it is 500px and after that the side seems to be like 610px;
+  // for the alignment the cube won't be in the centre; this is because
+  // initially it is 500px and after that the side seems to be like 610px;
   $('#cube').css('margin-left', ((width - 500) / 2) + "px");
 
   // Determining the side that will say how big the cube will be and how much
@@ -116,10 +117,10 @@ function adjust(){
 
 $(document).ready(function() {
 
-// check if we are coming from the map and "click" on the filters that the user
-// had already selected
-// in this way we remember his/her preferences and they don't have to input them
-// again at each transition between the map and the cube
+// check if we are coming from the map and "click" on the filters
+// that the user had already selected
+// in this way we remember his/her preferences and they don't have to
+// input them again at each transition between the map and the cube
   if (sessionStorage.isComingFromMap === "yes"){
     sessionStorage.isComingFromMap = "no";
     var days = sessionStorage.days.split(",");
@@ -146,7 +147,7 @@ $(document).ready(function() {
     sessionStorage.price = null;
     $('#all_toggler > a').trigger("click");
   }
-  
+
   // set some default properties and rotate the cube to the Bottom (Intro) side
   $('#bigWrapper').css('width', "100%");
   $('#bigWrapper').css('height', "100%");
@@ -160,7 +161,7 @@ $(document).ready(function() {
   determinerDirection = "-";
   currentDeterminerAxis = "Y";
   currentDeterminerDirection = "+";
-  
+
   adjust();
 
 })
@@ -176,6 +177,7 @@ $('#linkToMap').click(function(){
 })
 
 // this is the animation showing how to use the cube [TO BE CHANGED]
+// TODO Change this
 $('#how-to').click(function(){
   cubeLocked = true;
   $('#curtain').fadeIn();
@@ -262,8 +264,8 @@ function clickSportsToggler(obj){
   }
 }
 
-// setting what will be saved in the browser storage as clicked sports-togglers once
-// we go to the map
+// setting what will be saved in the browser storage as clicked sports-togglers
+// once we go to the map
 $('.sports-togglers').click(function(){
   var state = $(this).find('a').data('clicked');
   if (state === "yes"){
@@ -383,7 +385,7 @@ function gesturePerformed(type)
     type = "swipeup";
   }
     $('#linkToMap').delay(500).fadeOut(800);
-	
+
     switch (type) {
       case "swiperight": // left
         if ( isFront() ) {
@@ -590,23 +592,23 @@ function gesturePerformed(type)
         }
         break;
     }
-	
+
 	// check the beginning of the document for the variables that follow
 	// when we rotate the cube and it is moved inwards to make it fit the screen
 	// first we move it outwards
     document.getElementById('cube').style[prop] +=
             "translate" + currentDeterminerAxis  + "(" +
             currentDeterminerDirection + "" + depth + "px)";
-			
+
 	// then we rotate it
     document.getElementById('cube').style[prop] =
             "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
-	
+
 	// then move it inwards by the respective axis
     document.getElementById('cube').style[prop] +=
             "translate" + determinerAxis +
             "(" + determinerDirection + "" + depth + "px)";
-			
+
     currentDeterminerAxis = determinerAxis;
     if (determinerDirection === "+"){
       currentDeterminerDirection = "-";
@@ -616,7 +618,7 @@ function gesturePerformed(type)
     }
 }
 
-// detecting when a key is pressed and passing this key to the keydownEvent 
+// detecting when a key is pressed and passing this key to the keydownEvent
 // function
 $('body').keydown( function (evt){
   if (cubeLocked === false){
@@ -633,7 +635,7 @@ function keydownEvent( evt ) {
        evt.keyCode == 87 || evt.keyCode == 83 )
   {
     $('#linkToMap').delay(500).fadeOut(800);
-	  
+
     switch (evt.keyCode) {
       case 65: // left
         if ( isFront() ) {
@@ -841,7 +843,7 @@ function keydownEvent( evt ) {
         }
         break;
     }
-	
+
 	// check the beginning of the document for the variables that follow
 	// when we rotate the cube and it is moved inwards to make it fit the screen
 	// first we move it outwards
@@ -850,16 +852,16 @@ function keydownEvent( evt ) {
     document.getElementById('cube').style[prop] +=
             "translate" + currentDeterminerAxis  + "(" +
             currentDeterminerDirection + "" + depth + "px)";
-			
+
 	// then we rotate it
     document.getElementById('cube').style[prop] =
             "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
-	
+
 	// then move it inwards by the respective axis
     document.getElementById('cube').style[prop] +=
             "translate" + determinerAxis +
             "(" + determinerDirection + "" + depth + "px)";
-			
+
     currentDeterminerAxis = determinerAxis;
     if (determinerDirection === "+"){
       currentDeterminerDirection = "-";
@@ -925,7 +927,7 @@ function frontpanel(){
   $('#linkToMap').delay(500).fadeIn(800);
 }
 
-// checks which side we are facing and zooms it by making all other sides 
+// checks which side we are facing and zooms it by making all other sides
 // invisible; if the side is the Front one we also show the Map button
 function activityTimer( ) {
   clearInterval(interval);
@@ -957,7 +959,7 @@ function activityTimer( ) {
     getBottomPanel().style.opacity = 0.0;
 }
 
-// making all the sides visible before deciding which one to hide and which one 
+// making all the sides visible before deciding which one to hide and which one
 // not, according to which side we are facing (activityTimer)
 function showAllPanels() {
   getLeftPanel().style.opacity = 1.0;

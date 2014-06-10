@@ -33,8 +33,26 @@
     }
 
     $address = wh_db_post_input_string ( 'address' );
+
+    // TODO Should make this a function, check_null ()
+    if ( ! wh_not_null ($address) || $address == '' )
+    {
+      $address = 'null';
+    }
+
     $postcode = wh_db_post_input_string( 'postcode' );
+
+    if ( ! wh_not_null ($postcode) || $postcode == '' )
+    {
+      $postcode = 'null';
+    }
+
     $latitude = wh_db_post_input_string ( 'latitude' );
+
+    if ( ! wh_not_null ($latitude) || $latitude == '' )
+    {
+      $latitude = 'null';
+    }
 
     if ( wh_not_null ($latitude) && ! is_numeric ( $latitude ) )
     {
@@ -44,6 +62,11 @@
 
     $longtitude = wh_db_post_input_string ( 'longtitude' );
 
+    if ( ! wh_not_null ($latitude) || $latitude == '' )
+    {
+      $latitude = 'null';
+    }
+
     if ( wh_not_null ($longtitude) && ! is_numeric ( $longtitude ) )
     {
       wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Longtitude is not numeric</strong>' );
@@ -52,6 +75,11 @@
 
     $comment = wh_db_post_input_string ( 'comment' );
 
+    if ( ! wh_not_null ($comment) || $comment == '' )
+    {
+      $comment = 'null';
+    }
+
     if ( wh_not_null ( $comment ) && strlen ( $comment ) > 4000 ) {
       wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Comment is too long &mdash; over 4000 symbols</strong>' );
       return;
@@ -59,14 +87,25 @@
 
     $email = wh_db_post_input_string ( 'email' );
 
+    if ( ! wh_not_null ($email) || $email == '' )
+    {
+      $email = 'null';
+    }
+
+
     $phone = wh_db_post_input_string ( 'phone' );
 
+    if ( ! wh_not_null ($phone) || $phone == '' )
+    {
+      $phone = 'null';
+    }
+
     //TODO Limit length for not only comment but also email, phone and others
-    
+
     // Setting global schedules and prices for club
     // It there are individual schedules/prices, they will be active instead
 /*     $time_open = wh_db_post_input_string ( 'time_open_global' );
-    
+
     // previous to PHP 5.1.0 you would compare with -1, instead of false
     //if (($timestamp = strtotime($time_open)) === false) {
     if ( wh_not_null ($time_open) && strtotime($time_open) === false ) {
@@ -77,33 +116,33 @@
     //else {
     //die ("$time_open == " . date('l dS \o\f F Y h:i:s A', $timestamp));
     //}
-    
+
     $time_close = wh_db_post_input_string ( 'time_close_global' );
-    
+
     if ( wh_not_null ($time_close) && strtotime($time_close) === false ) {
       wh_define ( 'TEXT_ERROR',
       '<strong style="color: #FF0000">Closing time is not a valid time</strong>' );
       return;
     }
-    
+
     $price_member = wh_db_post_input_string ( 'price_member_global' );
-    
+
     if ( wh_not_null ($price_member) && ! is_numeric ( $price_member ) )
     {
       wh_define ( 'TEXT_ERROR',
       '<strong style="color: #FF0000">Members price is not numeric</strong>' );
       return;
     }
-    
+
     $price_nonmember = wh_db_post_input_string ( 'price_nonmember_global' );
-    
+
     if ( wh_not_null ($price_nonmember) && ! is_numeric ( $price_nonmember ) )
     {
       wh_define ( 'TEXT_ERROR',
       '<strong style="color: #FF0000">Non members price is not numeric</strong>' );
       return;
     }
-    
+
     $everyday = wh_db_post_input_prepare ( 'everyday' );
     if ( $everyday != true )
     {
@@ -124,7 +163,7 @@
         $days ['sunday'] = 7;
     }
     $sports = wh_db_post_input_prepare_array ( 'sports' );
-    
+
     // as of PHP 5.4
     $data = [
       "name" => $name,
@@ -136,7 +175,7 @@
       "email" => $email,
       "phone" => $phone
     ]; */
-    
+
     // as of PHP 5.4
     $data = [
       "name" => $name,
@@ -148,7 +187,7 @@
       "email" => $email,
       "phone" => $phone
     ];
-    
+
     wh_db_perform ( 'clubs', $data, 'update', "id = '{$club_id}'"  );
     unset ( $data );
 
