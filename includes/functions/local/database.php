@@ -135,6 +135,25 @@
       ? wh_db_prepare_input ( $_GET [$arg] ) : array ();
   }
 
+  /* If value is null, replaces it with 'null'
+   */
+  function wh_db_prepare_null ( $arg )
+  {
+    if ( ! wh_not_null ($arg) )
+      return 'null';
+    return $arg;
+  }
+
+  /* Replaces a value in array, using a reference to the array
+   */
+  function array_replace_value(&$ar, $value, $replacement)
+  {
+    if ( ( $key = array_search($value, $ar) ) !== false )
+    {
+      $ar[$key] = $replacement;
+    }
+  }
+
   function filterDays ( $days )
   {
 #   var_dump ( $days );
@@ -184,16 +203,6 @@
 #   var_dump ( $days );
 #   die ();
     return $days;
-  }
-
-  /* Replaces value in array, using a reference to the array
-   */
-  function array_replace_value(&$ar, $value, $replacement)
-  {
-    if ( ( $key = array_search($value, $ar) ) !== false )
-    {
-      $ar[$key] = $replacement;
-    }
   }
 
   function getClubs ( )

@@ -33,26 +33,13 @@
     }
 
     $address = wh_db_post_input_string ( 'address' );
-
-    // TODO Should make this a function, check_null ()
-    if ( ! wh_not_null ($address) || $address == '' )
-    {
-      $address = 'null';
-    }
+    $address = wh_db_prepare_null ($address);
 
     $postcode = wh_db_post_input_string( 'postcode' );
-
-    if ( ! wh_not_null ($postcode) || $postcode == '' )
-    {
-      $postcode = 'null';
-    }
+    $postcode = wh_db_prepare_null ($postcode);
 
     $latitude = wh_db_post_input_string ( 'latitude' );
-
-    if ( ! wh_not_null ($latitude) || $latitude == '' )
-    {
-      $latitude = 'null';
-    }
+    $latitude = wh_db_prepare_null ($latitude);
 
     if ( wh_not_null ($latitude) && ! is_numeric ( $latitude ) )
     {
@@ -61,11 +48,7 @@
     }
 
     $longtitude = wh_db_post_input_string ( 'longtitude' );
-
-    if ( ! wh_not_null ($latitude) || $latitude == '' )
-    {
-      $latitude = 'null';
-    }
+    $longtitude = wh_db_prepare_null ($longtitude);
 
     if ( wh_not_null ($longtitude) && ! is_numeric ( $longtitude ) )
     {
@@ -74,11 +57,7 @@
     }
 
     $comment = wh_db_post_input_string ( 'comment' );
-
-    if ( ! wh_not_null ($comment) || $comment == '' )
-    {
-      $comment = 'null';
-    }
+    $comment = wh_db_prepare_null ($comment);
 
     if ( wh_not_null ( $comment ) && strlen ( $comment ) > 4000 ) {
       wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Comment is too long &mdash; over 4000 symbols</strong>' );
@@ -86,19 +65,10 @@
     }
 
     $email = wh_db_post_input_string ( 'email' );
-
-    if ( ! wh_not_null ($email) || $email == '' )
-    {
-      $email = 'null';
-    }
-
+    $email = wh_db_prepare_null ($email);
 
     $phone = wh_db_post_input_string ( 'phone' );
-
-    if ( ! wh_not_null ($phone) || $phone == '' )
-    {
-      $phone = 'null';
-    }
+    $phone = wh_db_prepare_null ($phone);
 
     //TODO Limit length for not only comment but also email, phone and others
 

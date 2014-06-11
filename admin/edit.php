@@ -71,6 +71,7 @@
       $sports [$row_obj->id] = $row_obj->name;
     }
     unset ($row_obj);
+    wh_db_free_result($sports_query);
     echo wh_draw_pull_down_menu_label ( 'sport_search', $sports, '', 'Sport',
         '', '', 'size="1"', false, true, 2, false );
     unset ( $sports [0] );
@@ -197,6 +198,10 @@
         </td>
         <td colspan="7" style="text-align:center">
 <?php
+      // TODO: The arrays for displaying times/prices in text field should
+      // be filled completely, not only partially.
+      // Currently there are "artifacts" showing
+      // After they are filled, they will be with the right values
       $days_selected = array ();
       $prices_member = array ();
       $prices_nonmember = array ();
@@ -212,20 +217,29 @@
           $days_type = 'all';
           $days_type_price = 'all';
           $days_type_time = 'all';
-          $days_selected = range ( 1, 7 );
-          $prices_member [1] = $clubosport_row->price_member;
-          $prices_nonmember [1] = $clubosport_row->price_nonmember;
-          $times_open [1] =
+          $days_selected = array_fill(1, 7, true);
+          $price_member = $clubosport_row->price_member;
+          $price_nonmember = $clubosport_row->price_nonmember;
+          $time_open =
             ( wh_not_null ( $clubosport_row->opening_time )
               && $clubosport_row->opening_time != '00:00:00'
               && strtotime( $clubosport_row->opening_time ) !== false ) ?
               $clubosport_row->opening_time : null;
-          $times_close [1] =
+          $time_close =
             ( wh_not_null ( $clubosport_row->closing_time )
               && $clubosport_row->closing_time != '00:00:00'
               && strtotime( $clubosport_row->closing_time ) !== false ) ?
               $clubosport_row->closing_time : null;
-          $clubosport_row = wh_db_fetch_object_custom($clubosportquery);
+          if ( ! wh_not_null ($time_open) || ! wh_not_null ($time_open) )
+          {
+            $time_open = $time_close = null;
+          }
+          $prices_member = array_fill ( 1 , 7, $price_member );
+          $prices_nonmember = array_fill ( 1 , 7, $price_nonmember );
+          $times_open = array_fill ( 1 , 7, $time_open );
+          $times_close = array_fill ( 1 , 7, $time_close );
+// Do not currently know why this is here, will be soon removed
+#         $clubosport_row = wh_db_fetch_object_custom($clubosportquery);
         }
         else
         {
@@ -237,40 +251,56 @@
 #           echoQuery ( $clubosport_row->day_id );
             if ( $day_id == 9 )
             {
-              for ( $i = 1; $i < 6; ++$i )
+              $price_member = $clubosport_row->price_member;
+              $price_nonmember = $clubosport_row->price_nonmember;
+              $time_open =
+                ( wh_not_null ( $clubosport_row->opening_time )
+                  && $clubosport_row->opening_time != '00:00:00'
+                  && strtotime( $clubosport_row->opening_time ) !== false ) ?
+                  $clubosport_row->opening_time : null;
+              $time_close =
+                ( wh_not_null ( $clubosport_row->closing_time )
+                  && $clubosport_row->closing_time != '00:00:00'
+                  && strtotime( $clubosport_row->closing_time ) !== false ) ?
+                  $clubosport_row->closing_time : null;
+              if ( ! wh_not_null ($time_open) || ! wh_not_null ($time_open) )
+              {
+                $time_open = $time_close = null;
+              }
+              for ($i = 1; $i < 6; ++$i)
               {
                 $days_selected [$i] = true;
-                $prices_member [$i] = $clubosport_row->price_member;
-                $prices_nonmember [$i] = $clubosport_row->price_nonmember;
-                $times_open [$i] =
-                  ( wh_not_null ( $clubosport_row->opening_time )
-                    && $clubosport_row->opening_time != '00:00:00'
-                    && strtotime( $clubosport_row->opening_time ) != false ) ?
-                    $clubosport_row->opening_time : null;
-                $times_close [$i] =
-                  ( wh_not_null ( $clubosport_row->closing_time )
-                    && $clubosport_row->closing_time != '00:00:00'
-                    && strtotime( $clubosport_row->closing_time ) !== false ) ?
-                    $clubosport_row->closing_time : null;
+                $prices_member [$i] = $price_member;
+                $prices_nonmember [$i] = $price_nonmember;
+                $times_open [$i] = $time_open;
+                $times_close [$i] = $time_close;
               }
             }
             elseif ( $day_id == 10 )
             {
-              for ( $i = 6; $i < 8; ++$i )
+              $price_member = $clubosport_row->price_member;
+              $price_nonmember = $clubosport_row->price_nonmember;
+              $time_open =
+                ( wh_not_null ( $clubosport_row->opening_time )
+                  && $clubosport_row->opening_time != '00:00:00'
+                  && strtotime( $clubosport_row->opening_time ) !== false ) ?
+                  $clubosport_row->opening_time : null;
+              $time_close =
+                ( wh_not_null ( $clubosport_row->closing_time )
+                  && $clubosport_row->closing_time != '00:00:00'
+                  && strtotime( $clubosport_row->closing_time ) !== false ) ?
+                  $clubosport_row->closing_time : null;
+              if ( ! wh_not_null ($time_open) || ! wh_not_null ($time_open) )
+              {
+                $time_open = $time_close = null;
+              }
+              for ($i = 6; $i < 8; ++$i)
               {
                 $days_selected [$i] = true;
-                $prices_member [$i] = $clubosport_row->price_member;
-                $prices_nonmember [$i] = $clubosport_row->price_nonmember;
-                $times_open [$i] =
-                  ( wh_not_null ( $clubosport_row->opening_time )
-                    && $clubosport_row->opening_time != '00:00:00'
-                    && strtotime( $clubosport_row->opening_time ) != false ) ?
-                    $clubosport_row->opening_time : null;
-                $times_close [$i] =
-                  ( wh_not_null ( $clubosport_row->closing_time )
-                    && $clubosport_row->closing_time != '00:00:00'
-                    && strtotime( $clubosport_row->closing_time ) !== false ) ?
-                    $clubosport_row->closing_time : null;
+                $prices_member [$i] = $price_member;
+                $prices_nonmember [$i] = $price_nonmember;
+                $times_open [$i] = $time_open;
+                $times_close [$i] = $time_close;
               }
             }
             elseif ( 0 < $day_id && $day_id < 8 )
@@ -292,57 +322,58 @@
           }
           while ( ($clubosport_row = wh_db_fetch_object_custom($clubosportquery))
                 && $clubosport_row->sport_id == $sport_id  );
-        }
-        for ( $i = 1; $i < 5; ++$i )
-        {
-#         echoQuery ( $prices_member[$i] );
-          if ( $prices_member [$i] != $prices_member [$i+1]
-            || $prices_nonmember [$i] != $prices_nonmember [$i+1] )
+
+          for ( $i = 1; $i < 5; ++$i )
           {
-            $days_type_price = 'separately';
-            break;
+  #         echoQuery ( $prices_member[$i] );
+            if ( $prices_member [$i] != $prices_member [$i+1]
+              || $prices_nonmember [$i] != $prices_nonmember [$i+1] )
+            {
+              $days_type_price = 'separately';
+              break;
+            }
           }
-        }
-        for ( $i = 1; $i < 5; ++$i )
-        {
-#         echoQuery ( $prices_member[$i] );
-          if ( $times_open [$i] != $times_open [$i+1]
-            || $times_close [$i] != $times_close [$i+1] )
+          for ( $i = 1; $i < 5; ++$i )
           {
-            $days_type_time = 'separately';
-            break;
+  #         echoQuery ( $prices_member[$i] );
+            if ( $times_open [$i] != $times_open [$i+1]
+              || $times_close [$i] != $times_close [$i+1] )
+            {
+              $days_type_time = 'separately';
+              break;
+            }
           }
-        }
-        if ( $days_type_price == '' )
-        {
-          if ( $prices_member [6] != $prices_member [7]
-            || $prices_nonmember [6] != $prices_nonmember [7] )
+          if ( $days_type_price == '' )
           {
-            $days_type_price = 'workingsatsun';
+            if ( $prices_member [6] != $prices_member [7]
+              || $prices_nonmember [6] != $prices_nonmember [7] )
+            {
+              $days_type_price = 'workingsatsun';
+            }
+            elseif ( $prices_member[5] == $prices_member[6]
+              && $prices_nonmember [6] == $prices_nonmember [7]  )
+            {
+              $days_type_price = 'all';
+            }
+            else {
+              $days_type_price = 'workingweekend';
+            }
           }
-          elseif ( $prices_member[5] == $prices_member[6]
-            && $prices_nonmember [6] == $prices_nonmember [7]  )
+          if ( $days_type_time == '' )
           {
-            $days_type_price = 'all';
-          }
-          else {
-            $days_type_price = 'workingweekend';
-          }
-        }
-        if ( $days_type_time == '' )
-        {
-          if ( $times_open [6] != $times_open [7]
-            || $times_close [6] != $times_close [7] )
-          {
-            $days_type_time = 'workingsatsun';
-          }
-          elseif ( $times_open[5] == $times_open[6]
-            && $times_close [6] == $times_close [7]  )
-          {
-            $days_type_time = 'all';
-          }
-          else {
-            $days_type_time = 'workingweekend';
+            if ( $times_open [6] != $times_open [7]
+              || $times_close [6] != $times_close [7] )
+            {
+              $days_type_time = 'workingsatsun';
+            }
+            elseif ( $times_open[5] == $times_open[6]
+              && $times_close [6] == $times_close [7]  )
+            {
+              $days_type_time = 'all';
+            }
+            else {
+              $days_type_time = 'workingweekend';
+            }
           }
         }
       }
