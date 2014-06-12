@@ -253,25 +253,44 @@
     return wh_db_query ( "select * from clubs where name = '{$name}'" );
   }
 
-  function getClubsBySports ( $sports )
+  /**
+   * @param $table entity table, sports or facilities
+   * @param $data array with entities - sports or facilities
+   * @return query result
+   */
+  function getClubsBySports ( $table, $data )
   {
+    if ( $table == 'sports' )
+    {
+      $entity_table = 'sports';
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
+    }
+    else if ( $table == 'facilities' )
+    {
+      $entity_table = 'facilities';
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
+    }
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
     $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
-    $sports = array_values ( $sports );
-    $counter = count ( $sports );
+    $data = array_values ( $data );
+    $counter = count ( $data );
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= ', clubosport as clubosport' . $i;
-      $query .= ', sports as sports' . $i;
+      $query .= ", {$junction_table} as " . $junction_table . $i;
+      $query .= ", {$entity_table} as " . $entity_table . $i;
     }
     $query .= ' where 1';
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= " and clubs.id = clubosport{$i}.club_id";
-      $query .= " and sports{$i}.id = clubosport{$i}.sport_id";
-      $query .= " and sports{$i}.name = '{$sports[$i]}'";
+      $query .= " and clubs.id = {$junction_table}{$i}.club_id";
+      $query .= " and {$entity_table}{$i}.id = {$junction_table}{$i}.{$entity_id}";
+      $query .= " and {$entity_table}{$i}.name = '{$data[$i]}'";
     }
     $query .= ' group by id';
 #   $query .= ' order by id';
@@ -279,23 +298,42 @@
     return wh_db_query ( $query );
   }
 
-  function getClubsBySportsId ( $sports )
+  /**
+   * @param $table entity table, sports or facilities
+   * @param $data array with entities - sports or facilities
+   * @return query result
+   */
+  function getClubsBySportsId ( $table, $data )
   {
+    if ( $table == 'sports' )
+    {
+      $entity_table = 'sports';
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
+    }
+    else if ( $table == 'facilities' )
+    {
+      $entity_table = 'facilities';
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
+    }
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
     $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
-    $sports = array_values ( $sports );
-    $counter = count ( $sports );
+    $data = array_values ( $data );
+    $counter = count ( $data );
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= ', clubosport as clubosport' . $i;
+      $query .= ", {$junction_table} as " . $junction_table . $i;
     }
     $query .= ' where 1';
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= " and clubs.id = clubosport{$i}.club_id";
-      $query .= " and clubosport{$i}.sport_id = '{$sports[$i]}'";
+      $query .= " and clubs.id = {$junction_table}{$i}.club_id";
+      $query .= " and {$junction_table}{$i}.sport_id = '{$data[$i]}'";
     }
     $query .= ' group by id';
 #   $query .= ' order by id';
