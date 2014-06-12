@@ -135,16 +135,39 @@
       ? wh_db_prepare_input ( $_GET [$arg] ) : array ();
   }
 
-  /* If value is null, replaces it with 'null'
+  /**
+   * If value is null, replaces it with 'null'
+   * @param arg string to test
+   * @return input argument or 'null'
    */
   function wh_db_prepare_null ( $arg )
   {
-    if ( ! wh_not_null ($arg) )
+    if ( wh_null ($arg) )
       return 'null';
     return $arg;
   }
 
-  /* Replaces a value in array, using a reference to the array
+  /**
+   * Check the length of input text for the database limit
+   * @param arg string to test
+   * @param length_limit maximum length of the string
+   * @param arg_name name of the input that will be shown in the error message
+   * @return boolean true or false
+   */
+  function wh_db_limit_length ( $arg, $length_limit, $arg_name )
+  {
+    if ( wh_not_null ( $arg ) && strlen ( $arg ) > $length_limit )
+    {
+      wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">'
+                . $arg_name . ' is too long &mdash; over '
+                . $length_limit . ' symbols</strong>' );
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Replaces a value in array, using a reference to the array
    */
   function array_replace_value(&$ar, $value, $replacement)
   {
@@ -234,7 +257,7 @@
   {
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
     $sports = array_values ( $sports );
     $counter = count ( $sports );
@@ -260,7 +283,7 @@
   {
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
     $sports = array_values ( $sports );
     $counter = count ( $sports );
@@ -287,7 +310,7 @@
     }
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
     $sports = array_values ( $sports );
     $counter = count ( $sports );
@@ -331,7 +354,7 @@
   {
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
     $sports = array_values ( $sports );
     $counter = count ( $sports );
@@ -387,7 +410,7 @@
   {
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
     $sports = array_values ( $sports );
     $counter = count ( $sports );
@@ -432,7 +455,7 @@
   {
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
     $sports = array_values ( $sports );
     $counter = count ( $sports );
@@ -692,7 +715,8 @@
     return wh_db_multi_query ( $query );
   }
 
-  /* Deletes empty entries from clubosport
+  /**
+   * Deletes empty entries from clubosport
    */
   function cleanClubosport ( $club )
   {

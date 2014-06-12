@@ -64,7 +64,7 @@
 #   echo wh_draw_hidden_field ( 'action', 'select' ) . PHP_EOL;
 #   var_dump ( $clubs );
     echo wh_draw_pull_down_menu_label ( 'club_search', $clubs, '', 'Club Name',
-        '', 0, 'size="1"', false, true, 2, false );
+        '', $club->id, 'size="1"', false, true, 2, false );
     $sports_query = getSports ( );
     $sports = array ( 0 => '' );
     while ($row_obj = wh_db_fetch_object_custom($sports_query)) {
@@ -95,7 +95,7 @@
       echo wh_draw_input_field_label ( 'name', 'name', 'Club Name', '', $club->name,
         ' required = "required" placeholder = "enter club name"',
         'text', true, 2, true );
-      echo wh_draw_input_field_label ( 'address', 'address', 'Address Name', '',
+      echo wh_draw_input_field_label ( 'address', 'address', 'Address', '',
         $club->address, '', 'text', true, 2, true );
       echo wh_draw_input_field_label ( 'postcode', 'postcode', 'Postcode', '',
         $club->postcode, '', 'text', true, 2, true );
@@ -104,11 +104,11 @@
       echo wh_draw_input_field_label ( 'longtitude', 'longtitude', 'Longtitude', '',
         $club->longtitude, '', 'text', true, 2, true );
       echo wh_draw_input_field_label ( 'website', 'website', 'Website', '',
-      '', '', 'text', true, 2, true );
+        $club->website, 'maxlength="200"', 'text', true, 2, true );
       echo wh_draw_input_field_label ( 'email', 'email', 'Email', '',
-        $club->email, '', 'text', true, 2, true );
+        $club->email, 'maxlength="100"', 'text', true, 2, true );
       echo wh_draw_input_field_label ( 'phone', 'phone', 'Contact phone', '',
-        $club->phone, '', 'text', true, 2, true );
+        $club->phone, 'maxlength="100"', 'text', true, 2, true );
       echo wh_draw_textarea_field_label ( 'comment', 'comment', 'Comment', '',
         30, 3, $club->comment, 'maxlength="4000" spellcheck = "true"', true, 2, true );
       echo wh_draw_input_field_label ( 'time_open_global', 'time_open_global', 'Opening time', '',
@@ -198,10 +198,6 @@
         </td>
         <td colspan="7" style="text-align:center">
 <?php
-      // TODO: The arrays for displaying times/prices in text field should
-      // be filled completely, not only partially.
-      // Currently there are "artifacts" showing
-      // After they are filled, they will be with the right values
       $days_selected = array ();
       $prices_member = array ();
       $prices_nonmember = array ();
@@ -230,7 +226,7 @@
               && $clubosport_row->closing_time != '00:00:00'
               && strtotime( $clubosport_row->closing_time ) !== false ) ?
               $clubosport_row->closing_time : null;
-          if ( ! wh_not_null ($time_open) || ! wh_not_null ($time_open) )
+          if ( wh_null ($time_open) || wh_null ($time_open) )
           {
             $time_open = $time_close = null;
           }
@@ -238,8 +234,6 @@
           $prices_nonmember = array_fill ( 1 , 7, $price_nonmember );
           $times_open = array_fill ( 1 , 7, $time_open );
           $times_close = array_fill ( 1 , 7, $time_close );
-// Do not currently know why this is here, will be soon removed
-#         $clubosport_row = wh_db_fetch_object_custom($clubosportquery);
         }
         else
         {
@@ -263,7 +257,7 @@
                   && $clubosport_row->closing_time != '00:00:00'
                   && strtotime( $clubosport_row->closing_time ) !== false ) ?
                   $clubosport_row->closing_time : null;
-              if ( ! wh_not_null ($time_open) || ! wh_not_null ($time_open) )
+              if ( wh_null ($time_open) || wh_null ($time_open) )
               {
                 $time_open = $time_close = null;
               }
@@ -290,7 +284,7 @@
                   && $clubosport_row->closing_time != '00:00:00'
                   && strtotime( $clubosport_row->closing_time ) !== false ) ?
                   $clubosport_row->closing_time : null;
-              if ( ! wh_not_null ($time_open) || ! wh_not_null ($time_open) )
+              if ( wh_null ($time_open) || wh_null ($time_open) )
               {
                 $time_open = $time_close = null;
               }

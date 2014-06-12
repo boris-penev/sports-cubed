@@ -17,7 +17,7 @@
 
     $name = wh_db_post_input_string ( 'name' );
 
-    if ( ! wh_not_null ( $name ) )
+    if ( wh_null ( $name ) )
     {
       $name = $club->name;
     }
@@ -34,9 +34,13 @@
 
     $address = wh_db_post_input_string ( 'address' );
     $address = wh_db_prepare_null ($address);
+    if ( ! wh_db_limit_length ($address, 300, 'Comment') )
+      return;
 
     $postcode = wh_db_post_input_string( 'postcode' );
     $postcode = wh_db_prepare_null ($postcode);
+    if ( ! wh_db_limit_length ($postcode, 16, 'Comment') )
+      return;
 
     $latitude = wh_db_post_input_string ( 'latitude' );
     $latitude = wh_db_prepare_null ($latitude);
@@ -58,36 +62,46 @@
 
     $comment = wh_db_post_input_string ( 'comment' );
     $comment = wh_db_prepare_null ($comment);
-
-    if ( wh_not_null ( $comment ) && strlen ( $comment ) > 4000 ) {
-      wh_define ( 'TEXT_ERROR', '<strong style="color: #FF0000">Comment is too long &mdash; over 4000 symbols</strong>' );
+    if ( ! wh_db_limit_length ($comment, 4000, 'Comment') )
       return;
-    }
+
+    $website = wh_db_post_input_string ( 'website' );
+    $website = wh_db_prepare_null ($website);
+    if ( ! wh_db_limit_length ($website, 100, 'Website') )
+      return;
 
     $email = wh_db_post_input_string ( 'email' );
     $email = wh_db_prepare_null ($email);
+    if ( ! wh_db_limit_length ($email, 100, 'Email address') )
+      return;
 
     $phone = wh_db_post_input_string ( 'phone' );
     $phone = wh_db_prepare_null ($phone);
-
-    //TODO Limit length for not only comment but also email, phone and others
+    if ( ! wh_db_limit_length ($phone, 100, 'Contact phone number') )
+      return;
 
     // Setting global schedules and prices for club
     // It there are individual schedules/prices, they will be active instead
-/*     $time_open = wh_db_post_input_string ( 'time_open_global' );
+    $time_open = wh_db_post_input_string ( 'time_open_global' );
+    $time_open = wh_db_prepare_null ($time_open);
+    //set variables to null if zeroes
+    if ( $time_open == '00:00:00' ) {
+      $time_open = 'null';
+    }
 
     // previous to PHP 5.1.0 you would compare with -1, instead of false
-    //if (($timestamp = strtotime($time_open)) === false) {
     if ( wh_not_null ($time_open) && strtotime($time_open) === false ) {
       wh_define ( 'TEXT_ERROR',
       '<strong style="color: #FF0000">Opening time is not a valid time</strong>' );
       return;
     }
-    //else {
-    //die ("$time_open == " . date('l dS \o\f F Y h:i:s A', $timestamp));
-    //}
 
     $time_close = wh_db_post_input_string ( 'time_close_global' );
+    $time_close = wh_db_prepare_null ($time_close);
+    //set variables to null if zeroes
+    if ( $time_close == '00:00:00' ) {
+      $time_close = 'null';
+    }
 
     if ( wh_not_null ($time_close) && strtotime($time_close) === false ) {
       wh_define ( 'TEXT_ERROR',
@@ -95,7 +109,12 @@
       return;
     }
 
+    if ( $time_open == 'null' || $time_close == 'null' ) {
+      $time_open = $time_close = 'null';
+    }
+
     $price_member = wh_db_post_input_string ( 'price_member_global' );
+    $price_member = wh_db_prepare_null ($price_member);
 
     if ( wh_not_null ($price_member) && ! is_numeric ( $price_member ) )
     {
@@ -105,6 +124,7 @@
     }
 
     $price_nonmember = wh_db_post_input_string ( 'price_nonmember_global' );
+    $price_nonmember = wh_db_prepare_null ($price_nonmember);
 
     if ( wh_not_null ($price_nonmember) && ! is_numeric ( $price_nonmember ) )
     {
@@ -113,27 +133,6 @@
       return;
     }
 
-    $everyday = wh_db_post_input_prepare ( 'everyday' );
-    if ( $everyday != true )
-    {
-      $days = array ( );
-      if ( wh_db_post_input_check ( 'monday' ) )
-        $days ['monday'] = 1;
-      if ( wh_db_post_input_check ( 'tuesday' ) )
-        $days ['tuesday'] = 2;
-      if ( wh_db_post_input_check ( 'wednesday' ) )
-        $days ['wednesday'] = 3;
-      if ( wh_db_post_input_check ( 'thursday' ) )
-        $days ['thursday'] = 4;
-      if ( wh_db_post_input_check ( 'friday' ) )
-        $days ['friday'] = 5;
-      if ( wh_db_post_input_check ( 'saturday' ) )
-        $days ['saturday'] = 6;
-      if ( wh_db_post_input_check ( 'sunday' ) )
-        $days ['sunday'] = 7;
-    }
-    $sports = wh_db_post_input_prepare_array ( 'sports' );
-
     // as of PHP 5.4
     $data = [
       "name" => $name,
@@ -141,21 +140,14 @@
       "postcode" => $postcode,
       "latitude" => $latitude,
       "longtitude" => $longtitude,
-      "comment" => $comment,
+      "website" => $website,
       "email" => $email,
-      "phone" => $phone
-    ]; */
-
-    // as of PHP 5.4
-    $data = [
-      "name" => $name,
-      "address" => $address,
-      "postcode" => $postcode,
-      "latitude" => $latitude,
-      "longtitude" => $longtitude,
+      "phone" => $phone,
       "comment" => $comment,
-      "email" => $email,
-      "phone" => $phone
+      "opening_time" => $time_open,
+      "closing_time" => $time_close,
+      "price_member" => $price_member,
+      "price_nonmember" => $price_nonmember
     ];
 
     wh_db_perform ( 'clubs', $data, 'update', "id = '{$club_id}'"  );
@@ -371,49 +363,6 @@
     cleanClubosport ($club_id);
 
 
-    //foreach do not check if sports is null
-/*
-    if ( $everyday == true )
-    {
-      foreach ( $sports as $sport )
-      {
-        $data = [
-          "club_id" => $club_id,
-          "sport_id" => $sport,
-          "price_member" => $price_member,
-          "price_nonmember" => $price_nonmember,
-          "opening_time" => $time_open,
-          "closing_time" => $time_close
-          //"day_id" => 8
-        ];
-        wh_db_perform ( 'clubosport', $data );
-        unset ( $data );
-      }
-    } //if ( #everyday...
-    else
-    {
-      if ( ! is_array ( $days ) )
-        wh_error ( 'days is not array' );
-      foreach ( $sports as $sport )
-      {
-        foreach ( $days as $day )
-        {
-          $data = [
-            "club_id" => $club_id,
-            "sport_id" => $sport,
-            "day_id" => $day,
-            "price_member" => $price_member,
-            "price_nonmember" => $price_nonmember,
-            "opening_time" => $time_open,
-            "closing_time" => $time_close
-          ];
-          wh_db_perform ( 'clubosport', $data, 'update' );
-          unset ( $data );
-        } //foreach ( $days...
-      } //foreach ( $sports...
-    } //if ( $everyday... else...
-*/
-
 /*
     $bash_sum = 0.0;
     $bash_max = 0.0;
@@ -510,7 +459,8 @@
       header ( 'Location: edit.php' );
     }
 
-    if ( $action == 'update' || ( wh_not_null ( $club_search ) && $club_search != '0' ) )
+    if ( $action == 'update' ||
+         ( wh_not_null ($club_search) && $club_search != '0' ) )
     {
       global $club;
       $club = (object) array ();
@@ -519,7 +469,9 @@
       if ( $action != 'update' && wh_not_null($club_search) ) {
         $id = $club_search;
       };
-#     $id = wh_not_null($club_search) ? $club_search : wh_not_null($id) ? $id : null;
+#     $id = wh_not_null($club_search) ?
+#       $club_search : wh_not_null($id) ?
+#         $id : null;
 #     var_dump ($club_search);
 #     var_dump (wh_not_null($club_search));
 #     var_dump ($id);
@@ -535,6 +487,7 @@
         $club -> latitude = wh_db_output ( $row_obj->latitude );
         $club -> longtitude = wh_db_output ( $row_obj->longtitude );
         $club -> comment = wh_db_output ( $row_obj->comment );
+        $club -> website = wh_db_output ( $row_obj->website );
         $club -> email = wh_db_output ( $row_obj->email );
         $club -> phone = wh_db_output ( $row_obj->phone );
         $club -> time_open = wh_db_output ( $row_obj->time_open );
