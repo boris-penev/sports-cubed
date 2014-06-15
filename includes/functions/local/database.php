@@ -341,28 +341,45 @@
     return wh_db_query ( $query );
   }
 
-  function getClubsBySportsDays ( $sports, $days )
+  /**
+   * @param $table entity table, sports or facilities
+   * @param $data array with entities - sports or facilities
+   * @param $days array with selected days
+   * @return query result
+   */
+  function getClubsBySportsDays ( $table, $data, $days )
   {
-    if ( $price == null ) {
-      unset ( $price );
+    if ( $table == 'sports' )
+    {
+      $entity_table = 'sports';
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
+    }
+    else if ( $table == 'facilities' )
+    {
+      $entity_table = 'facilities';
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
     }
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
     $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
     $query .= ' from clubs';
-    $sports = array_values ( $sports );
-    $counter = count ( $sports );
+    $data = array_values ( $data );
+    $counter = count ( $data );
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= ', clubosport as clubosport' . $i;
-      $query .= ', sports as sports' . $i;
+      $query .= ", {$junction_table} as " . $junction_table . $i;
+      $query .= ", {$entity_table} as " . $entity_table . $i;
     }
     $query .= ' where 1';
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= " and clubs.id = clubosport{$i}.club_id";
-      $query .= " and sports{$i}.id = clubosport{$i}.sport_id";
-      $query .= " and sports{$i}.name = '{$sports[$i]}'";
+      $query .= " and clubs.id = {$junction_table}{$i}.club_id";
+      $query .= " and {$entity_table}{$i}.id = {$junction_table}{$i}.{$entity_id}";
+      $query .= " and {$entity_table}{$i}.name = '{$data[$i]}'";
     }
     if ( is_array ( $days ) && count ( days ) ) {
       $days = filterDays ( $days );
@@ -370,14 +387,14 @@
     if ( $days == false || ! is_array ( $days ) || count ( $days ) == 0 ) {
       $days = null;
     }
-    if ( wh_not_null ( $days ) && isset ( $price ) )
+    if ( wh_not_null ( $days ) )
     {
       for ( $i = 0; $i < $counter; ++$i )
       {
-        $query .= " and (clubosport{$i}.day_id = 8";
+        $query .= " and ({$junction_table}{$i}.day_id = 8";
         foreach ( $days as $day )
         {
-          $query .= " or clubosport{$i}.day_id = {$day}";
+          $query .= " or {$junction_table}{$i}.day_id = {$day}";
         }
         $query .= " )";
       }
