@@ -320,40 +320,35 @@
       }
       // Set times and prices when both schedules identical
       if ( $select_days_view == 'all' ) {
-        $is_it_true = setSportsTimePriceAll ( $club_id, $sport_id, $times, $prices );
-        //BUG Not working for some reason, the code here is for testing purposes
-        if ($is_it_true === true)
-        {
-          $i_am_happy = true;
-        }
+        setSportsTimePriceAll ( 'sports', $club_id, $sport_id, $times, $prices );
       }
       elseif ( $select_days_view == 'working' ) {
-        setSportsTimePriceWorking ( $club_id, $sport_id, $times, $prices );
+        setSportsTimePriceWorking ( 'sports', $club_id, $sport_id, $times, $prices );
       }
       elseif ( $select_days_view == 'separately' ) {
-        setSportsTimePriceSeparately ( $club_id, $sport_id, $times, $prices );
+        setSportsTimePriceSeparately ( 'sports', $club_id, $sport_id, $times, $prices );
       }
       else
       {
         // Set times
         if ( $select_days_view_time == 'all' ) {
-          setSportsTimeAll ( $club_id, $sport_id, $times );
+          setSportsTimeAll ( 'sports', $club_id, $sport_id, $times );
         }
         elseif ( $select_days_view_time == 'working' ) {
-          setSportsTimeWorking ( $club_id, $sport_id, $times );
+          setSportsTimeWorking ( 'sports', $club_id, $sport_id, $times );
         }
         elseif ( $select_days_view_time == 'separately' ) {
-          setSportsTimeSeparately ( $club_id, $sport_id, $times );
+          setSportsTimeSeparately ( 'sports', $club_id, $sport_id, $times );
         }
         // Set prices
         if ( $select_days_view_price == 'all' ) {
-          setSportsPriceAll ( $club_id, $sport_id, $prices );
+          setSportsPriceAll ( 'sports', $club_id, $sport_id, $prices );
         }
         elseif ( $select_days_view_price == 'working' ) {
-          setSportsPriceWorking ( $club_id, $sport_id, $prices );
+          setSportsPriceWorking ( 'sports', $club_id, $sport_id, $prices );
         }
         elseif ( $select_days_view_price == 'separately' ) {
-          setSportsPriceSeparately ( $club_id, $sport_id, $prices );
+          setSportsPriceSeparately ( 'sports', $club_id, $sport_id, $prices );
         }
       }
     } //end while $sport = wh_db_fetch...
@@ -506,7 +501,7 @@
 #     var_dump ( $sport_search );
       global $clubs;
       $clubs = array ( 0 => str_repeat ( '&nbsp', 45 ) );
-      $club_query = getClubsBySportsId ( array ( $sport_search ) );
+      $club_query = getClubsBySportsId ( 'sports', array ( $sport_search ) );
       while ( $row_obj = wh_db_fetch_object_custom ( $club_query ) ) {
         $clubs [ $row_obj->id ] = $row_obj->name;
       }
