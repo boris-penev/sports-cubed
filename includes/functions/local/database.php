@@ -622,20 +622,40 @@
   {
     return wh_db_query ( 'select * from sports' );
   }
+  
+  function getFacilities ( )
+  {
+    return wh_db_query ( 'select * from facilities' );
+  }
 
   function getSportsOrderById ( )
   {
     return wh_db_query ( 'select * from sports order by id' );
+  }
+  
+  function getFacilitiesOrderById ( )
+  {
+    return wh_db_query ( 'select * from facilities order by id' );
   }
 
   function getSportsOrderByName ( )
   {
     return wh_db_query ( 'select * from sports order by name' );
   }
+  
+  function getFacilitiesOrderByName ( )
+  {
+    return wh_db_query ( 'select * from facilities order by name' );
+  }
 
   function getSportByName ( $sport )
   {
     return wh_db_query ( "select * from sports where name='{$sport}'" );
+  }
+  
+  function getFacilityByName ( $facility )
+  {
+    return wh_db_query ( "select * from facilities where name='{$facility}'" );
   }
 
   function getSportsByClub ( $club )
@@ -644,6 +664,15 @@
       'where clubosport.club_id = ' . $club .
       ' and sports.id = clubosport.sport_id';
     $query .= ' group by sports.name';
+    return wh_db_query ( $query );
+  }
+  
+  function getFacilitiesByClub ( $club )
+  {
+    $query = 'select facilities.name from sports, club_facilities ' .
+      'where club_facilities.club_id = ' . $club .
+      ' and facilities.id = club_facilities.facility_id';
+    $query .= ' group by facilities.name';
     return wh_db_query ( $query );
   }
 
@@ -656,6 +685,19 @@
       ' and sports.id = clubosport.sport_id';
 #   $query .= ' group by sports.name, clubosport.day_id';
     $query .= ' order by sports.name, day_id';
+#   echoQuery ( $query );
+    return wh_db_query ( $query );
+  }
+  
+  function getFacilitiesByClubOrderByNameDays ( $club )
+  {
+    $query = 'select distinct sport_id, day_id, ' .
+      'price_member, price_nonmember, opening_time, closing_time' .
+      ' from facilities, club_facilities' .
+      ' where club_facilities.club_id = ' . $club .
+      ' and facilities.id = club_facilities.sport_id';
+#   $query .= ' group by facilities.name, club_facilities.day_id';
+    $query .= ' order by facilities.name, day_id';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
