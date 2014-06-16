@@ -71,7 +71,6 @@
       $sports [$row_obj->id] = $row_obj->name;
     }
     unset ($row_obj);
-    wh_db_free_result($sports_query);
     echo wh_draw_pull_down_menu_label ( 'sport_search', $sports, '', 'Sport',
         '', '', 'size="1"', false, true, 2, false );
     unset ( $sports [0] );
@@ -180,7 +179,6 @@
 
 #   var_dump ( $clubosport_row );
 
-    $sports_query = getSportsOrderByName ( );
     foreach ( $sports as $sport_id => $sport_name )
     {
 ?>

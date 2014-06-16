@@ -108,7 +108,6 @@
     while ($row_obj = wh_db_fetch_object_custom($sports_query)) {
       $sports [$row_obj->id] = $row_obj->name;
     }
-    wh_db_free_result ($sports_query);
     unset ($row_obj);
     echo wh_draw_pull_down_menu_label ( 'sports[]', $sports, '', 'Sports',
       '', '', 'multiple="multiple" size="3"', false, true, 2, true );

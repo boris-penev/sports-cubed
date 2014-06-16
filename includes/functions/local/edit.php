@@ -352,7 +352,6 @@
         }
       }
     } //end while $sport = wh_db_fetch...
-    wh_db_free_result($sports_query);
 
     // Delete empty entries from clubosport
     cleanClubosport ($club_id);
@@ -505,7 +504,6 @@
       while ( $row_obj = wh_db_fetch_object_custom ( $club_query ) ) {
         $clubs [ $row_obj->id ] = $row_obj->name;
       }
-      wh_db_free_result ($club_query);
 #     var_dump ( $clubs );
 #     die ();
     }
@@ -517,7 +515,6 @@
       while ( $row_obj = wh_db_fetch_object_custom ( $club_query ) ) {
         $clubs [ $row_obj->id ] = $row_obj->name;
       }
-      wh_db_free_result ($club_query);
 #     var_dump ( $clubs );
 #     die ();
     }
