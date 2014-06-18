@@ -93,40 +93,40 @@
       echo wh_draw_hidden_field ( 'id', $club->id ) . PHP_EOL;
       echo wh_draw_input_field_label ( 'name', 'name', 'Club Name', '', $club->name,
         ' required = "required" placeholder = "enter club name"',
-        'text', true, 2, true );
+        'text', false, 2, true );
       echo wh_draw_input_field_label ( 'address', 'address', 'Address', '',
-        $club->address, '', 'text', true, 2, true );
+        $club->address, '', 'text', false, 2, true );
       echo wh_draw_input_field_label ( 'postcode', 'postcode', 'Postcode', '',
-        $club->postcode, '', 'text', true, 2, true );
+        $club->postcode, '', 'text', false, 2, true );
       echo wh_draw_input_field_label ( 'latitude', 'latitude', 'Latitude', '',
-        $club->latitude, '', 'text', true, 2, true );
+        $club->latitude, '', 'text', false, 2, true );
       echo wh_draw_input_field_label ( 'longtitude', 'longtitude', 'Longtitude', '',
-        $club->longtitude, '', 'text', true, 2, true );
+        $club->longtitude, '', 'text', false, 2, true );
       echo wh_draw_input_field_label ( 'website', 'website', 'Website', '',
-        $club->website, 'maxlength="200"', 'text', true, 2, true );
+        $club->website, 'maxlength="200"', 'text', false, 2, true );
       echo wh_draw_input_field_label ( 'email', 'email', 'Email', '',
-        $club->email, 'maxlength="100"', 'text', true, 2, true );
+        $club->email, 'maxlength="100"', 'text', false, 2, true );
       echo wh_draw_input_field_label ( 'phone', 'phone', 'Contact phone', '',
-        $club->phone, 'maxlength="100"', 'text', true, 2, true );
+        $club->phone, 'maxlength="100"', 'text', false, 2, true );
       echo wh_draw_textarea_field_label ( 'comment', 'comment', 'Comment', '',
-        30, 3, $club->comment, 'maxlength="4000" spellcheck = "true"', true, 2, true );
+        30, 3, $club->comment, 'maxlength="4000" spellcheck = "true"', false, 2, true );
       echo wh_draw_input_field_label ( 'time_open_global', 'time_open_global', 'Opening time', '',
-        $club->time_open, '', 'time', true, 2, false );
+        $club->time_open, '', 'time', false, 2, false );
 ?>
     <input type="button" id="time_open_global_submit" value="set global" /> <br />
 <?php
       echo wh_draw_input_field_label ( 'time_close_global', 'time_close_global', 'Closing time', '',
-        $club->time_close, '', 'time', true, 2, false );
+        $club->time_close, '', 'time', false, 2, false );
 ?>
     <input type="button" id="time_close_global_submit" value="set global" /> <br />
 <?php
       echo wh_draw_input_field_label ( 'price_member_global', 'price_member_global', 'Price Member', '',
-        $club->price_member, '', 'text', true, 2, false );
+        $club->price_member, '', 'text', false, 2, false );
 ?>
     <input type="button" id="price_member_global_submit" value="set global" /> <br />
 <?php
       echo wh_draw_input_field_label ( 'price_nonmember_global', 'price_nonmember_global', 'Price Non-Member', '',
-        $club->price_nonmember, '', 'text', true, 2, false );
+        $club->price_nonmember, '', 'text', false, 2, false );
 ?>
     <input type="button" id="price_nonmember_global_submit" value="set global" /> <br />
 <?php
@@ -154,8 +154,8 @@
   <!--
   <table>
       <tr>
-        <td class="fieldKey"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
-        <td class="fieldValue"><?php echo wh_draw_input_field('dob', wh_date_short($account['customers_dob']), 'id="dob"') . '&nbsp;' . (wh_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">' . ENTRY_DATE_OF_BIRTH_TEXT . '</span>': ''); ?><script type="text/javascript">$('#dob').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script></td>
+        <td class="fieldKey"><?php #echo ENTRY_DATE_OF_BIRTH; ?></td>
+        <td class="fieldValue"><?php #echo wh_draw_input_field('dob', wh_date_short($account['customers_dob']), 'id="dob"') . '&nbsp;' . (wh_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">' . ENTRY_DATE_OF_BIRTH_TEXT . '</span>': ''); ?><script type="text/javascript">$('#dob').datepicker({dateFormat: '<?php #echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script></td>
       </tr>
   </table>
   -->
@@ -416,10 +416,10 @@
 
         echo wh_draw_input_field_custom ( "timeOpenDay{$i}_{$sport_id}",
           "timeOpenDay{$i}_{$sport_id}", $time_open,  ' size = "5" placeholder = ""',
-          'text', true, 5, true );
+          'text', false, 5, true );
         echo wh_draw_input_field_custom ( "timeCloseDay{$i}_{$sport_id}",
           "timeCloseDay{$i}_{$sport_id}", $time_close,  ' size = "5" placeholder = ""',
-          'text', true, 5, true );
+          'text', false, 5, true );
 ?>
         </td>
 <?php
@@ -436,10 +436,10 @@
 
       echo wh_draw_input_field_label ( "timeOpenWorking{$sport_id}",
         "timeOpenWorking{$sport_id}", 'Working days', '' ,$time_open,
-        ' size = "8" placeholder = ""', 'text', true, 5, false );
+        ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWorking{$sport_id}",
         "timeCloseWorking{$sport_id}", $time_close, ' size = "8" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center" colspan="2">
@@ -452,10 +452,10 @@
       echo wh_draw_label ( 'Weekend', '' , '', 5, true );
       echo wh_draw_input_field_custom ( "timeOpenWeekend{$sport_id}",
         "timeOpenWeekend{$sport_id}", $time_open, ' size = "5" placeholder = ""',
-        'text', true, 5, false );
+        'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWeekend{$sport_id}",
         "timeCloseWeekend{$sport_id}", $time_close, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
       </tr>
@@ -469,10 +469,10 @@
 
       echo wh_draw_input_field_label ( "timeOpenWorking{$sport_id}",
         "timeOpenWorking{$sport_id}", 'Working days', '' ,$time_open,
-        ' size = "8" placeholder = ""', 'text', true, 5, false );
+        ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWorking{$sport_id}",
         "timeCloseWorking{$sport_id}", $time_close, ' size = "8" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
@@ -487,10 +487,10 @@
 
       echo wh_draw_input_field_custom ( "timeOpenSat{$sport_id}",
         "timeOpenSat{$sport_id}", $time_open, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
       echo wh_draw_input_field_custom ( "timeCloseSat{$sport_id}",
         "timeCloseSat{$sport_id}", $time_close, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
@@ -505,10 +505,10 @@
 
       echo wh_draw_input_field_custom ( "timeOpenSun{$sport_id}",
         "timeOpenSun{$sport_id}", $time_open, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
       echo wh_draw_input_field_custom ( "timeCloseSun{$sport_id}",
         "timeCloseSun{$sport_id}", $time_close, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
       </tr>
@@ -523,10 +523,10 @@
       echo wh_draw_label ( 'All days', '' , '', 7, false );
       echo wh_draw_input_field_custom ( "timeOpenAll{$sport_id}",
         "timeOpenAll{$sport_id}", $time_open, ' size = "8" placeholder = ""',
-        'text', true, 5, false );
+        'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseAll{$sport_id}",
         "timeCloseAll{$sport_id}", $time_close, ' size = "8" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
       </tr>
@@ -568,10 +568,10 @@
 
         echo wh_draw_input_field_custom ( "priceMemberDay{$i}_{$sport_id}",
           "priceMemberDay{$i}_{$sport_id}", $price_member,  ' size = "5" placeholder = ""',
-          'text', true, 5, true );
+          'text', false, 5, true );
         echo wh_draw_input_field_custom ( "priceNonmemberDay{$i}_{$sport_id}",
           "priceNonmemberDay{$i}_{$sport_id}", $price_nonmember,  ' size = "5" placeholder = ""',
-          'text', true, 5, true );
+          'text', false, 5, true );
 ?>
         </td>
 <?php
@@ -588,10 +588,10 @@
 
       echo wh_draw_input_field_label ( "priceMemberWorking{$sport_id}",
         "priceMemberWorking{$sport_id}", 'Working days', '' , $price_member,
-        ' size = "8" placeholder = ""', 'text', true, 5, false );
+        ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWorking{$sport_id}",
         "priceNonmemberWorking{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center" colspan="2">
@@ -604,10 +604,10 @@
       echo wh_draw_label ( 'Weekend', '' , '', 5, true );
       echo wh_draw_input_field_custom ( "priceMemberWeekend{$sport_id}",
         "priceMemberWeekend{$sport_id}", $price_member, ' size = "5" placeholder = ""',
-        'text', true, 5, false );
+        'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWeekend{$sport_id}",
         "priceNonmemberWeekend{$sport_id}", $price_nonmember, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
       </tr>
@@ -621,10 +621,10 @@
 
       echo wh_draw_input_field_label ( "priceMemberWorking{$sport_id}",
         "priceMemberWorking{$sport_id}", 'Working days', '' , $price_member,
-        ' size = "8" placeholder = ""', 'text', true, 5, false );
+        ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWorking{$sport_id}",
         "priceNonmemberWorking{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
@@ -639,10 +639,10 @@
 
       echo wh_draw_input_field_custom ( "priceMemberSat{$sport_id}",
         "priceMemberSat{$sport_id}", $price_member, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
       echo wh_draw_input_field_custom ( "priceNonmemberSat{$sport_id}",
         "priceNonmemberSat{$sport_id}", $price_nonmember, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
@@ -657,10 +657,10 @@
 
       echo wh_draw_input_field_custom ( "priceMemberSun{$sport_id}",
         "priceMemberSun{$sport_id}", $price_member, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
       echo wh_draw_input_field_custom ( "priceNonmemberSun{$sport_id}",
         "priceNonmemberSun{$sport_id}", $price_nonmember, ' size = "5" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
       </tr>
@@ -675,10 +675,10 @@
       echo wh_draw_label ( 'All days', '' , '', 7, false );
       echo wh_draw_input_field_custom ( "priceMemberAll{$sport_id}",
         "priceMemberAll{$sport_id}", $price_member, ' size = "8" placeholder = ""',
-        'text', true, 5, false );
+        'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberAll{$sport_id}",
         "priceNonmemberAll{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
-        'text', true, 5, true );
+        'text', false, 5, true );
 ?>
         </td>
       </tr>
