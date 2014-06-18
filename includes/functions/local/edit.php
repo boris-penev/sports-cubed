@@ -8,12 +8,12 @@
 
     global $club;
 
-    if ( is_null ( $club ) || is_null ( $club->id ) )
+    $id = wh_db_post_input_string ( 'id' );
+    if ( is_null ( $id ) )
     {
       return;
     }
-
-    $club_id = $club->id;
+    $club_id = $id;
 
     $name = wh_db_post_input_string ( 'name' );
 
@@ -355,6 +355,7 @@
 
     // Delete empty entries from clubosport
     cleanClubosport ($club_id);
+    cleanClub_facilities ($club_id);
 
 
 /*
@@ -521,7 +522,7 @@
 
   }
 
-  selectClub ( );
   editClub ( );
+  selectClub ( );
 # var_dump (get_object_vars($club));
 ?>
