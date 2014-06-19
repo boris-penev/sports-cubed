@@ -78,10 +78,13 @@
     $current = $club_init;
     $address = $club->xpath('fields/field[@name=\'Address\']/text()');
     $location = $club->xpath('fields/field[@name=\'Location\']/text()');
+    $email = $club->xpath('fields/field[@name=\'Email\']/text()');
+    $phone = $club->xpath('fields/field[@name=\'Telephone\']/text()');
     $sports_x = $club->xpath('fields/field[@name=\'Activities\']/text()');
     $time_x = $club->xpath('fields/field[@name=\'Opening hours\']/text()');
     $sports_x = count ( $sports_x ) > 0 ? (string) $sports_x [ 0 ] : '';
     $time_x = count ( $time_x ) > 0 ? (string) $time_x [ 0 ] : '';
+    $current['name'] = (string) $club->title;
 
     if ( count ( $location ) > 0 && strlen ( $location[0] ) > 1 )
     {
@@ -99,18 +102,17 @@
         $current['longtitude'] = '';
       }
     }
-
+    // TODO These conditions can easily be made to function calls
     if ( count ( $address ) > 0 )
     {
       //echo $club->title, '  at  address ', $address [0];
-      $current['name'] = (string) $club->title;
       $current['address'] = (string) $address[0];
     }
-    else
-    {
-      //echo $club->title;
-      $current['name'] = (string) $club->title;
-      $current['address'] = '';
+    if ( count ( $email ) > 0 ) {
+      $current['email'] = (string) $email[0];
+    }
+    if ( count ( $phone ) > 0 ) {
+      $current['phone'] = (string) $phone[0];
     }
       //echo '<br />', PHP_EOL;
       /*if ( isset ( $sports_var ) )
