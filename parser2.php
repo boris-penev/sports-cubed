@@ -4,31 +4,21 @@
   require(DIR_WS_FUNCTIONS . 'local/parser.php');
 
   // as of PHP 5.4
-  $club = [
-    "name" => null,
-    "address" => null,
-    "postcode" => null,
-    "latitude" => null,
-    "longtitude" => null,
-    "website" => null,
-    "email" => null,
-    "phone" => null,
-    "comment" => null,
-    "opening_time" => null,
-    "closing_time" => null,
-    "price_member" => null,
-    "price_nonmember" => null
+  $club_init = [
+    'name' => '',
+    'address' => '',
+    'postcode' => '',
+    'latitude' => '',
+    'longtitude' => '',
+    'website' => '',
+    'email' => '',
+    'phone' => '',
+    'comment' => '',
+    'opening_time' => '',
+    'closing_time' => '',
+    'price_member' => '',
+    'price_nonmember' => ''
   ];
-
-  class Club
-  {
-    public $name;
-    public $address;
-    public $sports;
-    public $time;
-    public $latitude;
-    public $longtude;
-  };
 
   if ( isset ( $_GET [ 'sport' ] ) )
     $sports_var = $_GET [ 'sport' ];
@@ -85,7 +75,7 @@
 
   foreach ( $sports->xpath( '//entry' . $query1 . $query2 ) as $club )
   {
-    $current = new Club ( );
+    $current = $club_init;
     $address = $club->xpath('fields/field[@name=\'Address\']/text()');
     $location = $club->xpath('fields/field[@name=\'Location\']/text()');
     $sports_x = $club->xpath('fields/field[@name=\'Activities\']/text()');
@@ -99,54 +89,54 @@
       if ( count ( $location ) == 2 )
       {
         $latitude = $location [ 0 ];
-        $longtude = $location [ 1 ];
-        $current->{'latitude'} = (double) $latitude;
-        $current->{'longtude'} = (double) $longtude;
+        $longtitude = $location [ 1 ];
+        $current['latitude'] = (double) $latitude;
+        $current['longtitude'] = (double) $longtitude;
       }
       else
       {
-        $current->{'latitude'} = null;
-        $current->{'longtude'} = null;
+        $current['latitude'] = '';
+        $current['longtitude'] = '';
       }
     }
 
     if ( count ( $address ) > 0 )
     {
       //echo $club->title, '  at  address ', $address [0];
-      $current->{'name'} = (string) $club->title;
-      $current->{'address'} = (string) $address[0];
+      $current['name'] = (string) $club->title;
+      $current['address'] = (string) $address[0];
     }
     else
     {
       //echo $club->title;
-      $current->{'name'} = (string) $club->title;
-      $current->{'address'} = '';
+      $current['name'] = (string) $club->title;
+      $current['address'] = '';
     }
       //echo '<br />', PHP_EOL;
       /*if ( isset ( $sports_var ) )
       {
       //echo 'provides fields for ',  implode ( ' ', $sports_var ),
       //'<br />', PHP_EOL;
-      $current->{'sports'} = implode ( ' ', $sports_var );
+      $current['sports'] = implode ( ' ', $sports_var );
     }
     else
     {
-      $current->{'sports'} = '';
+      $current['sports'] = '';
     }*/
-    $sports_x = str_replace ( "\r", "", $sports_x );
-    $sports_x = str_replace ( "\n", ", ", $sports_x );
-    $current->{'sports'} = $sports_x;
+    $sports_x = str_replace ( "\r", '', $sports_x );
+    $sports_x = str_replace ( "\n", ', ', $sports_x );
+    $current['sports'] = $sports_x;
     /*if ( isset ( $time_var ) )
       {
       //echo 'at time ',  implode ( ' ', $time_var ),
       //'<br />', PHP_EOL;
-      $current->{'time'} = implode ( ' ', $time_var );
+      $current['time'] = implode ( ' ', $time_var );
     }
     else
     {
-      $current->{'time'} = '';
+      $current['time'] = '';
     }*/
-    $current->{'time'} = $time_x;
+    $current['time'] = $time_x;
     //$arr[$count++] = $current;
     $arr[] = $current;
 
