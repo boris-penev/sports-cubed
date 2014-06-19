@@ -136,8 +136,10 @@ makes the application responsive ***/
 
 /*** These are the cards and the button from the tutorial with explanations ***/
 .tutorial-explanation{
-  display:none; 
+  display:none;
   position:absolute;
+  top:0; 
+  left:0
 }
 
 .tutorial-explanation img{

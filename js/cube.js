@@ -41,7 +41,12 @@ var determinerDirection;
 var windowHeight;
 
 // used to lock cube when demonstrating the tutorial
-var cubeLocked = false;
+var cubeNotLocked = 'all';
+
+var tutorialMode = false;
+
+// used to determine whether the recursive swipe animation to be executed
+var swipeAllowed = true
 
 // Determine browser
 var props = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
@@ -179,12 +184,15 @@ $('#linkToMap').click(function(){
 // this is the animation showing how to use the cube [TO BE CHANGED]
 // TODO Change this
 $('#how-to').click(function(){
-  cubeLocked = true;
+  tutorialMode = true;
+  cubeNotLocked = 'left';
   $('#curtain').fadeIn();
-  setTimeout(function(){$('#intro-explanation').fadeIn(1000);},2000);
-  setTimeout(function(){$('#start-intro').fadeIn(1000);},2000);
-  $('#start-intro').click(function(){
-    $('#intro-explanation').fadeOut(1000);
+  setTimeout(function(){$('#bottom-explanation').fadeIn(1000);},500);
+  setTimeout(function(){$('#swipe-bottom').fadeIn(1000, function(){ 
+	animateSwipe('left', 'bottom')
+  });},500);
+  /*$('#start-intro').click(function(){
+    $('#bottom-explanation').fadeOut(1000);
     $('#start-intro').fadeOut(1000);
     setTimeout(function(){gesturePerformed("swiperight")},1000);
     setTimeout(function(){$('#time-explanation').fadeIn(1000);},3800);
@@ -209,8 +217,51 @@ $('#how-to').click(function(){
         })
       })
     })
-  })
+  })*/
 })
+
+// the repeating swiping animation for the tutorial
+function animateSwipe(direction, facingWall){
+
+if(swipeAllowed){
+	var swipeimage = $('#swipe-'+facingWall); 
+	
+	switch (direction){
+	case 'left':
+		swipeimage.animate({
+			marginLeft: '10px'
+			}, 1500, function(){
+			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
+			}
+		)
+		break;
+	case 'right':
+		swipeimage.animate({
+			marginRight: '10px'
+			}, 1500, function(){
+			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
+			}
+		)
+		break;
+	case 'down':
+		swipeimage.animate({
+			marginBottom: '10px'
+			}, 1500, function(){
+			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
+			}
+		)
+		break;
+	case 'up':
+		swipeimage.animate({
+			marginTop: '10px'
+			}, 1500, function(){
+			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
+			}
+		)
+		break;	
+	}
+}
+}
 
 // toggling the yes-no-button for prices
 $('.price-togglers > a').click(function(){
@@ -236,6 +287,15 @@ function clickPriceToggler(obj){
 // setting what will be saved in the browser storage as price once we go to
 // the map
 $('.price-togglers').click(function(){
+
+// if in tutorial mode - display the explanations
+if(tutorialMode == true){
+	setTimeout(function(){$('#left-explanation').fadeIn(1000);
+	$('#swipe-left').fadeIn(1000, function(){ 
+	animateSwipe('left', 'left')
+  });
+}, 500)}
+
   var state = $(this).find('a').data('clicked');
   var price = $(this).text().toLowerCase().replace(" ", "");
   if (state === "yes"){
@@ -267,6 +327,15 @@ function clickSportsToggler(obj){
 // setting what will be saved in the browser storage as clicked sports-togglers
 // once we go to the map
 $('.sports-togglers').click(function(){
+
+// if in tutorial mode - display the explanations
+if(tutorialMode == true){
+	setTimeout(function(){$('#back-explanation').fadeIn(1000);
+	$('#swipe-back').fadeIn(1000, function(){ 
+	animateSwipe('left', 'back')
+  });
+}, 500)}
+
   var state = $(this).find('a').data('clicked');
   if (state === "yes"){
     var sport = $(this).text().toLowerCase();
@@ -282,6 +351,15 @@ $('.sports-togglers').click(function(){
 // setting what will be saved in the browser storage as days once we go to
 // the map
 $('.time-togglers').click(function(){
+
+// if in tutorial mode - display the explanations
+if(tutorialMode == true){
+	setTimeout(function(){$('#right-explanation').fadeIn(1000);
+	$('#swipe-right').fadeIn(1000, function(){ 
+	animateSwipe('left', 'right')
+  });
+}, 500)}
+
 var state = $(this).find('a').data('clicked');
 var day = $(this).text().toLowerCase();
  clickTimeTogglers(state, day);
@@ -357,37 +435,69 @@ $(window).resize(function() {
 
 })
 
+$('#front-explanation').click(function(){ tutorialMode = false;
+										  cubeNotLocked = 'all'; 
+										  $(this).fadeOut(1000, function(){ 
+												$('#linkToMap').fadeIn(500) }); 
+										  $('#curtain').fadeOut(1000)})
+
 //preventing the elastic bounce effect in Safari under iOS
 $(document).bind('touchmove', function(e) { e.preventDefault();});
+
+// prevents images from being draggable
+$('img').on('dragstart', function(event) { event.preventDefault(); });
+
+// detecting when a key is pressed and passing this key to the keydownEvent
+// function
+$('body').keydown( function (evt){
+
+  	  if(evt.keyCode == 68){ type = 'left' }
+	  else if(evt.keyCode == 65) { type = 'right' }
+      else if(evt.keyCode == 83) { type = 'up' }
+      else if(evt.keyCode == 87) { type = 'down' }
+	      
+	  if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') || 
+							   (cubeNotLocked == 'right' && type == 'right') || 
+							   (cubeNotLocked == 'up' && type == 'up') || 
+							   (cubeNotLocked == 'down' && type == 'down')){
+        console.log(cubeNotLocked + "|" + type)
+		gesturePerformed(type);
+	  }
+});
 
 //detecting touch gestures on the screen (body)
 Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragleft dragright",
   function(event) {
-    if (cubeLocked === false){
+	var type
+	if (event.type == "swipedown" || event.type == "dragdown") {
+		type = "down";
+	}
+	else if (event.type == "swipeleft" || event.type == "dragleft") {
+		type = "left";
+	}
+	else if (event.type == "swiperight" || event.type == "dragright"){
+		type = "right";
+	}
+	else if (event.type == "swipeup" || event.type == "dragup"){
+		type = "up";
+	}
+    if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') || 
+							   (cubeNotLocked == 'right' && type == 'right') || 
+							   (cubeNotLocked == 'up' && type == 'up') || 
+							   (cubeNotLocked == 'down' && type == 'down')){
       event.gesture.stopDetect();
-      gesturePerformed(event.type);
+      gesturePerformed(type);
     }
   });
 
 // the equavelent of keydownEvent() but for the gestures
 function gesturePerformed(type)
 {
-  if (type == "swipedown" || type == "dragdown") {
-    type = "swipedown";
-  }
-  else if (type == "swipeleft" || type == "dragleft") {
-    type = "swipeleft";
-  }
-  else if (type == "swiperight" || type == "dragright"){
-    type = "swiperight";
-  }
-  else if (type == "swipeup" || type == "dragup"){
-    type = "swipeup";
-  }
+    // hides the red map button
     $('#linkToMap').delay(500).fadeOut(800);
 
     switch (type) {
-      case "swiperight": // left
+      case "right": // left
         if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "+";
@@ -436,7 +546,7 @@ function gesturePerformed(type)
         }
         break;
 
-      case "swipedown": // up
+      case "down": // up
         if ( isFront() )
         {
           determinerAxis = "Y";
@@ -490,7 +600,7 @@ function gesturePerformed(type)
         }
         break;
 
-      case "swipeleft": // right
+      case "left": // right
         if ( isFront() ) {
           determinerAxis = "X";
           determinerDirection = "-";
@@ -539,7 +649,7 @@ function gesturePerformed(type)
         }
         break;
 
-      case "swipeup": // down
+      case "up": // down
         if ( isFront() ) {
           determinerAxis = "Y";
           determinerDirection = "-";
@@ -592,6 +702,31 @@ function gesturePerformed(type)
         }
         break;
     }
+	
+	// if in tutorial mode hide the explanations that the user leaves behind
+	if(tutorialMode == true){
+		switch (currentWall){
+			case 'right':
+			$('#swipe-bottom').fadeOut(1500)
+			$('#bottom-explanation').fadeOut(1500)
+			break;
+			case 'back':
+			$('#swipe-right').fadeOut(1500)
+			$('#right-explanation').fadeOut(1500)
+			break;
+			case 'left':
+			$('#swipe-back').fadeOut(1500)
+			$('#back-explanation').fadeOut(1500)
+			break;
+			case 'front':
+			$('#swipe-left').fadeOut(1500)
+			$('#left-explanation').fadeOut(1500, function(){ 
+											$('#front-explanation').fadeIn(1000);
+											cubeNotLocked = ''; 
+											})
+			break;
+		}
+	}
 
 	// check the beginning of the document for the variables that follow
 	// when we rotate the cube and it is moved inwards to make it fit the screen
@@ -618,259 +753,6 @@ function gesturePerformed(type)
     }
 }
 
-// detecting when a key is pressed and passing this key to the keydownEvent
-// function
-$('body').keydown( function (evt){
-  if (cubeLocked === false){
-    keydownEvent(evt);
-    }
-});
-
-// 65 is left
-// 68 is right
-// 87 is up
-// 83 is down
-function keydownEvent( evt ) {
-  if ( evt.keyCode == 65 || evt.keyCode == 68 ||
-       evt.keyCode == 87 || evt.keyCode == 83 )
-  {
-    $('#linkToMap').delay(500).fadeOut(800);
-
-    switch (evt.keyCode) {
-      case 65: // left
-        if ( isFront() ) {
-          determinerAxis = "X";
-          determinerDirection = "+";
-          yAngle += 90;
-          currentWall = "left";
-          zoomIn();
-        }
-        else if ( isRight() ) {
-          determinerAxis = "Z";
-          determinerDirection = "-";
-          yAngle += 90;
-          currentWall = "front";
-          zoomIn();
-        }
-        else if ( isTop() ) {
-          determinerAxis = "X";
-          determinerDirection = "+";
-          xAngle += 90;
-          yAngle += 90;
-          currentWall = "left";
-          zoomIn();
-        }
-        else if ( isBottom() ) {
-          determinerAxis = "X";
-          determinerDirection = "+";
-          xAngle -= 90;
-          yAngle += 90;
-          currentWall = "left";
-          zoomIn();
-        }
-        else if ( isLeft ( ) )
-        {
-          determinerAxis = "Z";
-          determinerDirection = "+";
-          yAngle += 90;
-          currentWall = "back";
-          zoomIn();
-        }
-        else if ( isBack ( ) )
-        {
-          determinerAxis = "X";
-          determinerDirection = "-";
-          yAngle += 90;
-          currentWall = "right";
-          zoomIn();
-        }
-        break;
-
-      case 87: // up
-        if ( isFront() )
-        {
-          determinerAxis = "Y";
-          determinerDirection = "+";
-          xAngle -= 90;
-          currentWall = "top";
-          zoomIn();
-        }
-        else if ( isTop() ) {
-          determinerAxis = "Z";
-          determinerDirection = "+";
-          xAngle += 90;
-          yAngle += 180;
-          currentWall = "back";
-          zoomIn();
-        }
-        else if ( isBottom() )
-        {
-          determinerAxis = "Z";
-          determinerDirection = "-";
-          xAngle -= 90;
-          currentWall = "front";
-          zoomIn();
-        }
-        else if ( isLeft () )
-        {
-          determinerAxis = "Y";
-          determinerDirection = "+";
-          xAngle -= 90;
-          yAngle -= 90;
-          currentWall = "top";
-          zoomIn();
-        }
-        else if ( isRight () )
-        {
-          determinerAxis = "Y";
-          determinerDirection = "+";
-          xAngle -= 90;
-          yAngle += 90;
-          currentWall = "top";
-          zoomIn();
-        }
-        else if ( isBack ( ) )
-        {
-          determinerAxis = "Y";
-          determinerDirection = "+";
-          xAngle -= 90;
-          yAngle += 180;
-          currentWall = "top";
-          zoomIn();
-        }
-        break;
-
-      case 68: // right
-        if ( isFront() ) {
-          determinerAxis = "X";
-          determinerDirection = "-";
-          yAngle -= 90;
-          currentWall = "right";
-          zoomIn();
-        }
-        else if ( isLeft() ) {
-          determinerAxis = "Z";
-          determinerDirection = "-";
-          yAngle -= 90;
-          currentWall = "front";
-          zoomIn();
-        }
-        else if ( isTop() ) {
-          determinerAxis = "X";
-          determinerDirection = "-";
-          xAngle += 90;
-          yAngle -= 90;
-          currentWall = "right";
-          zoomIn();
-        }
-        else if ( isBottom() ) {
-          determinerAxis = "X";
-          determinerDirection = "-";
-          xAngle -= 90;
-          yAngle -= 90;
-          currentWall = "right";
-          zoomIn();
-        }
-        else if ( isRight () )
-        {
-		  alert("breakPoint");
-          determinerAxis = "Z";
-          determinerDirection = "+";
-          yAngle -= 90;
-          currentWall = "back";
-          zoomIn();
-        }
-        else if ( isBack () )
-        {
-          determinerAxis = "X";
-          determinerDirection = "+";
-          yAngle -= 90;
-          currentWall = "left";
-          zoomIn();
-        }
-        break;
-
-      case 83: // down
-        if ( isFront() ) {
-          determinerAxis = "Y";
-          determinerDirection = "-";
-          xAngle += 90;
-          currentWall = "bottom";
-          zoomIn();
-        }
-        else if ( isTop () )
-        {
-          determinerAxis = "Z";
-          determinerDirection = "-";
-          xAngle += 90;
-          currentWall = "front";
-          zoomIn();
-        }
-        else if ( isLeft () )
-        {
-          determinerAxis = "Y";
-          determinerDirection = "-";
-          xAngle += 90;
-          yAngle -= 90;
-          currentWall = "bottom";
-          zoomIn();
-        }
-        else if ( isRight () )
-        {
-          determinerAxis = "Y";
-          determinerDirection = "-";
-          xAngle += 90;
-          yAngle += 90;
-          currentWall = "bottom";
-          zoomIn();
-        }
-        else if ( isBottom() ) {
-          determinerAxis = "Z";
-          determinerDirection = "+";
-          xAngle -= 90;
-          yAngle += 180;
-          currentWall = "back";
-          zoomIn();
-        }
-        else if ( isBack ( ) )
-        {
-          determinerAxis = "Y";
-          determinerDirection = "-";
-          xAngle += 90;
-          yAngle += 180;
-          currentWall = "bottom";
-          zoomIn();
-        }
-        break;
-    }
-
-	// check the beginning of the document for the variables that follow
-	// when we rotate the cube and it is moved inwards to make it fit the screen
-	// first we move it outwards
-	//console.log(prop)
-	//console.log(document.getElementById('cube').style[prop]);
-    document.getElementById('cube').style[prop] +=
-            "translate" + currentDeterminerAxis  + "(" +
-            currentDeterminerDirection + "" + depth + "px)";
-
-	// then we rotate it
-    document.getElementById('cube').style[prop] =
-            "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
-
-	// then move it inwards by the respective axis
-    document.getElementById('cube').style[prop] +=
-            "translate" + determinerAxis +
-            "(" + determinerDirection + "" + depth + "px)";
-
-    currentDeterminerAxis = determinerAxis;
-    if (determinerDirection === "+"){
-      currentDeterminerDirection = "-";
-    }
-    else {
-      currentDeterminerDirection = "+";
-    }
-  }
-}
 
 // methods used to verify which side we are facing (currentWall)
 function isBack() {
@@ -924,7 +806,9 @@ function getBackPanel() {
 
 // executed when the user is facing the Front (Map) side of the cube
 function frontpanel(){
-  $('#linkToMap').delay(500).fadeIn(800);
+  if(tutorialMode == false){
+    $('#linkToMap').delay(500).fadeIn(800);
+  }
 }
 
 // checks which side we are facing and zooms it by making all other sides
