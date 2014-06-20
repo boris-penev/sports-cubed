@@ -40,22 +40,11 @@
     curl_close($curl);
     return $data;
   }
-
-  //@formatter:off
-  $sports = curl_get_html_file_contents_custom (
-    'http://www.edinburgh.gov.uk/api/directories/25/entries.xml?api_key=' .
-    COUNCIL_API_KEY . '&per_page=100&page=1' );
-  //@formatter:on
-
-  $sports = new SimpleXMLElement($sports);
-
-  foreach ( $sports->xpath( '//entry[fields/field[@name=\'Activities\'][contains(text(),\'Football\')]][fields/field[@name=\'Opening hours\'][contains(text(),\'Monday\')]]' ) as $club )
+  
+  function get_first_element ( $entity )
   {
-      $address = $club->xpath('fields/field[@name=\'Address\']/text()');
-      if ( count ( $address ) )
-        echo $club->title, '  at  ', $address [0], '<br />', PHP_EOL;
-      else
-        echo $club->title, '<br />', PHP_EOL;
+    return count ( $entity ) > 0 ?
+              (string) $entity[0] : '';
   }
 
 ?>

@@ -30,11 +30,11 @@
   if ( isset ( $time_var ) )
     $time_var = explode ( ' ', $time_var );
 
-  $sports = curl_get_html_file_contents_custom (
+  $xml = curl_get_html_file_contents_custom (
     'http://www.edinburgh.gov.uk/api/directories/25/entries.xml?api_key=' .
     COUNCIL_API_KEY . '&per_page=100&page=1' );
 
-  $sports = new SimpleXMLElement($sports);
+  $xml = new SimpleXMLElement($xml);
 
   if ( ! isset ( $sports_var ) )
   {
@@ -73,17 +73,20 @@
   //$count = 0;
   $arr = array ( );
 
-  foreach ( $sports->xpath( '//entry' . $query1 . $query2 ) as $club )
+  foreach ( $xml->xpath( '//entry' . $query1 . $query2 ) as $club )
   {
     $current = $club_init;
     $address = $club->xpath('fields/field[@name=\'Address\']/text()');
+    $postcode = $club->xpath('fields/field[@name=\'Postcode\']/text()');
     $location = $club->xpath('fields/field[@name=\'Location\']/text()');
     $email = $club->xpath('fields/field[@name=\'Email\']/text()');
     $phone = $club->xpath('fields/field[@name=\'Telephone\']/text()');
-    $sports_x = $club->xpath('fields/field[@name=\'Activities\']/text()');
-    $time_x = $club->xpath('fields/field[@name=\'Opening hours\']/text()');
-    $sports_x = count ( $sports_x ) > 0 ? (string) $sports_x [ 0 ] : '';
-    $time_x = count ( $time_x ) > 0 ? (string) $time_x [ 0 ] : '';
+    $sports = $club->xpath('fields/field[@name=\'Activities\']/text()');
+    $facilities = $club->xpath('fields/field[@name=\'Facilities\']/text()');
+    $times = $club->xpath('fields/field[@name=\'Opening hours\']/text()');
+    $prices = $club->xpath('fields/field[@name=\'Prices\']/text()');
+    $website = $club->xpath('fields/field[@name=\'Timetables\']/text()');
+    $comment = $club->xpath('fields/field[@name=\'More information\']/text()');
     $current['name'] = (string) $club->title;
 
     if ( count ( $location ) > 0 && strlen ( $location[0] ) > 1 )
@@ -96,55 +99,51 @@
         $current['latitude'] = (double) $latitude;
         $current['longtitude'] = (double) $longtitude;
       }
-      else
-      {
-        $current['latitude'] = '';
-        $current['longtitude'] = '';
-      }
     }
-    // TODO These conditions can easily be made to function calls
-    if ( count ( $address ) > 0 )
-    {
-      //echo $club->title, '  at  address ', $address [0];
-      $current['address'] = (string) $address[0];
-    }
-    if ( count ( $email ) > 0 ) {
-      $current['email'] = (string) $email[0];
-    }
-    if ( count ( $phone ) > 0 ) {
-      $current['phone'] = (string) $phone[0];
-    }
-      //echo '<br />', PHP_EOL;
-      /*if ( isset ( $sports_var ) )
-      {
-      //echo 'provides fields for ',  implode ( ' ', $sports_var ),
-      //'<br />', PHP_EOL;
-      $current['sports'] = implode ( ' ', $sports_var );
-    }
-    else
-    {
-      $current['sports'] = '';
-    }*/
-    $sports_x = str_replace ( "\r", '', $sports_x );
-    $sports_x = str_replace ( "\n", ', ', $sports_x );
-    $current['sports'] = $sports_x;
+#   echo $club->title, '  at  address ', $address [0];
+    $current['address'] = get_first_element ($address);
+    $current['postcode'] = get_first_element ($postcode);
+    $current['email'] = get_first_element ($email);
+    $current['phone'] = get_first_element ($phone);
+    $current['website'] = get_first_element ($website);
+    $sports = get_first_element ($sports);
+    $facilities = get_first_element ($facilities);
+    $times = get_first_element ($times);
+    $prices = get_first_element ($prices);
+    $comment = get_first_element ($comment);
+    $sports = str_replace ( "\r", '', $sports );
+    $sports = str_replace ( "\n", ', ', $sports );
+    $facilities = str_replace ( "\r", '', $facilities );
+    $facilities = str_replace ( "\n", ', ', $facilities );
+    $times = str_replace ( "\r", '', $times );
+    $times = str_replace ( "\n", ', ', $times );
+    $prices = str_replace ( "\r", '', $prices );
+    $prices = str_replace ( "\n", ', ', $prices );
+#   $comment = str_replace ( "\r", '', $comment );
+#   $comment = str_replace ( "\n", ', ', $comment );
+    $current['sports'] = $sports;
+    $current['facilities'] = $facilities;
+    $current['time'] = $times;
+    $current['price'] = $prices;
+    $current['comment'] = $comment;
     /*if ( isset ( $time_var ) )
       {
-      //echo 'at time ',  implode ( ' ', $time_var ),
+      //echo 'at times ',  implode ( ' ', $times ),
       //'<br />', PHP_EOL;
-      $current['time'] = implode ( ' ', $time_var );
+      $current['time'] = implode ( ' ', $times );
     }
     else
     {
       $current['time'] = '';
     }*/
-    $current['time'] = $time_x;
     //$arr[$count++] = $current;
     $arr[] = $current;
 
   }
 
-  echo json_encode ( $arr );
+# echo json_encode ( $arr );
+  var_dump ($arr);
+# var_export($arr);
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 
