@@ -20,8 +20,7 @@
     'price_nonmember' => ''
   ];
 
-  if ( isset ( $_GET [ 'club' ] ) )
-    $sports_var = $_GET [ 'club' ];
+  $club_var = wh_db_get_input_string ( 'club' );
 
   $xml = curl_get_html_file_contents_custom (
     'http://www.edinburgh.gov.uk/api/directories/25/entries.xml?api_key=' .
@@ -32,13 +31,13 @@
   if ( ! isset ( $club_var ) ) {
     $query1 = '';
   } else {
-    $query1 = "/title[text()='$club_var']";
+    $query1 = "[title[text()='$club_var']]";
   }
 
   //$count = 0;
   $arr = array ( );
 
-  foreach ( $xml->xpath( '//entry' . $query1 ) as $club )
+  foreach ( $xml->xpath( '/entries/entry' . $query1 ) as $club )
   {
     $current = $club_init;
     $address = $club->xpath('fields/field[@name=\'Address\']/text()');

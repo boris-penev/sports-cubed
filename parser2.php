@@ -20,10 +20,8 @@
     'price_nonmember' => ''
   ];
 
-  if ( isset ( $_GET [ 'sport' ] ) )
-    $sports_var = $_GET [ 'sport' ];
-  if ( isset ( $_GET [ 'time' ] ) )
-    $time_var = $_GET [ 'time' ];
+  $sports_var = wh_db_get_input_string ( 'sport' );
+  $time_var = wh_db_get_input_string ( 'time' );
 
   if ( isset ( $sports_var ) )
     $sports_var = explode ( ' ', $sports_var );
@@ -73,7 +71,7 @@
   //$count = 0;
   $arr = array ( );
 
-  foreach ( $xml->xpath( '//entry' . $query1 . $query2 ) as $club )
+  foreach ( $xml->xpath( '/entries/entry' . $query1 . $query2 ) as $club )
   {
     $current = $club_init;
     $address = $club->xpath('fields/field[@name=\'Address\']/text()');
