@@ -1,5 +1,5 @@
 body {
-  overflow:hidden;
+  overflow:true;
   background: linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); 
   background: -webkit-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); 
   background: -moz-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
@@ -25,7 +25,7 @@ p {
 /*** The wrapper that contains everything and is resized respectively to the screen,
 makes the application responsive ***/
 #bigWrapper {
-  overflow: hidden;
+  overflow: true;
   top:0; 
   left:0;
 }
@@ -86,6 +86,8 @@ makes the application responsive ***/
   -webkit-backface-visibility: hidden;
   -moz-transform-style: flat;
   -moz-backface-visibility: hidden;
+  
+  overflow: true;
 }
 
 #cube .top {
@@ -170,6 +172,38 @@ makes the application responsive ***/
   margin: 10px auto 0 auto;
 }
 
+#sports-left-navigator{
+width: 30px;
+height: 410px;
+float:left;
+}
+
+#sports-right-navigator{
+width: 30px;
+height: 410px;
+float:left;
+}
+
+#sports-left-navigator img{
+margin: 110px 3px 110px 3px;
+}
+
+#sports-right-navigator img{
+margin: 110px 3px 110px 3px;
+}
+
+#sports-page{
+width: 438px;
+height: 420px;
+float:left;
+overflow: hidden;
+}
+
+#sports-slider{
+width: 2200px;
+height: 420px;
+}
+
 .time_wrapper {
   margin:10px 0 0 0;
   width:37%;
@@ -178,12 +212,12 @@ makes the application responsive ***/
   padding:20px 30px 10px 30px;
 }
 
-.sport_wrapper {
-  margin:-15px 0 0 0;
-  width:31%;
+.sports-wrapper {
+  margin:0px 0 0 0;
+  width:146px;
   float: left;
   text-align:center;
-  padding:5px 5px 10px 5px;
+  padding:0px;
 }
 
 .price_wrapper {

@@ -64,6 +64,10 @@ for (var i = 0, l = props.length; i < l; i++) {
 var inactivity = 1000;
 var interval = setInterval(function(){activityTimer();}, inactivity);
 
+document.getElementById("linkToMap").style.cursor = "pointer";
+document.getElementById("sports-left-navigator").style.cursor = "pointer";
+document.getElementById("sports-right-navigator").style.cursor = "pointer";
+
 // this function adjusts the cube (translates it) so that it is resized
 // every time the orientation of the screen changes
 // by default every side of the cube is 500px and every time the screen size is
@@ -153,6 +157,18 @@ $(document).ready(function() {
     $('#all_toggler > a').trigger("click");
   }
 
+  // draw and populate the activities side
+  var sportsList = ['Football', 'Basketball', 'Golf', 'Swimming','Cricket','BMX',
+				  'Cycling','Badminton','Gym','Skateboard','Gymnastics',
+				  'Table tennins','Rugby','Hockey','Tennins','Athletics',
+				  'Volleyball','Bowling', '1','2','3','4','5','6','7','8','9',
+				  '10','11','12','13','14','15','16','17','18','Football', 
+				  'Basketball', 'Golf', 'Swimming','Cricket','BMX','Cycling',
+				  'Badminton','Gym','Skateboard','Gymnastics','Table tennins',
+				  'Rugby','Hockey','Tennins','Athletics','Volleyball','Bowling',
+				  'test1', 'test2', 'test3']
+  drawActivities(sportsList);
+  
   // set some default properties and rotate the cube to the Bottom (Intro) side
   $('#bigWrapper').css('width', "100%");
   $('#bigWrapper').css('height', "100%");
@@ -191,34 +207,66 @@ $('#how-to').click(function(){
   setTimeout(function(){$('#swipe-bottom').fadeIn(1000, function(){ 
 	animateSwipe('left', 'bottom')
   });},500);
-  /*$('#start-intro').click(function(){
-    $('#bottom-explanation').fadeOut(1000);
-    $('#start-intro').fadeOut(1000);
-    setTimeout(function(){gesturePerformed("swiperight")},1000);
-    setTimeout(function(){$('#time-explanation').fadeIn(1000);},3800);
-    $('#next-time').click(function(){
-      $('#time-explanation').fadeOut(1000);
-      setTimeout(function(){gesturePerformed("swipedown")},1000);
-      setTimeout(function(){$('#activities-explanation').fadeIn(1000);},3800);
-      $('#next-activities').click(function(){
-        $('#activities-explanation').fadeOut(1000);
-        setTimeout(function(){gesturePerformed("swipeleft")},1000);
-        setTimeout(function(){$('#price-explanation').fadeIn(1000);},3800);
-        $('#next-price').click(function(){
-          $('#price-explanation').fadeOut(1000);
-          setTimeout(function(){gesturePerformed("swiperight")},1000);
-          setTimeout(function(){$('#map-explanation').fadeIn(1000);},3800);
-          $('#next-final').click(function(){
-            $('#map-explanation').fadeOut(1000);
-            setTimeout(function(){gesturePerformed("swipeup")},1000);
-            setTimeout(function(){$('#curtain').fadeOut();},3800);
-            cubeLocked = false;
-          })
-        })
-      })
-    })
-  })*/
 })
+
+$('#sports-left-navigator').click(function(){ 
+	var currentMargin = parseInt($('#sports-slider').css('margin-left'))
+	if(currentMargin < 0){
+		currentMargin += 438;
+	$('#sports-slider').animate({
+	'marginLeft': currentMargin + 'px'}, 500)
+	}
+})
+
+$('#sports-right-navigator').click(function(){ 
+	var currentMargin = parseInt($('#sports-slider').css('margin-left'))
+	if(currentMargin > -2190){
+	currentMargin -= 438;
+	$('#sports-slider').animate({
+	'marginLeft': currentMargin + 'px'}, 500)
+	}
+})
+
+// draws all the choices on the activities side of the cube
+// takes an array of sports that is fetched from the DB
+// for now the array is static until Borkata works it out.
+function drawActivities(sportsList){
+	listLength = sportsList.length;
+	while(listLength != 0){
+		if(listLength > 6){
+			drawSportsWrapper(sportsList.slice(0,6))
+			sportsList.splice(0,6)
+			listLength = sportsList.length;
+		}
+		else{
+			drawSportsWrapper(sportsList.slice(0, listLength))
+			sportsList.splice(0,listLength)
+			listLength = sportsList.length;
+		}
+	}
+}
+
+function drawSportsWrapper(wrapperList){
+	n = wrapperList.length
+	var sportsWrapperSource = '<section class="sports-wrapper">'
+	for(var i = 0; i < n; i++){
+		sportsWrapperSource += drawSportsLine(wrapperList[i]);
+	}
+	sportsWrapperSource += '</section>';
+	
+	var sportsSliderSource = $('#sports-slider').html()
+	$('#sports-slider').html(sportsSliderSource + sportsWrapperSource)
+}
+
+// draws a single line for a sport with the label and the button
+function drawSportsLine(element){
+	elementID = element.toLowerCase();
+	elementID = elementID.replace(' ', '');
+	console.log(element + "|" + elementID)
+	return '<div class="sports-togglers" id="' + elementID + '_toggler">' + element + 
+		   '<br/><a href=# data-clicked="no"><div class="yes-no-button-sports"></div></a></div>'
+}
+
 
 // the repeating swiping animation for the tutorial
 function animateSwipe(direction, facingWall){
@@ -460,7 +508,6 @@ $('body').keydown( function (evt){
 							   (cubeNotLocked == 'right' && type == 'right') || 
 							   (cubeNotLocked == 'up' && type == 'up') || 
 							   (cubeNotLocked == 'down' && type == 'down')){
-        console.log(cubeNotLocked + "|" + type)
 		gesturePerformed(type);
 	  }
 });
