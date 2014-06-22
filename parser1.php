@@ -80,7 +80,7 @@
     $facilities = str_replace ( "\r", '', $facilities );
     $facilities = str_replace ( "\n", ', ', $facilities );
     $times = str_replace ( "\r", '', $times );
-    $times = str_replace ( "\n", ', ', $times );
+#   $times = str_replace ( "\n", ', ', $times );
     $prices = str_replace ( "\r", '', $prices );
     $prices = str_replace ( "\n", ', ', $prices );
 #   $comment = str_replace ( "\r", '', $comment );
