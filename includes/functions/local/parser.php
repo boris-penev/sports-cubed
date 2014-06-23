@@ -15,6 +15,8 @@
     'price_member' => '',
     'price_nonmember' => ''
   ];
+  
+  $day = '(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)';
 
   function curl_get_file_contents_custom($URL)
   {
@@ -115,6 +117,7 @@
   
   function process_current_club ( $club )
   {
+    global $club_init;
     $current = $club_init;
     $address = $club->xpath('fields/field[@name=\'Address\']/text()');
     $postcode = $club->xpath('fields/field[@name=\'Postcode\']/text()');
@@ -185,6 +188,7 @@
     foreach ( $xml->xpath('/entries/entry' . $query) as $club )
     {
       $current_club = process_current_club ($club);
+      parse_time ($current_club);
       $arr[] = $current_club;
       var_dump ($current_club);
     }
@@ -195,6 +199,37 @@
 #   echo json_encode ( $arr );
     var_dump ($arr);
 #   var_export($arr);
+  }
+
+  function parse_time ( &$club )
+  {
+    global $day;
+    var_dump($club['time']);
+    $subject = 'abcdef';
+    $pattern = '/^def/';
+    preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE, 3);
+    var_dump($matches);
+    $subject = "abcdef";
+    $pattern = '/^def/';
+    preg_match($pattern, substr($subject,3), $matches, PREG_OFFSET_CAPTURE);
+    var_dump($matches);
+    $pattern = '/^\b'.$day.'\s*-\s*\b'.$day.'/';
+    if (preg_match ($pattern, $club['time'], $matches)) {
+      var_dump($matches);
+    }
+    $pattern = '/^\b(?P<left>'.$day.')\s*-\s*\b(?P<right>'.$day.')/';
+    if (preg_match ($pattern, $club['time'], $matches)) {
+      var_dump($matches);
+      $matches['left']  = (int) date('N', strtotime($matches['left']));
+      $matches['right'] = (int) date('N', strtotime($matches['right']));
+      var_dump($matches['left']);
+      var_dump($matches['right']);
+      for ($i = $matches['left']; $i <= $matches['right']; ++$i) {
+        echo $i . PHP_EOL;
+      }
+      echo (int) date('N', strtotime('Tue'));
+    }
+    
   }
 
 ?>
