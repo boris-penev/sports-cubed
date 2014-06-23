@@ -190,7 +190,7 @@
     array_replace_value ( $days, 'sunday', 7 );
     array_replace_value ( $days, 'everyday', 8 );
     array_replace_value ( $days, 'whole week', 8 );
-#   array_replace_value ( $days, 'working', 9 );
+#   array_replace_value ( $days, 'workweek', 9 );
 #   array_replace_value ( $days, 'weekend', 10 );
 #   var_dump ( $days );
     $days = array_intersect ( $days, range(1, 8) );
@@ -817,7 +817,7 @@
    * @param $times array with time schedules
    * @return query result
    */
-  function setSportsTimeWorking ( $table, $club, $entity, $times )
+  function setSportsTimeWorkweekWeekend ( $table, $club, $entity, $times )
   {
     if ( $table == 'sports' )
     {
@@ -837,7 +837,7 @@
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'opening_time, closing_time ) values';
     $query .= " ( {$club}, {$entity}, 9, "
-            . "{$times['working']['open']}, {$times['working']['close']} ),"
+            . "{$times['workweek']['open']}, {$times['workweek']['close']} ),"
             . " ( {$club}, {$entity}, 10, "
             . "{$times['weekend']['open']}, {$times['weekend']['close']} )";
     $query .= ' on duplicate key update opening_time=values(opening_time), '
@@ -853,7 +853,7 @@
    * @param $prices array with prices
    * @return query result
    */
-  function setSportsPriceWorking ( $table, $club, $entity, $prices )
+  function setSportsPriceWorkweekWeekend ( $table, $club, $entity, $prices )
   {
     if ( $table == 'sports' )
     {
@@ -872,8 +872,8 @@
     wh_db_multi_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'price_member, price_nonmember ) values';
-    $query .= "values ( {$club}, {$entity}, 9, {$prices['working']['member']}, "
-            . "{$prices['working']['nonmember']} ),"
+    $query .= "values ( {$club}, {$entity}, 9, {$prices['workweek']['member']}, "
+            . "{$prices['workweek']['nonmember']} ),"
             . " ( {$club}, {$entity}, 10, {$prices['weekend']['member']}, "
             . "{$prices['weekend']['nonmember']} )";
     $query .= ' on duplicate key update price_member=values(price_member), '
@@ -890,7 +890,7 @@
    * @param $prices array with prices
    * @return query result
    */
-  function setSportsTimePriceWorking ( $table, $club, $entity, $times, $prices )
+  function setSportsTimePriceWorkweekWeekend ( $table, $club, $entity, $times, $prices )
   {
     if ( $table == 'sports' )
     {
@@ -911,10 +911,10 @@
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'opening_time, closing_time, price_member, price_nonmember ) ';
     $query .= " ( {$club}, {$entity}, 9, "
-            . "{$times['working']['open']}, "
-            . "{$times['working']['close']}, "
-            . "{$prices['working']['member']}, "
-            . "{$prices['working']['nonmember']} ),"
+            . "{$times['workweek']['open']}, "
+            . "{$times['workweek']['close']}, "
+            . "{$prices['workweek']['member']}, "
+            . "{$prices['workweek']['nonmember']} ),"
             . " ( {$club}, {$entity}, 10, "
             . "{$times['weekend']['open']}, "
             . "{$times['weekend']['close']}, "

@@ -340,7 +340,7 @@
             if ( $prices_member [6] != $prices_member [7]
               || $prices_nonmember [6] != $prices_nonmember [7] )
             {
-              $days_type_price = 'workingsatsun';
+              $days_type_price = 'workweeksatsun';
             }
             elseif ( $prices_member[5] == $prices_member[6]
               && $prices_nonmember [6] == $prices_nonmember [7]  )
@@ -348,7 +348,7 @@
               $days_type_price = 'all';
             }
             else {
-              $days_type_price = 'workingweekend';
+              $days_type_price = 'workweekweekend';
             }
           }
           if ( $days_type_time == '' )
@@ -356,7 +356,7 @@
             if ( $times_open [6] != $times_open [7]
               || $times_close [6] != $times_close [7] )
             {
-              $days_type_time = 'workingsatsun';
+              $days_type_time = 'workweeksatsun';
             }
             elseif ( $times_open[5] == $times_open[6]
               && $times_close [6] == $times_close [7]  )
@@ -364,7 +364,7 @@
               $days_type_time = 'all';
             }
             else {
-              $days_type_time = 'workingweekend';
+              $days_type_time = 'workweekweekend';
             }
           }
         }
@@ -382,16 +382,16 @@
       }
 
       $all_select_time = ( $days_type_time == 'all' ) ? true : false;
-      $working_weekend_select_time = ( $days_type_time == 'workingweekend' ) ? true : false;
-      $working_sat_sun_select_time = ( $days_type_time == 'workingsatsun' ) ? true : false;
+      $workweek_weekend_select_time = ( $days_type_time == 'workweekweekend' ) ? true : false;
+      $workweek_sat_sun_select_time = ( $days_type_time == 'workweeksatsun' ) ? true : false;
       $separately_select_time = ( $days_type_time == 'separately' ) ? true : false;
 
       echo wh_draw_radio_field_label ( "selectDaysViewTime{$sport_id}", "selectDaysViewTime{$sport_id}_0",
         'All days', '', 'all', $all_select_time, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
       echo wh_draw_radio_field_label ( "selectDaysViewTime{$sport_id}", "selectDaysViewTime{$sport_id}_1",
-        'Working & Weekend', '', 'workingweekend', $working_weekend_select_time, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
+        'Workweek & Weekend', '', 'workweekweekend', $workweek_weekend_select_time, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
       echo wh_draw_radio_field_label ( "selectDaysViewTime{$sport_id}", "selectDaysViewTime{$sport_id}_1",
-        'Working & Sat/Sun', '', 'workingsatsun', $working_sat_sun_select_time, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
+        'Workweek & Sat/Sun', '', 'workweeksatsun', $workweek_sat_sun_select_time, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
       echo wh_draw_radio_field_label ( "selectDaysViewTime{$sport_id}", "selectDaysViewTime{$sport_id}_2",
         'Separately', '', 'separately', $separately_select_time, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
 ?>
@@ -426,7 +426,7 @@
       }
 ?>
       </tr>
-      <tr class="trDaysWorkingWeekend<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
       $time_open = wh_not_null ( $times_open [1] ) ?
@@ -434,11 +434,11 @@
       $time_close = wh_not_null ( $times_close [1] ) ?
           $times_close [1] : '' ;
 
-      echo wh_draw_input_field_label ( "timeOpenWorking{$sport_id}",
-        "timeOpenWorking{$sport_id}", 'Working days', '' ,$time_open,
+      echo wh_draw_input_field_label ( "timeOpenWorkweek{$sport_id}",
+        "timeOpenWorkweek{$sport_id}", 'Workweek', '' ,$time_open,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "timeCloseWorking{$sport_id}",
-        "timeCloseWorking{$sport_id}", $time_close, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "timeCloseWorkweek{$sport_id}",
+        "timeCloseWorkweek{$sport_id}", $time_close, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -459,7 +459,7 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysWorkingSatSun<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
       $time_open = wh_not_null ( $times_open [1] ) ?
@@ -467,11 +467,11 @@
       $time_close = wh_not_null ( $times_close [1] ) ?
           $times_close [1] : '' ;
 
-      echo wh_draw_input_field_label ( "timeOpenWorking{$sport_id}",
-        "timeOpenWorking{$sport_id}", 'Working days', '' ,$time_open,
+      echo wh_draw_input_field_label ( "timeOpenWorkweek{$sport_id}",
+        "timeOpenWorkweek{$sport_id}", 'Workweek', '' ,$time_open,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "timeCloseWorking{$sport_id}",
-        "timeCloseWorking{$sport_id}", $time_close, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "timeCloseWorkweek{$sport_id}",
+        "timeCloseWorkweek{$sport_id}", $time_close, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -534,16 +534,16 @@
         <td colspan="7" style="text-align:center">
 <?php
       $all_select_price = ( $days_type_price == 'all' ) ? true : false;
-      $working_weekend_select_price = ( $days_type_price == 'workingweekend' ) ? true : false;
-      $working_sat_sun_select_price = ( $days_type_price == 'workingsatsun' ) ? true : false;
+      $workweek_weekend_select_price = ( $days_type_price == 'workweekweekend' ) ? true : false;
+      $workweek_sat_sun_select_price = ( $days_type_price == 'workweeksatsun' ) ? true : false;
       $separately_select_price = ( $days_type_price == 'separately' ) ? true : false;
 
       echo wh_draw_radio_field_label ( "selectDaysViewPrice{$sport_id}", "selectDaysViewPrice{$sport_id}_0",
         'All days', '', 'all', $all_select_price, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
       echo wh_draw_radio_field_label ( "selectDaysViewPrice{$sport_id}", "selectDaysViewPrice{$sport_id}_1",
-        'Working & Weekend', '', 'workingweekend', $working_weekend_select_price, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
+        'Workweek & Weekend', '', 'workweekweekend', $workweek_weekend_select_price, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
       echo wh_draw_radio_field_label ( "selectDaysViewPrice{$sport_id}", "selectDaysViewPrice{$sport_id}_1",
-        'Working & Sat/Sun', '', 'workingsatsun', $working_sat_sun_select_price, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
+        'Workweek & Sat/Sun', '', 'workweeksatsun', $workweek_sat_sun_select_price, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
       echo wh_draw_radio_field_label ( "selectDaysViewPrice{$sport_id}", "selectDaysViewPrice{$sport_id}_2",
         'Separately', '', 'separately', $separately_select_price, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
 ?>
@@ -578,7 +578,7 @@
       }
 ?>
       </tr>
-      <tr class="trDaysWorkingWeekend<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
         $price_member = wh_not_null ( $prices_member [1] ) ?
@@ -586,11 +586,11 @@
         $price_nonmember = wh_not_null ( $prices_nonmember [1] ) ?
             $prices_nonmember [1] : '' ;
 
-      echo wh_draw_input_field_label ( "priceMemberWorking{$sport_id}",
-        "priceMemberWorking{$sport_id}", 'Working days', '' , $price_member,
+      echo wh_draw_input_field_label ( "priceMemberWorkweek{$sport_id}",
+        "priceMemberWorkweek{$sport_id}", 'Workweek', '' , $price_member,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "priceNonmemberWorking{$sport_id}",
-        "priceNonmemberWorking{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "priceNonmemberWorkweek{$sport_id}",
+        "priceNonmemberWorkweek{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -611,7 +611,7 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysWorkingSatSun<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
         $price_member = wh_not_null ( $prices_member [1] ) ?
@@ -619,11 +619,11 @@
         $price_nonmember = wh_not_null ( $prices_nonmember [1] ) ?
             $prices_nonmember [1] : '' ;
 
-      echo wh_draw_input_field_label ( "priceMemberWorking{$sport_id}",
-        "priceMemberWorking{$sport_id}", 'Working days', '' , $price_member,
+      echo wh_draw_input_field_label ( "priceMemberWorkweek{$sport_id}",
+        "priceMemberWorkweek{$sport_id}", 'Workweek', '' , $price_member,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "priceNonmemberWorking{$sport_id}",
-        "priceNonmemberWorking{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "priceNonmemberWorkweek{$sport_id}",
+        "priceNonmemberWorkweek{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
