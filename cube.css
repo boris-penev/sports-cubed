@@ -173,35 +173,37 @@ makes the application responsive ***/
 }
 
 #sports-left-navigator{
-width: 30px;
-height: 410px;
-float:left;
+  width: 30px;
+  height: 410px;
+  float:left;
+  cursor: pointer;
 }
 
 #sports-right-navigator{
-width: 30px;
-height: 410px;
-float:left;
+  width: 30px;
+  height: 410px;
+  float:left;
+  cursor: pointer;
 }
 
 #sports-left-navigator img{
-margin: 110px 3px 110px 3px;
+  margin: 110px 3px 110px 3px;
 }
 
 #sports-right-navigator img{
-margin: 110px 3px 110px 3px;
+  margin: 110px 3px 110px 3px;
 }
 
 #sports-page{
-width: 438px;
-height: 420px;
-float:left;
-overflow: hidden;
+  width: 438px;
+  height: 420px;
+  float:left;
+  overflow: hidden;
 }
 
 #sports-slider{
-width: 2200px;
-height: 420px;
+  width: 2200px;
+  height: 420px;
 }
 
 .time_wrapper {
@@ -278,6 +280,7 @@ height: 420px;
   height: 35px;
   width: 100px;
   margin: 2px auto 0 auto;
+  cursor: pointer;
 }
 
 .yes-no-button-time {
@@ -285,6 +288,7 @@ height: 420px;
   height: 35px;
   width: 100px;
   margin: 10px auto 0 auto;
+  cursor: pointer;
 }
 
 .yes-no-button-price {
@@ -292,6 +296,7 @@ height: 420px;
   height: 35px;
   width: 100px;
   margin: 15px auto 0 auto;
+  cursor: pointer;
 }
 
 /*** button leading to the map with results ***/
@@ -304,6 +309,7 @@ height: 420px;
   margin: 175px 125px 175px 125px;
   box-shadow: 5px 5px 5px black;
   border-radius: 15px;
+  cursor: pointer;
 }
 
 /*** the curtain that dims the screen for the tutorial ***/

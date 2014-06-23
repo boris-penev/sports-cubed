@@ -64,10 +64,6 @@ for (var i = 0, l = props.length; i < l; i++) {
 var inactivity = 1000;
 var interval = setInterval(function(){activityTimer();}, inactivity);
 
-document.getElementById("linkToMap").style.cursor = "pointer";
-document.getElementById("sports-left-navigator").style.cursor = "pointer";
-document.getElementById("sports-right-navigator").style.cursor = "pointer";
-
 // this function adjusts the cube (translates it) so that it is resized
 // every time the orientation of the screen changes
 // by default every side of the cube is 500px and every time the screen size is
@@ -153,8 +149,8 @@ $(document).ready(function() {
   else {
     sessionStorage.sports = null;
     sessionStorage.days = null;
-    sessionStorage.price = null;
-    $('#all_toggler > a').trigger("click");
+    sessionStorage.price = 'all';
+    $('#all_toggler > div').trigger("click");
   }
 
   // draw and populate the activities side
@@ -168,6 +164,37 @@ $(document).ready(function() {
 				  'Rugby','Hockey','Tennins','Athletics','Volleyball','Bowling',
 				  'test1', 'test2', 'test3']
   drawActivities(sportsList);
+  
+  // we have the click handler for the sports togglers here because unlike the 
+  // price and time togglers, the activities ones are generated dynamically by
+  // the function above - drawActivities
+  $('.yes-no-button-sports').click(function(){
+
+    var btn = $(this);
+    var state = btn.data('clicked');
+    if (state === "yes"){
+      btn.css('background-position','0px 0px');
+      btn.data('clicked', 'no');
+      var sport = btn.parent().text().toLowerCase();
+      var index = sportsToBeSubmitted.indexOf(sport);
+      sportsToBeSubmitted.splice(index, 1);
+    }
+    else {
+      btn.css('background-position','0px -35px');
+      btn.data('clicked', 'yes');
+      var sport = btn.parent().text().toLowerCase();
+      sportsToBeSubmitted.push(sport);
+    }
+    
+    // if in tutorial mode - display the explanations
+    if(tutorialMode == true){
+    	 setTimeout(function(){$('#back-explanation').fadeIn(1000);
+    	 $('#swipe-back').fadeIn(1000, function(){ 
+    	 animateSwipe('left', 'back')
+     });
+    }, 500)}
+    
+  })
   
   // set some default properties and rotate the cube to the Bottom (Intro) side
   $('#bigWrapper').css('width', "100%");
@@ -193,6 +220,7 @@ $('#linkToMap').click(function(){
   sessionStorage.sports = sportsToBeSubmitted;
   sessionStorage.days = daysToBeSubmitted;
   sessionStorage.price = priceToBeSubmitted;
+  alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
   sessionStorage.isComingFromMap = "yes";
   window.location = "http://testpilot.x10.mx/cubedtouch/map.html";
 })
@@ -262,9 +290,8 @@ function drawSportsWrapper(wrapperList){
 function drawSportsLine(element){
 	elementID = element.toLowerCase();
 	elementID = elementID.replace(' ', '');
-	console.log(element + "|" + elementID)
 	return '<div class="sports-togglers" id="' + elementID + '_toggler">' + element + 
-		   '<br/><a href=# data-clicked="no"><div class="yes-no-button-sports"></div></a></div>'
+		   '<br/><div class="yes-no-button-sports" data-clicked="no"></div></div>'
 }
 
 
@@ -311,162 +338,92 @@ if(swipeAllowed){
 }
 }
 
-// toggling the yes-no-button for prices
-$('.price-togglers > a').click(function(){
-  var obj = $(this);
-  clickPriceToggler(obj);
-})
-
-function clickPriceToggler(obj){
-  var btn = obj.parent().text().toLowerCase().replace(" ", "");
-  var state = obj.data('clicked');
-  if (state === "yes"){
-    $("#"+btn+" > a > div").css('background-position','0px -35px');
-    $("#"+btn+" > a").data('clicked','yes');
-  }
-  else {
-    $(".price-togglers > a > div").css('background-position','0px 0px');
-    $(".price-togglers > a").data('clicked','no');
-    $("#"+btn+"_toggler > a > div").css('background-position','0px -35px');
-    $("#"+btn+"_toggler > a").data('clicked','yes');
-  }
-}
-
 // setting what will be saved in the browser storage as price once we go to
 // the map
-$('.price-togglers').click(function(){
+$('.yes-no-button-price').click(function(){
 
-// if in tutorial mode - display the explanations
-if(tutorialMode == true){
-	setTimeout(function(){$('#left-explanation').fadeIn(1000);
-	$('#swipe-left').fadeIn(1000, function(){ 
-	animateSwipe('left', 'left')
-  });
-}, 500)}
+var btn = $(this)
 
-  var state = $(this).find('a').data('clicked');
-  var price = $(this).text().toLowerCase().replace(" ", "");
-  if (state === "yes"){
+var state = btn.data('clicked');
+  if (state == "no")
+  {
+	$(".yes-no-button-price").css('background-position','0px 0px');
+    $(".yes-no-button-price").data('clicked','no');
+    btn.css('background-position','0px -35px');
+    btn.data('clicked','yes');
+	
+	var price = btn.parent().text().toLowerCase().replace(" ", "");
     priceToBeSubmitted = price;
   }
-  else {
-    priceToBeSubmitted = null;
-  }
-})
+  
 
-// toggling the yes-no-buttons for the sports-togglers
-$('.sports-togglers > a').click(function(){
-  var obj = $(this);
-  clickSportsToggler(obj);
-})
+  // if in tutorial mode - display the explanations
+  if(tutorialMode == true){
+	  setTimeout(function(){$('#left-explanation').fadeIn(1000);
+	  $('#swipe-left').fadeIn(1000, function(){ 
+	  animateSwipe('left', 'left')
+    });
+  }, 500)}
 
-function clickSportsToggler(obj){
-  var state = obj.data('clicked');
-  if (state === "yes"){
-    obj.find("div").css('background-position','0px 0px');
-    obj.data('clicked', 'no');
-  }
-  else {
-    obj.find("div").css('background-position','0px -35px');
-    obj.data('clicked', 'yes');
-  }
-}
-
-// setting what will be saved in the browser storage as clicked sports-togglers
-// once we go to the map
-$('.sports-togglers').click(function(){
-
-// if in tutorial mode - display the explanations
-if(tutorialMode == true){
-	setTimeout(function(){$('#back-explanation').fadeIn(1000);
-	$('#swipe-back').fadeIn(1000, function(){ 
-	animateSwipe('left', 'back')
-  });
-}, 500)}
-
-  var state = $(this).find('a').data('clicked');
-  if (state === "yes"){
-    var sport = $(this).text().toLowerCase();
-    sportsToBeSubmitted.push(sport);
-  }
-  else {
-    var sport = $(this).text().toLowerCase();
-    var index = sportsToBeSubmitted.indexOf(sport);
-    sportsToBeSubmitted.splice(index, 1);
-  }
 })
 
 // setting what will be saved in the browser storage as days once we go to
 // the map
-$('.time-togglers').click(function(){
+$('.yes-no-button-time').click(function(){
 
-// if in tutorial mode - display the explanations
-if(tutorialMode == true){
-	setTimeout(function(){$('#right-explanation').fadeIn(1000);
-	$('#swipe-right').fadeIn(1000, function(){ 
-	animateSwipe('left', 'right')
-  });
-}, 500)}
-
-var state = $(this).find('a').data('clicked');
-var day = $(this).text().toLowerCase();
- clickTimeTogglers(state, day);
-})
-
-function clickTimeTogglers(state, day){
-  if (state === "yes"){
-    if (day === "whole week"){
-      var length = daysToBeSubmitted.length;
+  var btn = $(this);
+  var btnLabel = btn.parent().text()
+  var clicked = btn.data('clicked');
+  if (btnLabel == "Whole week"){
+    switch (clicked){
+    case "no":
+      $('.yes-no-button-time').css('background-position','0px -35px');
+      $('.yes-no-button-time').data('clicked','yes');
+	  	  
+	  var length = daysToBeSubmitted.length;
       daysToBeSubmitted.splice(0, length);
       daysToBeSubmitted.push("monday", "tuesday", "wednesday",
                              "thursday", "friday", "saturday", "sunday");
-    }
-    else {
-      daysToBeSubmitted.push(day);
+      break;
+    case "yes":
+      $('.yes-no-button-time').css('background-position','0px 0px');
+      $('.yes-no-button-time').data('clicked','no');
+
+      daysToBeSubmitted.splice(0, 7);
+      break;
     }
   }
   else {
-    if (day === "whole week"){
-      daysToBeSubmitted.splice(0, 7);
-    }
-    else {
+    switch (clicked){
+    case "no":
+      btn.css('background-position','0px -35px');
+      btn.data('clicked','yes');
+
+	  var day = btn.parent().text().toLowerCase();
+	  daysToBeSubmitted.push(day);
+      break;
+    case "yes":
+      btn.css('background-position','0px 0px');
+      btn.data('clicked','no');
+      $("#whole_toggler").find("div").css('background-position','0px 0px');
+      $("#whole_toggler > div").data('clicked','no');
+	  	  
+	  var day = btn.parent().text().toLowerCase();
       var index = daysToBeSubmitted.indexOf(day);
       daysToBeSubmitted.splice(index, 1);
-    }
-  }
-}
-
-// toggling the yes-no-buttons for the days
-$('.time-togglers > a').click(function(){
-  var btn = $(this).parent().text();
-  var clicked = $(this).data('clicked');
-  if (btn === "Whole week"){
-    switch (clicked){
-    case "no":
-      $('.time-togglers > a > div').css('background-position','0px -35px');
-      $('.time-togglers > a').data('clicked','yes');
-      break;
-    case "yes":
-      $('.time-togglers > a > div').css('background-position','0px 0px');
-      $('.time-togglers > a').data('clicked','no');
       break;
     }
   }
-  else {
-    switch (clicked){
-    case "no":
-      $(this).find("div").css('background-position','0px -35px');
-      $(this).data('clicked','yes');
-      break;
-    case "yes":
-      $(this).find("div").css('background-position','0px 0px');
-      $(this).data('clicked','no');
-      $("#whole_toggler").find("div").css('background-position','0px 0px');
-      $("#whole_toggler > a").data('clicked','no');
-      break;
-    }
-  }
+  
+  // if in tutorial mode - display the explanations
+  if(tutorialMode == true){
+	  setTimeout(function(){$('#right-explanation').fadeIn(1000);
+	  $('#swipe-right').fadeIn(1000, function(){ 
+	  animateSwipe('left', 'right')
+    });
+  }, 500)}
 })
+
 
 // triggered if the screen dimensions change
 $(window).resize(function() {
@@ -483,6 +440,7 @@ $(window).resize(function() {
 
 })
 
+// the end point of the tutorial
 $('#front-explanation').click(function(){ tutorialMode = false;
 										  cubeNotLocked = 'all'; 
 										  $(this).fadeOut(1000, function(){ 
@@ -538,7 +496,7 @@ Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragle
     }
   });
 
-// the equavelent of keydownEvent() but for the gestures
+// the function that manipulates the cube
 function gesturePerformed(type)
 {
     // hides the red map button
