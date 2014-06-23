@@ -960,7 +960,7 @@
       $query .= " ( {$club}, {$entity}, {$i}, {$times[$i]['open']}, "
               . "{$times[$i]['close']} ),";
     }
-    rtrim($query, ',');
+    $query = rtrim($query, ',');
     $query .= ' on duplicate key update opening_time=values(opening_time), '
             . 'closing_time=values(closing_time)' . PHP_EOL;
 #   echoQuery ( $query );
@@ -998,7 +998,7 @@
       $query .= " ( {$club}, {$entity}, {$i}, {$prices[$i]['member']}, "
               . "{$prices[$i]['nonmember']} ),";
     }
-    rtrim($query, ',');
+    $query = rtrim($query, ',');
     $query .= ' on duplicate key update price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember)' . PHP_EOL;
 #   echoQuery ( $query );
@@ -1040,7 +1040,7 @@
               . "{$times[$i]['open']}, {$times[$i]['close']}, "
               . "{$prices[$i]['member']}, {$prices[$i]['nonmember']} ),";
     }
-    rtrim($query, ',');
+    $query = rtrim($query, ',');
     $query .= ' on duplicate key update '
             . 'opening_time=values(opening_time), '
             . 'closing_time=values(closing_time), '

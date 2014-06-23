@@ -16,7 +16,8 @@
     'price_nonmember' => ''
   ];
   
-  $day = '(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)';
+  $day = '(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
+       . '|Mon|Tue|Wed|Thu|Fri|Sat|Sun)';
 
   function curl_get_file_contents_custom($URL)
   {
@@ -225,9 +226,8 @@
       var_dump($matches['left']);
       var_dump($matches['right']);
       for ($i = $matches['left']; $i <= $matches['right']; ++$i) {
-        echo $i . PHP_EOL;
+        echo $i . ' ';
       }
-      echo (int) date('N', strtotime('Tue'));
     }
     
   }
