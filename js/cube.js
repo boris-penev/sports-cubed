@@ -498,12 +498,13 @@ $('img').on('dragstart', function(event) { event.preventDefault(); });
 // detecting when a key is pressed and passing this key to the keydownEvent
 // function
 $('body').keydown( function (evt){
-
+	  
+	  var type
   	  if(evt.keyCode == 68){ type = 'left' }
 	  else if(evt.keyCode == 65) { type = 'right' }
       else if(evt.keyCode == 83) { type = 'up' }
       else if(evt.keyCode == 87) { type = 'down' }
-	      
+	  
 	  if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') || 
 							   (cubeNotLocked == 'right' && type == 'right') || 
 							   (cubeNotLocked == 'up' && type == 'up') || 
