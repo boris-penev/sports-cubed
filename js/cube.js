@@ -45,6 +45,11 @@ var cubeNotLocked = 'all';
 
 var tutorialMode = false;
 
+var numberOfSportsPages;
+
+// pointing the page which is currently showed on the sports slider
+var currentSportsPage = 1;
+
 // used to determine whether the recursive swipe animation to be executed
 var swipeAllowed = true
 
@@ -163,6 +168,7 @@ $(document).ready(function() {
 				  'Badminton','Gym','Skateboard','Gymnastics','Table tennins',
 				  'Rugby','Hockey','Tennins','Athletics','Volleyball','Bowling',
 				  'test1', 'test2', 'test3']
+  numberOfSportsPages = Math.ceil(sportsList.length / 18);
   drawActivities(sportsList);
   
   // we have the click handler for the sports togglers here because unlike the 
@@ -238,20 +244,26 @@ $('#how-to').click(function(){
 })
 
 $('#sports-left-navigator').click(function(){ 
-	var currentMargin = parseInt($('#sports-slider').css('margin-left'))
-	if(currentMargin < 0){
-		currentMargin += 438;
-	$('#sports-slider').animate({
-	'marginLeft': currentMargin + 'px'}, 500)
+	if(currentSportsPage > 0){
+		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
+		if(currentMargin < 0){
+			currentMargin += 438;
+		$('#sports-slider').stop(true, false).animate({
+		'marginLeft': currentMargin + 'px'}, 200)
+		}
+		currentSportsPage -= 1;
 	}
 })
 
-$('#sports-right-navigator').click(function(){ 
-	var currentMargin = parseInt($('#sports-slider').css('margin-left'))
-	if(currentMargin > -2190){
-	currentMargin -= 438;
-	$('#sports-slider').animate({
-	'marginLeft': currentMargin + 'px'}, 500)
+$('#sports-right-navigator').click(function(){
+    if(currentSportsPage < 4){ 
+		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
+		if(currentMargin > -2190){
+		currentMargin -= 438;
+		$('#sports-slider').stop(true, false).animate({
+		'marginLeft': currentMargin + 'px'}, 200)
+		}
+		currentSportsPage += 1;
 	}
 })
 
