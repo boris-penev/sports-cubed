@@ -434,11 +434,11 @@
       $time_close = wh_not_null ( $times_close [1] ) ?
           $times_close [1] : '' ;
 
-      echo wh_draw_input_field_label ( "timeOpenWorkweek{$sport_id}",
-        "timeOpenWorkweek{$sport_id}", 'Workweek', '' ,$time_open,
+      echo wh_draw_input_field_label ( "timeOpenWorkweek1{$sport_id}",
+        "timeOpenWorkweek1{$sport_id}", 'Workweek', '' ,$time_open,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "timeCloseWorkweek{$sport_id}",
-        "timeCloseWorkweek{$sport_id}", $time_close, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "timeCloseWorkweek1{$sport_id}",
+        "timeCloseWorkweek1{$sport_id}", $time_close, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -467,11 +467,11 @@
       $time_close = wh_not_null ( $times_close [1] ) ?
           $times_close [1] : '' ;
 
-      echo wh_draw_input_field_label ( "timeOpenWorkweek{$sport_id}",
-        "timeOpenWorkweek{$sport_id}", 'Workweek', '' ,$time_open,
+      echo wh_draw_input_field_label ( "timeOpenWorkweek2{$sport_id}",
+        "timeOpenWorkweek2{$sport_id}", 'Workweek', '' ,$time_open,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "timeCloseWorkweek{$sport_id}",
-        "timeCloseWorkweek{$sport_id}", $time_close, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "timeCloseWorkweek2{$sport_id}",
+        "timeCloseWorkweek2{$sport_id}", $time_close, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -586,11 +586,11 @@
         $price_nonmember = wh_not_null ( $prices_nonmember [1] ) ?
             $prices_nonmember [1] : '' ;
 
-      echo wh_draw_input_field_label ( "priceMemberWorkweek{$sport_id}",
-        "priceMemberWorkweek{$sport_id}", 'Workweek', '' , $price_member,
+      echo wh_draw_input_field_label ( "priceMemberWorkweek1{$sport_id}",
+        "priceMemberWorkweek1{$sport_id}", 'Workweek', '' , $price_member,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "priceNonmemberWorkweek{$sport_id}",
-        "priceNonmemberWorkweek{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "priceNonmemberWorkweek1{$sport_id}",
+        "priceNonmemberWorkweek1{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -619,11 +619,11 @@
         $price_nonmember = wh_not_null ( $prices_nonmember [1] ) ?
             $prices_nonmember [1] : '' ;
 
-      echo wh_draw_input_field_label ( "priceMemberWorkweek{$sport_id}",
-        "priceMemberWorkweek{$sport_id}", 'Workweek', '' , $price_member,
+      echo wh_draw_input_field_label ( "priceMemberWorkweek2{$sport_id}",
+        "priceMemberWorkweek2{$sport_id}", 'Workweek', '' , $price_member,
         ' size = "8" placeholder = ""', 'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "priceNonmemberWorkweek{$sport_id}",
-        "priceNonmemberWorkweek{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
+      echo wh_draw_input_field_custom ( "priceNonmemberWorkweek2{$sport_id}",
+        "priceNonmemberWorkweek2{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>

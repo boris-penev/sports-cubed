@@ -11,7 +11,7 @@
     }
   }
 
-  function wh_db_multi_query($query, $link = 'db_link') {
+  function wh_db_multi_query ($query, $link = 'db_link') {
     global $$link;
 
     if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
@@ -622,7 +622,7 @@
   {
     return wh_db_query ( 'select * from sports' );
   }
-  
+
   function getFacilities ( )
   {
     return wh_db_query ( 'select * from facilities' );
@@ -632,7 +632,7 @@
   {
     return wh_db_query ( 'select * from sports order by id' );
   }
-  
+
   function getFacilitiesOrderById ( )
   {
     return wh_db_query ( 'select * from facilities order by id' );
@@ -642,7 +642,7 @@
   {
     return wh_db_query ( 'select * from sports order by name' );
   }
-  
+
   function getFacilitiesOrderByName ( )
   {
     return wh_db_query ( 'select * from facilities order by name' );
@@ -652,7 +652,7 @@
   {
     return wh_db_query ( "select * from sports where name='{$sport}'" );
   }
-  
+
   function getFacilityByName ( $facility )
   {
     return wh_db_query ( "select * from facilities where name='{$facility}'" );
@@ -666,7 +666,7 @@
     $query .= ' group by sports.name';
     return wh_db_query ( $query );
   }
-  
+
   function getFacilitiesByClub ( $club )
   {
     $query = 'select facilities.name from sports, club_facilities ' .
@@ -688,7 +688,7 @@
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
-  
+
   function getFacilitiesByClubOrderByNameDays ( $club )
   {
     $query = 'select distinct sport_id, day_id, ' .
@@ -725,7 +725,7 @@
     }
     $query = "update {$junction_table} set opening_time=null, closing_time=null "
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'opening_time, closing_time ) ';
     $query .= "values ( {$club}, {$entity}, 8, "
@@ -733,7 +733,7 @@
     $query .= ' on duplicate key update opening_time=values(opening_time), '
             . 'closing_time=values(closing_time);' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -759,7 +759,7 @@
     }
     $query = "update {$junction_table} set price_member=null, price_nonmember=null "
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'price_member, price_nonmember ) ';
     $query .= "values ( {$club}, {$entity}, 8, "
@@ -767,7 +767,7 @@
     $query .= ' on duplicate key update price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -795,7 +795,7 @@
     $query = "update {$junction_table} set opening_time=null, closing_time=null, "
            . 'price_member=null, price_nonmember=null '
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'opening_time, closing_time, price_member, price_nonmember ) ';
     $query .= "values ( {$club}, {$entity}, 8, "
@@ -807,7 +807,7 @@
             . 'price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -833,7 +833,7 @@
     }
     $query = "update {$junction_table} set opening_time=null, closing_time=null "
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'opening_time, closing_time ) values';
     $query .= " ( {$club}, {$entity}, 9, "
@@ -843,7 +843,7 @@
     $query .= ' on duplicate key update opening_time=values(opening_time), '
             . 'closing_time=values(closing_time);' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -869,17 +869,17 @@
     }
     $query = "update {$junction_table} set price_member=null, price_nonmember=null "
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'price_member, price_nonmember ) values';
-    $query .= "values ( {$club}, {$entity}, 9, {$prices['workweek']['member']}, "
+    $query .= " ( {$club}, {$entity}, 9, {$prices['workweek']['member']}, "
             . "{$prices['workweek']['nonmember']} ),"
             . " ( {$club}, {$entity}, 10, {$prices['weekend']['member']}, "
             . "{$prices['weekend']['nonmember']} )";
     $query .= ' on duplicate key update price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -907,9 +907,9 @@
     $query = "update {$junction_table} set opening_time=null, closing_time=null, "
            . 'price_member=null, price_nonmember=null '
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
-           . 'opening_time, closing_time, price_member, price_nonmember ) ';
+           . 'opening_time, closing_time, price_member, price_nonmember ) values';
     $query .= " ( {$club}, {$entity}, 9, "
             . "{$times['workweek']['open']}, "
             . "{$times['workweek']['close']}, "
@@ -926,7 +926,7 @@
             . 'price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -952,7 +952,7 @@
     }
     $query = "update {$junction_table} set opening_time=null, closing_time=null "
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'opening_time, closing_time ) values';
     for ($i = 1; $i < 8; ++$i)
@@ -964,7 +964,7 @@
     $query .= ' on duplicate key update opening_time=values(opening_time), '
             . 'closing_time=values(closing_time)' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -990,7 +990,7 @@
     }
     $query = "update {$junction_table} set price_member=null, price_nonmember=null "
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'price_member, price_nonmember ) values';
     for ($i = 1; $i < 8; ++$i)
@@ -1002,7 +1002,7 @@
     $query .= ' on duplicate key update price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember)' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -1030,7 +1030,7 @@
     $query = "update {$junction_table} set opening_time=null, closing_time=null, "
            . 'price_member=null, price_nonmember=null '
            . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
-    wh_db_multi_query ( $query );
+    wh_db_query ( $query );
     $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
            . 'opening_time, closing_time, price_member, price_nonmember ) '
            . 'values';
@@ -1047,7 +1047,7 @@
             . 'price_member=values(price_member), '
             . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
 #   echoQuery ( $query );
-    return wh_db_multi_query ( $query );
+    return wh_db_query ( $query );
   }
 
   /**
@@ -1061,7 +1061,7 @@
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
-  
+
   /**
    * Deletes empty entries from club_facilities
    */
