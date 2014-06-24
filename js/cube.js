@@ -457,11 +457,12 @@ $('img').on('dragstart', function(event) { event.preventDefault(); });
 // function
 $('body').keydown( function (evt){
 	  
+	  console.log(evt.keyCode);
 	  var type
-  	  if(evt.keyCode == 68){ type = 'left' }
-	  else if(evt.keyCode == 65) { type = 'right' }
-      else if(evt.keyCode == 83) { type = 'up' }
-      else if(evt.keyCode == 87) { type = 'down' }
+  	  if(evt.keyCode == 39){ type = 'left' }
+	  else if(evt.keyCode == 37) { type = 'right' }
+      else if(evt.keyCode == 40) { type = 'up' }
+      else if(evt.keyCode == 38) { type = 'down' }
 	  
 	  if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') || 
 							   (cubeNotLocked == 'right' && type == 'right') || 
