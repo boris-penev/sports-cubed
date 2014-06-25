@@ -267,6 +267,21 @@ $('#sports-right-navigator').click(function(){
 	}
 })
 
+$('#rangeInput').mousedown(function(){ cubeNotLocked='' });
+
+$('#rangeInput').mouseup(function(){ cubeNotLocked='all' });
+
+$('form').on('input',function(){ 
+	var value = $('#rangeInput').val()
+	if( value == 0 ){
+		$('#pounds').hide()
+		$('output').html('Free')
+	}
+	else{
+		$('#pounds').show()
+	}
+});
+
 // draws all the choices on the activities side of the cube
 // takes an array of sports that is fetched from the DB
 // for now the array is static until Borkata works it out.
@@ -359,13 +374,17 @@ var btn = $(this)
 var state = btn.data('clicked');
   if (state == "no")
   {
-	$(".yes-no-button-price").css('background-position','0px 0px');
-    $(".yes-no-button-price").data('clicked','no');
+	$('#priceSliderLabel').css('color', 'white')
     btn.css('background-position','0px -35px');
     btn.data('clicked','yes');
 
-	var price = btn.parent().text().toLowerCase().replace(" ", "");
+	var price = $('#rangeInput').val();
     priceToBeSubmitted = price;
+  }
+  else{
+	$('#priceSliderLabel').css('color', 'lightgrey')
+	btn.css('background-position','0px 0px');
+    btn.data('clicked','no')
   }
 
 
@@ -378,6 +397,7 @@ var state = btn.data('clicked');
   }, 500)}
 
 })
+
 
 // setting what will be saved in the browser storage as days once we go to
 // the map

@@ -323,3 +323,57 @@ makes the application responsive ***/
   top:0;
   left:0;
 }
+
+#priceSlider{
+	margin-top: 50px;
+}
+
+#priceSliderLabel{
+	font-size: 50px;
+	font-family: cursive;
+	text-shadow: 2px 2px black;
+	
+}
+
+#disclaimer{
+	width: 400px;
+	background-color: #606060;
+	border-radius: 10px;
+	margin: 40px auto 10px auto;
+	padding: 10px;
+	color: #49BB0E;
+	text-shadow: 1px 1px black;
+	font-weight: bold;
+}
+
+#pounds{
+	font-size: 50px;
+	font-family: cursive;
+	text-shadow: 2px 2px black;
+	margin-left:10px; 
+	display: none;
+}
+
+
+input[type=range] {
+    -webkit-appearance: none;
+    background-color: silver;
+    width: 400px;
+    height:30px;
+    border-radius: 10px;
+    outline: none;
+	box-shadow: inset 1px 1px 1px black;
+	margin-top: 15px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #00b7ea; /* Old browsers */
+	background: -moz-linear-gradient(top, #00b7ea 0%, #009ec3 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00b7ea), color-stop(100%,#009ec3)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #00b7ea 0%,#009ec3 100%); /* Chrome10+,Safari5.1+ */
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+	box-shadow: 1px 1px 1px black;
+}
