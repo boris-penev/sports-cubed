@@ -195,7 +195,8 @@
         </td>
         <td colspan="7" style="text-align:center">
 <?php
-      $days_selected = array ();
+#     $days_selected = array ();
+      $days_selected = array_fill ( 1 , 7, '' );
       $prices_member = array ();
       $prices_nonmember = array ();
       $times_open = array ();
@@ -203,174 +204,167 @@
       $days_type = '';
       $days_type_price = '';
       $days_type_time = '';
+
       if ( $clubosport_row && $clubosport_row->sport_id == $sport_id )
       {
-        if ( $clubosport_row->day_id == 8 )
+        $prices_member = array_fill ( 1 , 7, '' );
+        $prices_nonmember = $prices_member;
+        $times_open = $prices_member;
+        $times_close = $prices_member;
+        do
         {
-          $days_type = 'all';
-          $days_type_price = 'all';
-          $days_type_time = 'all';
-          $days_selected = array_fill(1, 7, true);
-          $price_member = $clubosport_row->price_member;
-          $price_nonmember = $clubosport_row->price_nonmember;
-          $time_open =
-            ( wh_not_null ( $clubosport_row->opening_time )
-              && $clubosport_row->opening_time !== '00:00:00'
-              && strtotime( $clubosport_row->opening_time ) !== false ) ?
-              $clubosport_row->opening_time : null;
-          $time_close =
-            ( wh_not_null ( $clubosport_row->closing_time )
-              && $clubosport_row->closing_time !== '00:00:00'
-              && strtotime( $clubosport_row->closing_time ) !== false ) ?
-              $clubosport_row->closing_time : null;
-          if ( wh_null ($time_open) || wh_null ($time_open) )
+          $day_id = $clubosport_row->day_id;
+#         echoQuery ( $clubosport_row->day_id );
+          if ( $day_id == 8 )
           {
-            $time_open = $time_close = null;
+            $price_member = wh_get_price ($clubosport_row->price_member);
+            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+            $time_open  = wh_get_time ($clubosport_row->opening_time);
+            $time_close = wh_get_time ($clubosport_row->closing_time);
+#           $days_selected = array_fill(1, 7, true);
+            if ( $time_open === null || $time_close === null ) {
+              $time_open = $time_close = null;
+            }
+            if ( $price_member !== null ) {
+              $prices_member = array_fill ( 1 , 7, $price_member );
+            }
+            if ( $price_nonmember !== null ) {
+              $prices_nonmember = array_fill ( 1 , 7, $price_nonmember );
+            }
+            if ( $time_open !== null ) {
+              $times_open  = array_fill ( 1 , 7, $time_open );
+              $times_close = array_fill ( 1 , 7, $time_close );
+            }
           }
-          $prices_member = array_fill ( 1 , 7, $price_member );
-          $prices_nonmember = array_fill ( 1 , 7, $price_nonmember );
-          $times_open = array_fill ( 1 , 7, $time_open );
-          $times_close = array_fill ( 1 , 7, $time_close );
+          elseif ( $day_id == 9 )
+          {
+            $price_member = wh_get_price ($clubosport_row->price_member);
+            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+            $time_open  = wh_get_time ($clubosport_row->opening_time);
+            $time_close = wh_get_time ($clubosport_row->closing_time);
+            if ( $time_open === null || $time_close === null ) {
+              $time_open = $time_close = null;
+            }
+            for ($i = 1; $i < 6; ++$i)
+            {
+#             $days_selected [$i] = true;
+              if ($price_member !== null) {
+                $prices_member [$i] = $price_member;
+              }
+              if ($price_nonmember !== null) {
+                $prices_nonmember [$i] = $price_nonmember;
+              }
+              if ($time_open !== null) {
+                $times_open  [$i] = $time_open;
+                $times_close [$i] = $time_close;
+              }
+            }
+          }
+          elseif ( $day_id == 10 )
+          {
+            $price_member = wh_get_price ($clubosport_row->price_member);
+            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+            $time_open  = wh_get_time ($clubosport_row->opening_time);
+            $time_close = wh_get_time ($clubosport_row->closing_time);
+            if ( $time_open === null || $time_close === null ) {
+              $time_open = $time_close = null;
+            }
+            for ($i = 6; $i < 8; ++$i)
+            {
+#             $days_selected [$i] = true;
+              if ($price_member !== null) {
+                $prices_member [$i] = $price_member;
+              }
+              if ($price_nonmember !== null) {
+                $prices_nonmember [$i] = $price_nonmember;
+              }
+              if ($time_open !== null) {
+                $times_open  [$i] = $time_open;
+                $times_close [$i] = $time_close;
+              }
+            }
+          }
+          elseif ( 0 < $day_id && $day_id < 8 )
+          {
+            $price_member = wh_get_price ($clubosport_row->price_member);
+            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+            $time_open  = wh_get_time ($clubosport_row->opening_time);
+            $time_close = wh_get_time ($clubosport_row->closing_time);
+            if ( $time_open === null || $time_close === null ) {
+              $time_open = $time_close = null;
+            }
+#           $days_selected [$day_id] = true;
+            if ($price_member !== null) {
+              $prices_member [$day_id] = $price_member;
+            }
+            if ($price_nonmember !== null) {
+              $prices_nonmember [$day_id] = $price_nonmember;
+            }
+            if ($time_open !== null) {
+              $times_open  [$day_id] = $time_open;
+              $times_close [$day_id] = $time_close;
+            }
+          }
         }
-        else
-        {
-          do
-          {
-            $day_id = $clubosport_row->day_id;
-#           echoQuery ( $clubosport_row->day_id );
-            if ( $day_id == 9 )
-            {
-              $price_member = $clubosport_row->price_member;
-              $price_nonmember = $clubosport_row->price_nonmember;
-              $time_open =
-                ( wh_not_null ( $clubosport_row->opening_time )
-                  && $clubosport_row->opening_time !== '00:00:00'
-                  && strtotime( $clubosport_row->opening_time ) !== false ) ?
-                  $clubosport_row->opening_time : null;
-              $time_close =
-                ( wh_not_null ( $clubosport_row->closing_time )
-                  && $clubosport_row->closing_time !== '00:00:00'
-                  && strtotime( $clubosport_row->closing_time ) !== false ) ?
-                  $clubosport_row->closing_time : null;
-              if ( wh_null ($time_open) || wh_null ($time_open) )
-              {
-                $time_open = $time_close = null;
-              }
-              for ($i = 1; $i < 6; ++$i)
-              {
-                $days_selected [$i] = true;
-                $prices_member [$i] = $price_member;
-                $prices_nonmember [$i] = $price_nonmember;
-                $times_open [$i] = $time_open;
-                $times_close [$i] = $time_close;
-              }
-            }
-            elseif ( $day_id == 10 )
-            {
-              $price_member = $clubosport_row->price_member;
-              $price_nonmember = $clubosport_row->price_nonmember;
-              $time_open =
-                ( wh_not_null ( $clubosport_row->opening_time )
-                  && $clubosport_row->opening_time !== '00:00:00'
-                  && strtotime( $clubosport_row->opening_time ) !== false ) ?
-                  $clubosport_row->opening_time : null;
-              $time_close =
-                ( wh_not_null ( $clubosport_row->closing_time )
-                  && $clubosport_row->closing_time !== '00:00:00'
-                  && strtotime( $clubosport_row->closing_time ) !== false ) ?
-                  $clubosport_row->closing_time : null;
-              if ( wh_null ($time_open) || wh_null ($time_open) )
-              {
-                $time_open = $time_close = null;
-              }
-              for ($i = 6; $i < 8; ++$i)
-              {
-                $days_selected [$i] = true;
-                $prices_member [$i] = $price_member;
-                $prices_nonmember [$i] = $price_nonmember;
-                $times_open [$i] = $time_open;
-                $times_close [$i] = $time_close;
-              }
-            }
-            elseif ( 0 < $day_id && $day_id < 8 )
-            {
-              $days_selected [$day_id] = true;
-              $prices_member [$day_id] = $clubosport_row->price_member;
-              $prices_nonmember [$day_id] = $clubosport_row->price_nonmember;
-              $times_open [$day_id] =
-                ( wh_not_null ( $clubosport_row->opening_time )
-                  && $clubosport_row->opening_time !== '00:00:00'
-                  && strtotime( $clubosport_row->opening_time ) != false ) ?
-                  $clubosport_row->opening_time : null;
-              $times_close [$day_id] =
-                ( wh_not_null ( $clubosport_row->closing_time )
-                  && $clubosport_row->closing_time !== '00:00:00'
-                  && strtotime( $clubosport_row->closing_time ) !== false ) ?
-                  $clubosport_row->closing_time : null;
-            }
-          }
-          while ( ($clubosport_row = wh_db_fetch_object_custom($clubosportquery))
-                && $clubosport_row->sport_id == $sport_id  );
+        while ( ($clubosport_row = wh_db_fetch_object_custom($clubosportquery))
+              && $clubosport_row->sport_id == $sport_id  );
 
-          for ( $i = 1; $i < 5; ++$i )
+        // checking the most optimal way to represent the data
+        for ( $i = 1; $i < 5; ++$i )
+        {
+#         echoQuery ( $prices_member[$i] );
+          if ( $prices_member    [$i] != $prices_member    [$i+1] ||
+               $prices_nonmember [$i] != $prices_nonmember [$i+1] )
           {
-  #         echoQuery ( $prices_member[$i] );
-            if ( $prices_member [$i] != $prices_member [$i+1]
-              || $prices_nonmember [$i] != $prices_nonmember [$i+1] )
-            {
-              $days_type_price = 'separately';
-              break;
-            }
+            $days_type_price = 'separately';
+            break;
           }
-          for ( $i = 1; $i < 5; ++$i )
+        }
+        for ( $i = 1; $i < 5; ++$i )
+        {
+#         echoQuery ( $prices_member[$i] );
+          if ( $times_open  [$i] != $times_open  [$i+1] ||
+               $times_close [$i] != $times_close [$i+1] )
           {
-  #         echoQuery ( $prices_member[$i] );
-            if ( $times_open [$i] != $times_open [$i+1]
-              || $times_close [$i] != $times_close [$i+1] )
-            {
-              $days_type_time = 'separately';
-              break;
-            }
+            $days_type_time = 'separately';
+            break;
           }
-          if ( $days_type_price == '' )
+        }
+        // if data type not set yet, at least workweek days are identical
+        if ( $days_type_price == '' )
+        {
+          if ( $prices_member    [6] != $prices_member    [7] ||
+               $prices_nonmember [6] != $prices_nonmember [7] )
           {
-            if ( $prices_member [6] != $prices_member [7]
-              || $prices_nonmember [6] != $prices_nonmember [7] )
-            {
-              $days_type_price = 'workweeksatsun';
-            }
-            elseif ( $prices_member[5] == $prices_member[6]
-              && $prices_nonmember [6] == $prices_nonmember [7]  )
-            {
-              $days_type_price = 'all';
-            }
-            else {
-              $days_type_price = 'workweekweekend';
-            }
+            $days_type_price = 'workweeksatsun';
           }
-          if ( $days_type_time == '' )
+          elseif ( $prices_member    [5] == $prices_member    [6] &&
+                   $prices_nonmember [6] == $prices_nonmember [7]  )
           {
-            if ( $times_open [6] != $times_open [7]
-              || $times_close [6] != $times_close [7] )
-            {
-              $days_type_time = 'workweeksatsun';
-            }
-            elseif ( $times_open[5] == $times_open[6]
-              && $times_close [6] == $times_close [7]  )
-            {
-              $days_type_time = 'all';
-            }
-            else {
-              $days_type_time = 'workweekweekend';
-            }
+            $days_type_price = 'all';
+          }
+          else {
+            $days_type_price = 'workweekweekend';
+          }
+        }
+        if ( $days_type_time == '' )
+        {
+          if ( $times_open  [6] != $times_open  [7] ||
+               $times_close [6] != $times_close [7] )
+          {
+            $days_type_time = 'workweeksatsun';
+          }
+          elseif ( $times_open  [5] == $times_open  [6] &&
+                   $times_close [6] == $times_close [7]  )
+          {
+            $days_type_time = 'all';
+          }
+          else {
+            $days_type_time = 'workweekweekend';
           }
         }
       }
-      else
-      {
-        $days_type_price = 'all';
-        $days_type_time = 'all';
-      }
+      // If there were no clubosport entries or the entries were empty
       if ( $days_type_price == '' ) {
         $days_type_price = 'all';
       }
@@ -378,10 +372,10 @@
         $days_type_time = 'all';
       }
 
-      $all_select_time = ( $days_type_time == 'all' ) ? true : false;
-      $workweek_weekend_select_time = ( $days_type_time == 'workweekweekend' ) ? true : false;
-      $workweek_sat_sun_select_time = ( $days_type_time == 'workweeksatsun' ) ? true : false;
-      $separately_select_time = ( $days_type_time == 'separately' ) ? true : false;
+      $all_select_time = ( $days_type_time == 'all' );
+      $workweek_weekend_select_time = ( $days_type_time == 'workweekweekend' );
+      $workweek_sat_sun_select_time = ( $days_type_time == 'workweeksatsun' );
+      $separately_select_time = ( $days_type_time == 'separately' );
 
       echo wh_draw_radio_field_label ( "selectDaysViewTime{$sport_id}", "selectDaysViewTime{$sport_id}_0",
         'All days', '', 'all', $all_select_time, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
@@ -394,64 +388,41 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysSeparately<?php echo $sport_id; ?>">
+      <tr class="trDaysAll<?php echo $sport_id; ?>">
+        <td style="text-align:center" colspan="7">
 <?php
-      for ($i = 1; $i < 8; ++$i)
-      {
-  ?>
-        <td style="text-align:center;padding:0px 2px">
-<?php
-#       $checkbox_selected = wh_not_null ( $days_selected [$i] ) ? true : false;
 
-        echo wh_draw_checkbox_field_custom ( "selectDay{$i}_{$sport_id}",
-          "selectDay{$i}_{$sport_id}", null, $days_selected [$i], 'style="display: block; margin: auto"', 4, false );
-
-        $time_open = wh_not_null ( $times_open [$i] ) ?
-            $times_open [$i] : '' ;
-        $time_close = wh_not_null ( $times_close [$i] ) ?
-            $times_close [$i] : '' ;
-
-        echo wh_draw_input_field_custom ( "timeOpenDay{$i}_{$sport_id}",
-          "timeOpenDay{$i}_{$sport_id}", $time_open,  ' size = "5" placeholder = ""',
-          'text', false, 5, true );
-        echo wh_draw_input_field_custom ( "timeCloseDay{$i}_{$sport_id}",
-          "timeCloseDay{$i}_{$sport_id}", $time_close,  ' size = "5" placeholder = ""',
-          'text', false, 5, true );
+      echo wh_draw_label ( 'All days', '' , '', 7, false );
+      echo wh_draw_input_field_custom ( "timeOpenAll{$sport_id}",
+        "timeOpenAll{$sport_id}", $times_open [1], ' size = "8" placeholder = ""',
+        'text', false, 5, false );
+      echo wh_draw_input_field_custom ( "timeCloseAll{$sport_id}",
+        "timeCloseAll{$sport_id}", $times_close [1], ' size = "8" placeholder = ""',
+        'text', false, 5, true );
 ?>
         </td>
-<?php
-      }
-?>
       </tr>
       <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
-      $time_open = wh_not_null ( $times_open [1] ) ?
-          $times_open [1] : '' ;
-      $time_close = wh_not_null ( $times_close [1] ) ?
-          $times_close [1] : '' ;
 
       echo wh_draw_input_field_label ( "timeOpenWorkweek1{$sport_id}",
-        "timeOpenWorkweek1{$sport_id}", 'Workweek', '' ,$time_open,
+        "timeOpenWorkweek1{$sport_id}", 'Workweek', '' , $times_open [1],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWorkweek1{$sport_id}",
-        "timeCloseWorkweek1{$sport_id}", $time_close, ' size = "8" placeholder = ""',
+        "timeCloseWorkweek1{$sport_id}", $times_close [1], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center" colspan="2">
 <?php
-      $time_open = wh_not_null ( $times_open [6] ) ?
-          $times_open [6] : '' ;
-      $time_close = wh_not_null ( $times_close [6] ) ?
-          $times_close [6] : '' ;
 
       echo wh_draw_label ( 'Weekend', '' , '', 5, true );
       echo wh_draw_input_field_custom ( "timeOpenWeekend{$sport_id}",
-        "timeOpenWeekend{$sport_id}", $time_open, ' size = "5" placeholder = ""',
+        "timeOpenWeekend{$sport_id}", $times_open [6], ' size = "5" placeholder = ""',
         'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWeekend{$sport_id}",
-        "timeCloseWeekend{$sport_id}", $time_close, ' size = "5" placeholder = ""',
+        "timeCloseWeekend{$sport_id}", $times_close [6], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -459,81 +430,74 @@
       <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
-      $time_open = wh_not_null ( $times_open [1] ) ?
-          $times_open [1] : '' ;
-      $time_close = wh_not_null ( $times_close [1] ) ?
-          $times_close [1] : '' ;
 
       echo wh_draw_input_field_label ( "timeOpenWorkweek2{$sport_id}",
-        "timeOpenWorkweek2{$sport_id}", 'Workweek', '' ,$time_open,
+        "timeOpenWorkweek2{$sport_id}", 'Workweek', '' , $times_open [1],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWorkweek2{$sport_id}",
-        "timeCloseWorkweek2{$sport_id}", $time_close, ' size = "8" placeholder = ""',
+        "timeCloseWorkweek2{$sport_id}", $times_close [1], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
 <?php
-      echo wh_draw_checkbox_field_custom ( "selectSat{$sport_id}",
-        "selectSat{$sport_id}", null, $days_selected [6], 'style="display: block; margin: auto"', 4, false );
-
-      $time_open = wh_not_null ( $times_open [6] ) ?
-          $times_open [6] : '' ;
-      $time_close = wh_not_null ( $times_close [6] ) ?
-          $times_close [6] : '' ;
+#     echo wh_draw_checkbox_field_custom ( "selectSat{$sport_id}",
+#       "selectSat{$sport_id}", null, $days_selected [6],
+#       'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "timeOpenSat{$sport_id}",
-        "timeOpenSat{$sport_id}", $time_open, ' size = "5" placeholder = ""',
+        "timeOpenSat{$sport_id}", $times_open [6], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "timeCloseSat{$sport_id}",
-        "timeCloseSat{$sport_id}", $time_close, ' size = "5" placeholder = ""',
+        "timeCloseSat{$sport_id}", $times_close [6], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
 <?php
-      echo wh_draw_checkbox_field_custom ( "selectSun{$sport_id}",
-        "selectSun{$sport_id}", null, $days_selected [7], 'style="display: block; margin: auto"', 4, false );
-
-      $time_open = wh_not_null ( $times_open [7] ) ?
-          $times_open [7] : '' ;
-      $time_close = wh_not_null ( $times_close [7] ) ?
-          $times_close [7] : '' ;
+#     echo wh_draw_checkbox_field_custom ( "selectSun{$sport_id}",
+#       "selectSun{$sport_id}", null, $days_selected [7],
+#       'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "timeOpenSun{$sport_id}",
-        "timeOpenSun{$sport_id}", $time_open, ' size = "5" placeholder = ""',
+        "timeOpenSun{$sport_id}", $times_open [7], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "timeCloseSun{$sport_id}",
-        "timeCloseSun{$sport_id}", $time_close, ' size = "5" placeholder = ""',
+        "timeCloseSun{$sport_id}", $times_close [7], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
       </tr>
-      <tr class="trDaysAll<?php echo $sport_id; ?>">
-        <td style="text-align:center" colspan="7">
+      <tr class="trDaysSeparately<?php echo $sport_id; ?>">
 <?php
-      $time_open = wh_not_null ( $times_open [1] ) ?
-          $times_open [1] : '' ;
-      $time_close = wh_not_null ( $times_close [1] ) ?
-          $times_close [1] : '' ;
+      for ($i = 1; $i < 8; ++$i)
+      {
+?>
+        <td style="text-align:center;padding:0px 2px">
+<?php
 
-      echo wh_draw_label ( 'All days', '' , '', 7, false );
-      echo wh_draw_input_field_custom ( "timeOpenAll{$sport_id}",
-        "timeOpenAll{$sport_id}", $time_open, ' size = "8" placeholder = ""',
-        'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "timeCloseAll{$sport_id}",
-        "timeCloseAll{$sport_id}", $time_close, ' size = "8" placeholder = ""',
-        'text', false, 5, true );
+#       echo wh_draw_checkbox_field_custom ( "selectDay{$i}_{$sport_id}",
+#         "selectDay{$i}_{$sport_id}", null, $days_selected [$i], 'style="display: block; margin: auto"', 4, false );
+
+        echo wh_draw_input_field_custom ( "timeOpenDay{$i}_{$sport_id}",
+          "timeOpenDay{$i}_{$sport_id}", $times_open [$i],  ' size = "5" placeholder = ""',
+          'text', false, 5, true );
+        echo wh_draw_input_field_custom ( "timeCloseDay{$i}_{$sport_id}",
+          "timeCloseDay{$i}_{$sport_id}", $times_close [$i],  ' size = "5" placeholder = ""',
+          'text', false, 5, true );
 ?>
         </td>
+<?php
+      }
+?>
       </tr>
       <tr>
         <td colspan="7" style="text-align:center">
 <?php
-      $all_select_price = ( $days_type_price == 'all' ) ? true : false;
-      $workweek_weekend_select_price = ( $days_type_price == 'workweekweekend' ) ? true : false;
-      $workweek_sat_sun_select_price = ( $days_type_price == 'workweeksatsun' ) ? true : false;
-      $separately_select_price = ( $days_type_price == 'separately' ) ? true : false;
+      $all_select_price = ( $days_type_price == 'all' );
+      $workweek_weekend_select_price = ( $days_type_price == 'workweekweekend' );
+      $workweek_sat_sun_select_price = ( $days_type_price == 'workweeksatsun' );
+      $separately_select_price = ( $days_type_price == 'separately' );
 
       echo wh_draw_radio_field_label ( "selectDaysViewPrice{$sport_id}", "selectDaysViewPrice{$sport_id}_0",
         'All days', '', 'all', $all_select_price, '', 'style="margin:0px 0px;padding:0px 0px;"', 4, false );
@@ -546,64 +510,41 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysSeparately<?php echo $sport_id; ?>">
+      <tr class="trDaysAll<?php echo $sport_id; ?>">
+        <td style="text-align:center" colspan="7">
 <?php
-      for ($i = 1; $i < 8; ++$i)
-      {
-  ?>
-        <td style="text-align:center;padding:0px 2px">
-<?php
-#       $checkbox_selected = wh_not_null ( $days_selected [$i] ) ? true : false;
 
-        echo wh_draw_checkbox_field_custom ( "selectDay{$i}_{$sport_id}",
-          "selectDay{$i}_{$sport_id}", null, $days_selected [$i], 'style="display: block; margin: auto"', 4, false );
-
-        $price_member = wh_not_null ( $prices_member [$i] ) ?
-            $prices_member [$i] : '' ;
-        $price_nonmember = wh_not_null ( $prices_nonmember [$i] ) ?
-            $prices_nonmember [$i] : '' ;
-
-        echo wh_draw_input_field_custom ( "priceMemberDay{$i}_{$sport_id}",
-          "priceMemberDay{$i}_{$sport_id}", $price_member,  ' size = "5" placeholder = ""',
-          'text', false, 5, true );
-        echo wh_draw_input_field_custom ( "priceNonmemberDay{$i}_{$sport_id}",
-          "priceNonmemberDay{$i}_{$sport_id}", $price_nonmember,  ' size = "5" placeholder = ""',
-          'text', false, 5, true );
+      echo wh_draw_label ( 'All days', '' , '', 7, false );
+      echo wh_draw_input_field_custom ( "priceMemberAll{$sport_id}",
+        "priceMemberAll{$sport_id}", $prices_member [1], ' size = "8" placeholder = ""',
+        'text', false, 5, false );
+      echo wh_draw_input_field_custom ( "priceNonmemberAll{$sport_id}",
+        "priceNonmemberAll{$sport_id}", $prices_nonmember [1], ' size = "8" placeholder = ""',
+        'text', false, 5, true );
 ?>
         </td>
-<?php
-      }
-?>
       </tr>
       <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
-        $price_member = wh_not_null ( $prices_member [1] ) ?
-            $prices_member [1] : '' ;
-        $price_nonmember = wh_not_null ( $prices_nonmember [1] ) ?
-            $prices_nonmember [1] : '' ;
 
       echo wh_draw_input_field_label ( "priceMemberWorkweek1{$sport_id}",
-        "priceMemberWorkweek1{$sport_id}", 'Workweek', '' , $price_member,
+        "priceMemberWorkweek1{$sport_id}", 'Workweek', '' , $prices_member [1],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWorkweek1{$sport_id}",
-        "priceNonmemberWorkweek1{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
+        "priceNonmemberWorkweek1{$sport_id}", $prices_nonmember [1], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center" colspan="2">
 <?php
-        $price_member = wh_not_null ( $prices_member [6] ) ?
-            $prices_member [6] : '' ;
-        $price_nonmember = wh_not_null ( $prices_nonmember [6] ) ?
-            $prices_nonmember [6] : '' ;
 
       echo wh_draw_label ( 'Weekend', '' , '', 5, true );
       echo wh_draw_input_field_custom ( "priceMemberWeekend{$sport_id}",
-        "priceMemberWeekend{$sport_id}", $price_member, ' size = "5" placeholder = ""',
+        "priceMemberWeekend{$sport_id}", $prices_member [6], ' size = "5" placeholder = ""',
         'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWeekend{$sport_id}",
-        "priceNonmemberWeekend{$sport_id}", $price_nonmember, ' size = "5" placeholder = ""',
+        "priceNonmemberWeekend{$sport_id}", $prices_nonmember [6], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -611,73 +552,64 @@
       <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>">
         <td style="text-align:center" colspan="5">
 <?php
-        $price_member = wh_not_null ( $prices_member [1] ) ?
-            $prices_member [1] : '' ;
-        $price_nonmember = wh_not_null ( $prices_nonmember [1] ) ?
-            $prices_nonmember [1] : '' ;
 
       echo wh_draw_input_field_label ( "priceMemberWorkweek2{$sport_id}",
-        "priceMemberWorkweek2{$sport_id}", 'Workweek', '' , $price_member,
+        "priceMemberWorkweek2{$sport_id}", 'Workweek', '' , $prices_member [1],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWorkweek2{$sport_id}",
-        "priceNonmemberWorkweek2{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
+        "priceNonmemberWorkweek2{$sport_id}", $prices_nonmember [1], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
 <?php
-        echo wh_draw_checkbox_field_custom ( "selectSat{$sport_id}",
-          "selectSat{$sport_id}", null, $days_selected [6], 'style="display: block; margin: auto"', 4, false );
-
-        $price_member = wh_not_null ( $prices_member [6] ) ?
-            $prices_member [6] : '' ;
-        $price_nonmember = wh_not_null ( $prices_nonmember [6] ) ?
-            $prices_nonmember [6] : '' ;
+#       echo wh_draw_checkbox_field_custom ( "selectSat{$sport_id}",
+#         "selectSat{$sport_id}", null, $days_selected [6], 'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "priceMemberSat{$sport_id}",
-        "priceMemberSat{$sport_id}", $price_member, ' size = "5" placeholder = ""',
+        "priceMemberSat{$sport_id}", $prices_member [6], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "priceNonmemberSat{$sport_id}",
-        "priceNonmemberSat{$sport_id}", $price_nonmember, ' size = "5" placeholder = ""',
+        "priceNonmemberSat{$sport_id}", $prices_nonmember [6], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center;padding:0px 2px">
 <?php
-        echo wh_draw_checkbox_field_custom ( "selectSun{$sport_id}",
-          "selectSun{$sport_id}", null, $days_selected [7], 'style="display: block; margin: auto"', 4, false );
-
-        $price_member = wh_not_null ( $prices_member [7] ) ?
-            $prices_member [7] : '' ;
-        $price_nonmember = wh_not_null ( $prices_nonmember [7] ) ?
-            $prices_nonmember [7] : '' ;
+#       echo wh_draw_checkbox_field_custom ( "selectSun{$sport_id}",
+#         "selectSun{$sport_id}", null, $days_selected [7], 'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "priceMemberSun{$sport_id}",
-        "priceMemberSun{$sport_id}", $price_member, ' size = "5" placeholder = ""',
+        "priceMemberSun{$sport_id}", $prices_member [7], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "priceNonmemberSun{$sport_id}",
-        "priceNonmemberSun{$sport_id}", $price_nonmember, ' size = "5" placeholder = ""',
+        "priceNonmemberSun{$sport_id}", $prices_nonmember [7], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
       </tr>
-      <tr class="trDaysAll<?php echo $sport_id; ?>">
-        <td style="text-align:center" colspan="7">
+      <tr class="trDaysSeparately<?php echo $sport_id; ?>">
 <?php
-        $price_member = wh_not_null ( $prices_member [1] ) ?
-            $prices_member [1] : '' ;
-        $price_nonmember = wh_not_null ( $prices_nonmember [1] ) ?
-            $prices_nonmember [1] : '' ;
+      for ($i = 1; $i < 8; ++$i)
+      {
+?>
+        <td style="text-align:center;padding:0px 2px">
+<?php
 
-      echo wh_draw_label ( 'All days', '' , '', 7, false );
-      echo wh_draw_input_field_custom ( "priceMemberAll{$sport_id}",
-        "priceMemberAll{$sport_id}", $price_member, ' size = "8" placeholder = ""',
-        'text', false, 5, false );
-      echo wh_draw_input_field_custom ( "priceNonmemberAll{$sport_id}",
-        "priceNonmemberAll{$sport_id}", $price_nonmember, ' size = "8" placeholder = ""',
-        'text', false, 5, true );
+#       echo wh_draw_checkbox_field_custom ( "selectDay{$i}_{$sport_id}",
+#         "selectDay{$i}_{$sport_id}", null, $days_selected [$i], 'style="display: block; margin: auto"', 4, false );
+
+        echo wh_draw_input_field_custom ( "priceMemberDay{$i}_{$sport_id}",
+          "priceMemberDay{$i}_{$sport_id}", $prices_member [$i],  ' size = "5" placeholder = ""',
+          'text', false, 5, true );
+        echo wh_draw_input_field_custom ( "priceNonmemberDay{$i}_{$sport_id}",
+          "priceNonmemberDay{$i}_{$sport_id}", $prices_nonmember [$i],  ' size = "5" placeholder = ""',
+          'text', false, 5, true );
 ?>
         </td>
+<?php
+      }
+?>
       </tr>
 
 <!--      </div> -->

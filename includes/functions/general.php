@@ -1165,8 +1165,8 @@
   }
 
   function wh_not_null($value) {
-		if ( ! isset ( $value ) )
-			return false;
+    if ( ! isset ( $value ) )
+      return false;
     if (is_array($value)) {
       if (sizeof($value) > 0) {
         return true;

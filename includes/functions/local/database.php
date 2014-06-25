@@ -85,18 +85,18 @@
 
   function wh_db_post_input_string ( $arg )
   {
-    return isset ( $_POST [$arg] )
+    return (isset ( $_POST [$arg] )
       && wh_not_null ( $_POST [$arg] )
       && is_string  ( $_POST [$arg] ) ?
-        wh_db_prepare_input ( $_POST [$arg] ) : null;
+        wh_db_prepare_input ( $_POST [$arg] ) : null);
   }
 
   function wh_db_post_input_prepare_array ( $arg )
   {
-    return isset ( $_POST [$arg] )
+    return (isset ( $_POST [$arg] )
       && wh_not_null ( $_POST [$arg] )
       && is_array ( $_POST [$arg] ) ?
-        wh_db_prepare_input ( $_POST [$arg] ) : array ();
+        wh_db_prepare_input ( $_POST [$arg] ) : array ());
   }
 
   function wh_db_get_input_check ( $arg )
@@ -114,25 +114,25 @@
 
   function wh_db_get_input_prepare ( $arg )
   {
-    return isset ( $_GET [$arg] )
+    return (isset ( $_GET [$arg] )
       && wh_not_null ( $_GET [$arg] ) ?
-        wh_db_prepare_input ( $_GET [$arg] ) : null;
+        wh_db_prepare_input ( $_GET [$arg] ) : null);
   }
 
   function wh_db_get_input_string ( $arg )
   {
-    return isset ( $_GET [$arg] )
+    return (isset ( $_GET [$arg] )
       && wh_not_null ( $_GET [$arg] )
       && is_string  ( $_GET [$arg] ) ?
-        wh_db_prepare_input ( $_GET [$arg] ) : null;
+        wh_db_prepare_input ( $_GET [$arg] ) : null);
   }
 
   function wh_db_get_input_array ( $arg )
   {
-    return isset ( $_GET [$arg] )
+    return (isset ( $_GET [$arg] )
       && wh_not_null ( $_GET [$arg] )
       && is_array ( $_GET [$arg] ) ?
-        wh_db_prepare_input ( $_GET [$arg] ) : array ();
+        wh_db_prepare_input ( $_GET [$arg] ) : array ());
   }
 
   /**
@@ -867,7 +867,8 @@
   function cleanClubosport ( $club )
   {
     $query = "delete from clubosport where club_id = {$club} "
-           . 'and (opening_time is null or closing_time is null) '
+           . 'and (opening_time is null or opening_time = \'00:00:00\' or '
+           . 'closing_time is null or closing_time = \'00:00:00\') '
            . 'and price_member is null and price_nonmember is null;' . PHP_EOL;
 #   echoQuery ( $query );
     return wh_db_query ( $query );

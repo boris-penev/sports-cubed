@@ -13,11 +13,11 @@
   function wh_db_connect($server = DB_SERVER, $username = DB_SERVER_USERNAME, $password = DB_SERVER_PASSWORD, $database = DB_DATABASE, $link = 'db_link') {
     global $$link;
 
-		if (USE_PCONNECT == 'true') {
-			$$link = mysqli_pconnect($server, $username, $password, $database);
-		} else {
-			$$link = mysqli_connect($server, $username, $password, $database);
-		}
+    if (USE_PCONNECT == 'true') {
+      $$link = mysqli_pconnect($server, $username, $password, $database);
+    } else {
+      $$link = mysqli_connect($server, $username, $password, $database);
+    }
 
     //if ($$link) mysqli_select_db($database);
 

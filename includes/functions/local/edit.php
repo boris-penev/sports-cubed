@@ -89,13 +89,6 @@
       $time_open = 'null';
     }
 
-    // previous to PHP 5.1.0 you would compare with -1, instead of false
-    if ( wh_not_null ($time_open) && strtotime($time_open) === false ) {
-      wh_define ( 'TEXT_ERROR',
-      '<strong style="color: #FF0000">Opening time is not a valid time</strong>' );
-      return;
-    }
-
     $time_close = wh_db_post_input_string ( 'time_close_global' );
     $time_close = wh_db_prepare_null ($time_close);
     //set variables to null if zeroes
@@ -103,7 +96,16 @@
       $time_close = 'null';
     }
 
-    if ( wh_not_null ($time_close) && strtotime($time_close) === false ) {
+    // previous to PHP 5.1.0 you would compare with -1, instead of false
+    if ( wh_not_null ($time_open) &&
+        (strtotime($time_open) === false || ! validate_time ($time_open)) ) {
+      wh_define ( 'TEXT_ERROR',
+      '<strong style="color: #FF0000">Opening time is not a valid time</strong>' );
+      return;
+    }
+
+    if ( wh_not_null ($time_close) &&
+        (strtotime($time_close) === false || ! validate_time ($time_close)) ) {
       wh_define ( 'TEXT_ERROR',
       '<strong style="color: #FF0000">Closing time is not a valid time</strong>' );
       return;
@@ -168,14 +170,16 @@
       // Build times array
       if ( $select_days_view_time == 'all' )
       {
-        $times['open'] = wh_db_post_input_string ( "timeOpenAll{$sport_id}" );
-        $times['close'] = wh_db_post_input_string ( "timeCloseAll{$sport_id}" );
+        $times['open'] = wh_get_time ( wh_db_post_input_string (
+              "timeOpenAll{$sport_id}" ) );
+        $times['close'] = wh_get_time ( wh_db_post_input_string (
+              "timeCloseAll{$sport_id}" ) );
 
         // flag indicating whether the array is empty
         $empty = false;
         //set variables to null if zeroes
         foreach ($times as $time) {
-          if ( $time === null || $time === '00:00:00' ) {
+          if ( $time === null ) {
             $times = [ 'open' => 'null', 'close' => 'null' ];
             $empty = true;
             break;
@@ -191,21 +195,21 @@
       }
       elseif ( $select_days_view_time == 'workweekweekend' )
       {
-        $times['workweek']['open'] =
-          wh_db_post_input_string ( "timeOpenWorkweek1{$sport_id}" );
-        $times['workweek']['close'] =
-          wh_db_post_input_string ( "timeCloseWorkweek1{$sport_id}" );
-        $times['weekend']['open'] =
-          wh_db_post_input_string ( "timeOpenWeekend{$sport_id}" );
-        $times['weekend']['close'] =
-          wh_db_post_input_string ( "timeCloseWeekend{$sport_id}" );
+        $times['workweek']['open'] = wh_get_time (
+            wh_db_post_input_string ( "timeOpenWorkweek1{$sport_id}" ) );
+        $times['workweek']['close'] = wh_get_time (
+            wh_db_post_input_string ( "timeCloseWorkweek1{$sport_id}" ) );
+        $times['weekend']['open'] = wh_get_time (
+            wh_db_post_input_string ( "timeOpenWeekend{$sport_id}" ) );
+        $times['weekend']['close'] = wh_get_time (
+            wh_db_post_input_string ( "timeCloseWeekend{$sport_id}" ) );
 
         // flag indicating whether the array is empty
         $empty = true;
         //set variables to null if zeroes
         foreach ($times as &$times_t) {
           foreach ($times_t as $time) {
-            if ( $time === null || $time === '00:00:00' ) {
+            if ( $time === null ) {
               $times_t = [ 'open' => 'null', 'close' => 'null' ];
               break;
             }
@@ -226,25 +230,25 @@
       }
       elseif ( $select_days_view_time == 'workweeksatsun' )
       {
-        $times['workweek']['open'] =
-          wh_db_post_input_string ( "timeOpenWorkweek2{$sport_id}" );
-        $times['workweek']['close'] =
-          wh_db_post_input_string ( "timeCloseWorkweek2{$sport_id}" );
-        $times['saturday']['open'] =
-          wh_db_post_input_string ( "timeOpenSat{$sport_id}" );
-        $times['saturday']['close'] =
-          wh_db_post_input_string ( "timeCloseSat{$sport_id}" );
-        $times['sunday']['open'] =
-          wh_db_post_input_string ( "timeOpenSun{$sport_id}" );
-        $times['sunday']['close'] =
-          wh_db_post_input_string ( "timeCloseSun{$sport_id}" );
+        $times['workweek']['open'] = wh_get_time (
+            wh_db_post_input_string ( "timeOpenWorkweek2{$sport_id}" ) );
+        $times['workweek']['close'] = wh_get_time (
+            wh_db_post_input_string ( "timeCloseWorkweek2{$sport_id}" ) );
+        $times['saturday']['open'] = wh_get_time (
+            wh_db_post_input_string ( "timeOpenSat{$sport_id}" ) );
+        $times['saturday']['close'] = wh_get_time (
+            wh_db_post_input_string ( "timeCloseSat{$sport_id}" ) );
+        $times['sunday']['open'] = wh_get_time (
+            wh_db_post_input_string ( "timeOpenSun{$sport_id}" ) );
+        $times['sunday']['close'] = wh_get_time (
+            wh_db_post_input_string ( "timeCloseSun{$sport_id}" ) );
 
         // flag indicating whether the array is empty
         $empty = true;
         //set variables to null if zeroes
         foreach ($times as &$times_t) {
           foreach ($times_t as $time) {
-            if ( $time === null || $time === '00:00:00' ) {
+            if ( $time === null ) {
               $times_t = [ 'open' => 'null', 'close' => 'null' ];
               break;
             }
@@ -270,14 +274,14 @@
         $empty = true;
         for ($i = 1; $i < 8; ++$i)
         {
-          $times[$i]['open'] =
-            wh_db_post_input_string ( "timeOpenDay{$i}_{$sport_id}" );
-          $times[$i]['close'] =
-            wh_db_post_input_string ( "timeCloseDay{$i}_{$sport_id}" );
+          $times[$i]['open'] = wh_get_time (
+              wh_db_post_input_string ( "timeOpenDay{$i}_{$sport_id}" ) );
+          $times[$i]['close'] = wh_get_time (
+              wh_db_post_input_string ( "timeCloseDay{$i}_{$sport_id}" ) );
 
           //set variables to null if zeroes
           foreach ($times[$i] as $time) {
-            if ( $time === null || $time === '00:00:00' ) {
+            if ( $time === null ) {
               $times[$i] = [ 'open' => 'null', 'close' => 'null' ];
               break;
             }
@@ -412,6 +416,7 @@
           $select_days_view_price = '';
         }
       }
+      // TODO Smart selection of most compact representation of data
       // Delete times and prices
       deleteSportsTimePrice ( 'sports', $club_id, $sport_id );
       // Set times and prices when both schedules identical
@@ -599,6 +604,19 @@
 #     die ();
     }
 
+  }
+
+  function wh_get_price ( $price )
+  {
+    return ( wh_not_null ($price) ? $price : null );
+  }
+
+  function wh_get_time ( $time )
+  {
+    return ( wh_not_null ($time) && $time !== '00:00:00' &&
+        strtotime($time) !== false &&
+        validate_time ($time, 'H:i:s') || validate_time ($time, 'H:i') ?
+          $time : null );
   }
 
   editClub ( );
