@@ -216,12 +216,12 @@
           $price_nonmember = $clubosport_row->price_nonmember;
           $time_open =
             ( wh_not_null ( $clubosport_row->opening_time )
-              && $clubosport_row->opening_time != '00:00:00'
+              && $clubosport_row->opening_time !== '00:00:00'
               && strtotime( $clubosport_row->opening_time ) !== false ) ?
               $clubosport_row->opening_time : null;
           $time_close =
             ( wh_not_null ( $clubosport_row->closing_time )
-              && $clubosport_row->closing_time != '00:00:00'
+              && $clubosport_row->closing_time !== '00:00:00'
               && strtotime( $clubosport_row->closing_time ) !== false ) ?
               $clubosport_row->closing_time : null;
           if ( wh_null ($time_open) || wh_null ($time_open) )
@@ -247,12 +247,12 @@
               $price_nonmember = $clubosport_row->price_nonmember;
               $time_open =
                 ( wh_not_null ( $clubosport_row->opening_time )
-                  && $clubosport_row->opening_time != '00:00:00'
+                  && $clubosport_row->opening_time !== '00:00:00'
                   && strtotime( $clubosport_row->opening_time ) !== false ) ?
                   $clubosport_row->opening_time : null;
               $time_close =
                 ( wh_not_null ( $clubosport_row->closing_time )
-                  && $clubosport_row->closing_time != '00:00:00'
+                  && $clubosport_row->closing_time !== '00:00:00'
                   && strtotime( $clubosport_row->closing_time ) !== false ) ?
                   $clubosport_row->closing_time : null;
               if ( wh_null ($time_open) || wh_null ($time_open) )
@@ -274,12 +274,12 @@
               $price_nonmember = $clubosport_row->price_nonmember;
               $time_open =
                 ( wh_not_null ( $clubosport_row->opening_time )
-                  && $clubosport_row->opening_time != '00:00:00'
+                  && $clubosport_row->opening_time !== '00:00:00'
                   && strtotime( $clubosport_row->opening_time ) !== false ) ?
                   $clubosport_row->opening_time : null;
               $time_close =
                 ( wh_not_null ( $clubosport_row->closing_time )
-                  && $clubosport_row->closing_time != '00:00:00'
+                  && $clubosport_row->closing_time !== '00:00:00'
                   && strtotime( $clubosport_row->closing_time ) !== false ) ?
                   $clubosport_row->closing_time : null;
               if ( wh_null ($time_open) || wh_null ($time_open) )
@@ -302,12 +302,12 @@
               $prices_nonmember [$day_id] = $clubosport_row->price_nonmember;
               $times_open [$day_id] =
                 ( wh_not_null ( $clubosport_row->opening_time )
-                  && $clubosport_row->opening_time != '00:00:00'
+                  && $clubosport_row->opening_time !== '00:00:00'
                   && strtotime( $clubosport_row->opening_time ) != false ) ?
                   $clubosport_row->opening_time : null;
               $times_close [$day_id] =
                 ( wh_not_null ( $clubosport_row->closing_time )
-                  && $clubosport_row->closing_time != '00:00:00'
+                  && $clubosport_row->closing_time !== '00:00:00'
                   && strtotime( $clubosport_row->closing_time ) !== false ) ?
                   $clubosport_row->closing_time : null;
             }

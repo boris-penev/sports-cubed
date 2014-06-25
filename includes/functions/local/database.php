@@ -79,24 +79,24 @@
 
   function wh_db_post_input_prepare ( $arg )
   {
-    return ( isset ( $_POST [$arg] ) && wh_not_null ( $_POST [$arg] ) )
-      ? wh_db_prepare_input ( $_POST [$arg] ) : null;
+    return ( isset ( $_POST [$arg] ) && wh_not_null ( $_POST [$arg] ) ) ?
+        wh_db_prepare_input ( $_POST [$arg] ) : null;
   }
 
   function wh_db_post_input_string ( $arg )
   {
     return isset ( $_POST [$arg] )
       && wh_not_null ( $_POST [$arg] )
-      && is_string  ( $_POST [$arg] )
-      ? wh_db_prepare_input ( $_POST [$arg] ) : null;
+      && is_string  ( $_POST [$arg] ) ?
+        wh_db_prepare_input ( $_POST [$arg] ) : null;
   }
 
   function wh_db_post_input_prepare_array ( $arg )
   {
     return isset ( $_POST [$arg] )
       && wh_not_null ( $_POST [$arg] )
-      && is_array ( $_POST [$arg] )
-      ? wh_db_prepare_input ( $_POST [$arg] ) : array ();
+      && is_array ( $_POST [$arg] ) ?
+        wh_db_prepare_input ( $_POST [$arg] ) : array ();
   }
 
   function wh_db_get_input_check ( $arg )
@@ -115,24 +115,24 @@
   function wh_db_get_input_prepare ( $arg )
   {
     return isset ( $_GET [$arg] )
-      && wh_not_null ( $_GET [$arg] )
-      ? wh_db_prepare_input ( $_GET [$arg] ) : null;
+      && wh_not_null ( $_GET [$arg] ) ?
+        wh_db_prepare_input ( $_GET [$arg] ) : null;
   }
 
   function wh_db_get_input_string ( $arg )
   {
     return isset ( $_GET [$arg] )
       && wh_not_null ( $_GET [$arg] )
-      && is_string  ( $_GET [$arg] )
-      ? wh_db_prepare_input ( $_GET [$arg] ) : null;
+      && is_string  ( $_GET [$arg] ) ?
+        wh_db_prepare_input ( $_GET [$arg] ) : null;
   }
 
   function wh_db_get_input_array ( $arg )
   {
     return isset ( $_GET [$arg] )
       && wh_not_null ( $_GET [$arg] )
-      && is_array ( $_GET [$arg] )
-      ? wh_db_prepare_input ( $_GET [$arg] ) : array ();
+      && is_array ( $_GET [$arg] ) ?
+        wh_db_prepare_input ( $_GET [$arg] ) : array ();
   }
 
   /**
@@ -920,6 +920,134 @@
             . "{$times['weekend']['close']}, "
             . "{$prices['weekend']['member']}, "
             . "{$prices['weekend']['nonmember']} )";
+    $query .= ' on duplicate key update '
+            . 'opening_time=values(opening_time), '
+            . 'closing_time=values(closing_time), '
+            . 'price_member=values(price_member), '
+            . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
+#   echoQuery ( $query );
+    return wh_db_query ( $query );
+  }
+
+  /**
+   * @param $table entity table - sports or facilities
+   * @param $club id of the club
+   * @param $entity id of entity - sport or facility
+   * @param $times array with time schedules
+   * @return query result
+   */
+  function setSportsTimeWorkweekSatSun ( $table, $club, $entity, $times )
+  {
+    if ( $table == 'sports' )
+    {
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
+    }
+    else if ( $table == 'facilities' )
+    {
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
+    }
+    $query = "update {$junction_table} set opening_time=null, closing_time=null "
+           . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
+    wh_db_query ( $query );
+    $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
+           . 'opening_time, closing_time ) values';
+    $query .= " ( {$club}, {$entity}, 9, "
+            . "{$times['workweek']['open']}, {$times['workweek']['close']} ),"
+            . " ( {$club}, {$entity}, 6, "
+            . "{$times['saturday']['open']}, {$times['saturday']['close']} ),"
+            . " ( {$club}, {$entity}, 7, "
+            . "{$times['sunday']['open']}, {$times['sunday']['close']} )";
+    $query .= ' on duplicate key update opening_time=values(opening_time), '
+            . 'closing_time=values(closing_time);' . PHP_EOL;
+#   echoQuery ( $query );
+    return wh_db_query ( $query );
+  }
+
+  /**
+   * @param $table entity table - sports or facilities
+   * @param $club id of the club
+   * @param $entity id of entity - sport or facility
+   * @param $prices array with prices
+   * @return query result
+   */
+  function setSportsPriceWorkweekSatSun ( $table, $club, $entity, $prices )
+  {
+    if ( $table == 'sports' )
+    {
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
+    }
+    else if ( $table == 'facilities' )
+    {
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
+    }
+    $query = "update {$junction_table} set price_member=null, price_nonmember=null "
+           . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
+    wh_db_query ( $query );
+    $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
+           . 'price_member, price_nonmember ) values';
+    $query .= " ( {$club}, {$entity}, 9, {$prices['workweek']['member']}, "
+            . "{$prices['workweek']['nonmember']} ),"
+            . " ( {$club}, {$entity}, 6, {$prices['saturday']['member']}, "
+            . "{$prices['saturday']['nonmember']} ),"
+            . " ( {$club}, {$entity}, 7, {$prices['sunday']['member']}, "
+            . "{$prices['sunday']['nonmember']} )";
+    $query .= ' on duplicate key update price_member=values(price_member), '
+            . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
+#   echoQuery ( $query );
+    return wh_db_query ( $query );
+  }
+
+  /**
+   * @param $table entity table - sports or facilities
+   * @param $club id of the club
+   * @param $entity id of entity - sport or facility
+   * @param $times array with time schedules
+   * @param $prices array with prices
+   * @return query result
+   */
+  function setSportsTimePriceWorkweekSatSun ( $table, $club, $entity, $times, $prices )
+  {
+    if ( $table == 'sports' )
+    {
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
+    }
+    else if ( $table == 'facilities' )
+    {
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
+    }
+    $query = "update {$junction_table} set opening_time=null, closing_time=null, "
+           . 'price_member=null, price_nonmember=null '
+           . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
+    wh_db_query ( $query );
+    $query = "insert into {$junction_table} ( club_id, {$entity_id}, day_id, "
+           . 'opening_time, closing_time, price_member, price_nonmember ) values';
+    $query .= " ( {$club}, {$entity}, 9, "
+            . "{$times['workweek']['open']}, "
+            . "{$times['workweek']['close']}, "
+            . "{$prices['workweek']['member']}, "
+            . "{$prices['workweek']['nonmember']} ),"
+            . " ( {$club}, {$entity}, 6, "
+            . "{$times['saturday']['open']}, "
+            . "{$times['saturday']['close']}, "
+            . "{$prices['saturday']['member']}, "
+            . "{$prices['saturday']['nonmember']} ),"
+            . " ( {$club}, {$entity}, 7, "
+            . "{$times['sunday']['open']}, "
+            . "{$times['sunday']['close']}, "
+            . "{$prices['sunday']['member']}, "
+            . "{$prices['sunday']['nonmember']} )";
     $query .= ' on duplicate key update '
             . 'opening_time=values(opening_time), '
             . 'closing_time=values(closing_time), '

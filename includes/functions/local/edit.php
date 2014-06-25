@@ -170,102 +170,96 @@
       // Build times array
       if ( $select_days_view_time == 'all' )
       {
-        $time_open = wh_db_post_input_string ( "timeOpenAll{$sport_id}" );
-        $time_close = wh_db_post_input_string ( "timeCloseAll{$sport_id}" );
+        $times['open'] = wh_db_post_input_string ( "timeOpenAll{$sport_id}" );
+        $times['close'] = wh_db_post_input_string ( "timeCloseAll{$sport_id}" );
         //set variables to null if zeroes
-        if ( $time_open == '00:00:00' ) {
-          $time_open = null;
-        }
-        if ( $time_close == '00:00:00' ) {
-          $time_close = null;
-        }
-        if ( wh_not_null ( $time_open ) && wh_not_null ( $time_close ) ) {
-          $times = [ 'open' => $time_open, 'close' => $time_close ];
-        } else {
-          $times = [ 'open' => 'null', 'close' => 'null' ];
+        foreach ($times as $time) {
+          if ( $time === null || $time === '00:00:00' ) {
+            $times = [ 'open' => 'null', 'close' => 'null' ];
+            break;
+          }
         }
       }
       elseif ( $select_days_view_time == 'workweekweekend' )
       {
-        $time_open_workweek =
+        $times['workweek']['open'] =
           wh_db_post_input_string ( "timeOpenWorkweek1{$sport_id}" );
-        $time_close_workweek =
+        $times['workweek']['close'] =
           wh_db_post_input_string ( "timeCloseWorkweek1{$sport_id}" );
-        $time_open_weekend =
+        $times['weekend']['open'] =
           wh_db_post_input_string ( "timeOpenWeekend{$sport_id}" );
-        $time_close_weekend =
+        $times['weekend']['close'] =
           wh_db_post_input_string ( "timeCloseWeekend{$sport_id}" );
 
         //set variables to null if zeroes
-        if ( $time_open_workweek == '00:00:00' ) {
-          $time_open_workweek = null;
+        foreach ($times as &$times_t) {
+          foreach ($times_t as $time) {
+            if ( $time === null || $time === '00:00:00' ) {
+              $times_t = [ 'open' => 'null', 'close' => 'null' ];
+              break;
+            }
+          }
         }
-        if ( $time_close_workweek == '00:00:00' ) {
-          $time_close_workweek = null;
-        }
-        if ( $time_open_weekend == '00:00:00' ) {
-          $time_open_weekend = null;
-        }
-        if ( $time_close_weekend == '00:00:00' ) {
-          $time_close_weekend = null;
-        }
+        unset($times_t);
+      }
+      elseif ( $select_days_view_time == 'workweeksatsun' )
+      {
+        $times['workweek']['open'] =
+          wh_db_post_input_string ( "timeOpenWorkweek2{$sport_id}" );
+        $times['workweek']['close'] =
+          wh_db_post_input_string ( "timeCloseWorkweek2{$sport_id}" );
+        $times['saturday']['open'] =
+          wh_db_post_input_string ( "timeOpenSat{$sport_id}" );
+        $times['saturday']['close'] =
+          wh_db_post_input_string ( "timeCloseSat{$sport_id}" );
+        $times['sunday']['open'] =
+          wh_db_post_input_string ( "timeOpenSun{$sport_id}" );
+        $times['sunday']['close'] =
+          wh_db_post_input_string ( "timeCloseSun{$sport_id}" );
 
-        if ( wh_not_null ( $time_open_workweek )
-              && wh_not_null ( $time_close_workweek ) ) {
-          $times['workweek'] =
-            [ 'open' => $time_open_workweek, 'close' => $time_close_workweek ];
-        } else {
-          $times['workweek'] = [ 'open' => 'null', 'close' => 'null' ];
+        //set variables to null if zeroes
+        foreach ($times as &$times_t) {
+          foreach ($times_t as $time) {
+            if ( $time === null || $time === '00:00:00' ) {
+              $times_t = [ 'open' => 'null', 'close' => 'null' ];
+              break;
+            }
+          }
         }
-        if ( wh_not_null ( $time_open_weekend )
-              && wh_not_null ( $time_close_weekend ) ) {
-          $times['weekend'] =
-            [ 'open' => $time_open_weekend, 'close' => $time_close_weekend ];
-        } else {
-          $times['weekend'] = [ 'open' => 'null', 'close' => 'null' ];
-        }
+        unset($times_t);
       }
       elseif ( $select_days_view_time == 'separately' )
       {
         for ($i = 1; $i < 8; ++$i)
         {
-          $time_open =
+          $times[$i]['open'] =
             wh_db_post_input_string ( "timeOpenDay{$i}_{$sport_id}" );
-          $time_close =
+          $times[$i]['close'] =
             wh_db_post_input_string ( "timeCloseDay{$i}_{$sport_id}" );
 
           //set variables to null if zeroes
-          if ( $time_open == '00:00:00' ) {
-            $time_open = null;
-          }
-          if ( $time_close == '00:00:00' ) {
-            $time_close = null;
-          }
-          if ( wh_not_null ( $time_open ) && wh_not_null ( $time_close ) ) {
-            $times[$i] = [ 'open' => $time_open, 'close' => $time_close ];
-          } else {
-            $times[$i] = [ 'open' => 'null', 'close' => 'null' ];
+          foreach ($times[$i] as $time) {
+            if ( $time === null || $time === '00:00:00' ) {
+              $times[$i] = [ 'open' => 'null', 'close' => 'null' ];
+              break;
+            }
           }
         }
       }
       // Build prices array
       if ( $select_days_view_price == 'all' )
       {
-        $price_member =
+        $prices['member'] =
           wh_db_post_input_string ( "priceMemberAll{$sport_id}" );
-        $price_nonmember =
+        $prices['nonmember'] =
           wh_db_post_input_string ( "priceNonmemberAll{$sport_id}" );
         //set variables to null if zeroes
-        if ( $price_member != null && (float) $price_member == 0.0 ) {
-          $price_member = null;
+        foreach ($prices as &$price) {
+          if ( (float) $price == 0.0 ) {
+            $price = 'null';
+          }
         }
-        if ( $price_nonmember != null && (float) $price_nonmember == 0.0 ) {
-          $price_nonmember = null;
-        }
-        $prices = [
-          'member' => wh_not_null($price_member) ? $price_member : 'null',
-          'nonmember' => wh_not_null($price_nonmember) ?
-            $price_nonmember : 'null' ];
+        unset($price);
       }
       elseif ( $select_days_view_price == 'workweekweekend' )
       {
@@ -279,43 +273,58 @@
           wh_db_post_input_string ( "priceNonmemberWeekend{$sport_id}" );
 
         //set variables to null if zeroes
-        if ( $prices['workweek']['member'] == null
-              || (float) $prices['workweek']['member'] == 0.0 ) {
-          $prices['workweek']['member'] = 'null';
+        foreach ($prices as &$prices_t) {
+          foreach ($prices_t as &$price) {
+            if ( (float) $price == 0.0 ) {
+              $price = 'null';
+            }
+          }
+          unset($price);
         }
-        if ( $prices['workweek']['nonmember'] == null
-              || (float) $prices['workweek']['nonmember'] == 0.0 ) {
-          $prices['workweek']['nonmember'] = 'null';
+        unset($prices_t);
+      }
+      elseif ( $select_days_view_price == 'workweeksatsun' )
+      {
+        $prices['workweek']['member'] =
+          wh_db_post_input_string ( "priceMemberWorkweek2{$sport_id}" );
+        $prices['workweek']['nonmember'] =
+          wh_db_post_input_string ( "priceNonmemberWorkweek2{$sport_id}" );
+        $prices['saturday']['member'] =
+          wh_db_post_input_string ( "priceMemberSat{$sport_id}" );
+        $prices['saturday']['nonmember'] =
+          wh_db_post_input_string ( "priceNonmemberSat{$sport_id}" );
+        $prices['sunday']['member'] =
+          wh_db_post_input_string ( "priceMemberSun{$sport_id}" );
+        $prices['sunday']['nonmember'] =
+          wh_db_post_input_string ( "priceNonmemberSun{$sport_id}" );
+
+        //set variables to null if zeroes
+        foreach ($prices as &$prices_t) {
+          foreach ($prices_t as &$price) {
+            if ( (float) $price == 0.0 ) {
+              $price = 'null';
+            }
+          }
+          unset($price);
         }
-        if ( $prices['weekend']['member'] == null
-              || (float) $prices['weekend']['member'] == 0.0 ) {
-          $prices['weekend']['member'] = 'null';
-        }
-        if ( $prices['weekend']['nonmember'] == null
-              || (float) $prices['weekend']['nonmember'] == 0.0 ) {
-          $prices['weekend']['nonmember'] = 'null';
-        }
+        unset($prices_t);
       }
       elseif ( $select_days_view_price == 'separately' )
       {
         for ($i = 1; $i < 8; ++$i)
         {
-          $price_member =
+          $prices[$i]['member'] =
             wh_db_post_input_string ( "priceMemberDay{$i}_{$sport_id}" );
-          $price_nonmember =
+          $prices[$i]['nonmember'] =
             wh_db_post_input_string ( "priceNonmemberDay{$i}_{$sport_id}" );
 
           //set variables to null if zeroes
-          if ( $price_member != null && (float) $price_member == 0.0 ) {
-            $price_member = null;
+          foreach ($prices[$i] as &$price) {
+            if ( (float) $price == 0.0 ) {
+              $price = 'null';
+            }
           }
-          if ( $price_nonmember != null && (float) $price_nonmember == 0.0 ) {
-            $price_nonmember = null;
-          }
-          $prices[$i] = [
-            'member' => wh_not_null($price_member) ? $price_member : 'null',
-            'nonmember' => wh_not_null($price_nonmember) ?
-              $price_nonmember : 'null' ];
+          unset($price);
         }
       }
       // Set times and prices when both schedules identical
@@ -325,18 +334,23 @@
       elseif ( $select_days_view == 'workweekweekend' ) {
         setSportsTimePriceWorkweekWeekend ( 'sports', $club_id, $sport_id, $times, $prices );
       }
+      elseif ( $select_days_view == 'workweeksatsun' ) {
+        setSportsTimePriceWorkweekSatSun ( 'sports', $club_id, $sport_id, $times, $prices );
+      }
       elseif ( $select_days_view == 'separately' ) {
         setSportsTimePriceSeparately ( 'sports', $club_id, $sport_id, $times, $prices );
       }
       else
       {
-        // TODO Implement support for workingsatsun
         // Set times
         if ( $select_days_view_time == 'all' ) {
           setSportsTimeAll ( 'sports', $club_id, $sport_id, $times );
         }
         elseif ( $select_days_view_time == 'workweekweekend' ) {
           setSportsTimeWorkweekWeekend ( 'sports', $club_id, $sport_id, $times );
+        }
+        elseif ( $select_days_view_time == 'workweeksatsun' ) {
+          setSportsTimeWorkweekSatSun ( 'sports', $club_id, $sport_id, $times );
         }
         elseif ( $select_days_view_time == 'separately' ) {
           setSportsTimeSeparately ( 'sports', $club_id, $sport_id, $times );
@@ -347,6 +361,9 @@
         }
         elseif ( $select_days_view_price == 'workweekweekend' ) {
           setSportsPriceWorkweekWeekend ( 'sports', $club_id, $sport_id, $prices );
+        }
+        elseif ( $select_days_view_price == 'workweeksatsun' ) {
+          setSportsPriceWorkweekSatSun ( 'sports', $club_id, $sport_id, $prices );
         }
         elseif ( $select_days_view_price == 'separately' ) {
           setSportsPriceSeparately ( 'sports', $club_id, $sport_id, $prices );
