@@ -163,15 +163,15 @@ $(document).ready(function() {
 				  'Cycling','Badminton','Gym','Skateboard','Gymnastics',
 				  'Table tennins','Rugby','Hockey','Tennins','Athletics',
 				  'Volleyball','Bowling', '1','2','3','4','5','6','7','8','9',
-				  '10','11','12','13','14','15','16','17','18','Football', 
+				  '10','11','12','13','14','15','16','17','18','Football',
 				  'Basketball', 'Golf', 'Swimming','Cricket','BMX','Cycling',
 				  'Badminton','Gym','Skateboard','Gymnastics','Table tennins',
 				  'Rugby','Hockey','Tennins','Athletics','Volleyball','Bowling',
 				  'test1', 'test2', 'test3']
   numberOfSportsPages = Math.ceil(sportsList.length / 18);
   drawActivities(sportsList);
-  
-  // we have the click handler for the sports togglers here because unlike the 
+
+  // we have the click handler for the sports togglers here because unlike the
   // price and time togglers, the activities ones are generated dynamically by
   // the function above - drawActivities
   $('.yes-no-button-sports').click(function(){
@@ -191,17 +191,17 @@ $(document).ready(function() {
       var sport = btn.parent().text().toLowerCase();
       sportsToBeSubmitted.push(sport);
     }
-    
+
     // if in tutorial mode - display the explanations
     if(tutorialMode == true){
     	 setTimeout(function(){$('#back-explanation').fadeIn(1000);
-    	 $('#swipe-back').fadeIn(1000, function(){ 
+    	 $('#swipe-back').fadeIn(1000, function(){
     	 animateSwipe('left', 'back')
      });
     }, 500)}
-    
+
   })
-  
+
   // set some default properties and rotate the cube to the Bottom (Intro) side
   $('#bigWrapper').css('width', "100%");
   $('#bigWrapper').css('height', "100%");
@@ -238,12 +238,12 @@ $('#how-to').click(function(){
   cubeNotLocked = 'left';
   $('#curtain').fadeIn();
   setTimeout(function(){$('#bottom-explanation').fadeIn(1000);},500);
-  setTimeout(function(){$('#swipe-bottom').fadeIn(1000, function(){ 
+  setTimeout(function(){$('#swipe-bottom').fadeIn(1000, function(){
 	animateSwipe('left', 'bottom')
   });},500);
 })
 
-$('#sports-left-navigator').click(function(){ 
+$('#sports-left-navigator').click(function(){
 	if(currentSportsPage > 0){
 		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
 		if(currentMargin < 0){
@@ -256,7 +256,7 @@ $('#sports-left-navigator').click(function(){
 })
 
 $('#sports-right-navigator').click(function(){
-    if(currentSportsPage < 4){ 
+    if(currentSportsPage < 4){
 		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
 		if(currentMargin > -2190){
 		currentMargin -= 438;
@@ -293,7 +293,7 @@ function drawSportsWrapper(wrapperList){
 		sportsWrapperSource += drawSportsLine(wrapperList[i]);
 	}
 	sportsWrapperSource += '</section>';
-	
+
 	var sportsSliderSource = $('#sports-slider').html()
 	$('#sports-slider').html(sportsSliderSource + sportsWrapperSource)
 }
@@ -302,7 +302,7 @@ function drawSportsWrapper(wrapperList){
 function drawSportsLine(element){
 	elementID = element.toLowerCase();
 	elementID = elementID.replace(' ', '');
-	return '<div class="sports-togglers" id="' + elementID + '_toggler">' + element + 
+	return '<div class="sports-togglers" id="' + elementID + '_toggler">' + element +
 		   '<br/><div class="yes-no-button-sports" data-clicked="no"></div></div>'
 }
 
@@ -311,8 +311,8 @@ function drawSportsLine(element){
 function animateSwipe(direction, facingWall){
 
 if(swipeAllowed){
-	var swipeimage = $('#swipe-'+facingWall); 
-	
+	var swipeimage = $('#swipe-'+facingWall);
+
 	switch (direction){
 	case 'left':
 		swipeimage.animate({
@@ -345,7 +345,7 @@ if(swipeAllowed){
 			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
 			}
 		)
-		break;	
+		break;
 	}
 }
 }
@@ -363,16 +363,16 @@ var state = btn.data('clicked');
     $(".yes-no-button-price").data('clicked','no');
     btn.css('background-position','0px -35px');
     btn.data('clicked','yes');
-	
+
 	var price = btn.parent().text().toLowerCase().replace(" ", "");
     priceToBeSubmitted = price;
   }
-  
+
 
   // if in tutorial mode - display the explanations
   if(tutorialMode == true){
 	  setTimeout(function(){$('#left-explanation').fadeIn(1000);
-	  $('#swipe-left').fadeIn(1000, function(){ 
+	  $('#swipe-left').fadeIn(1000, function(){
 	  animateSwipe('left', 'left')
     });
   }, 500)}
@@ -391,7 +391,7 @@ $('.yes-no-button-time').click(function(){
     case "no":
       $('.yes-no-button-time').css('background-position','0px -35px');
       $('.yes-no-button-time').data('clicked','yes');
-	  	  
+
 	  var length = daysToBeSubmitted.length;
       daysToBeSubmitted.splice(0, length);
       daysToBeSubmitted.push("monday", "tuesday", "wednesday",
@@ -419,18 +419,18 @@ $('.yes-no-button-time').click(function(){
       btn.data('clicked','no');
       $("#whole_toggler").find("div").css('background-position','0px 0px');
       $("#whole_toggler > div").data('clicked','no');
-	  	  
+
 	  var day = btn.parent().text().toLowerCase();
       var index = daysToBeSubmitted.indexOf(day);
       daysToBeSubmitted.splice(index, 1);
       break;
     }
   }
-  
+
   // if in tutorial mode - display the explanations
   if(tutorialMode == true){
 	  setTimeout(function(){$('#right-explanation').fadeIn(1000);
-	  $('#swipe-right').fadeIn(1000, function(){ 
+	  $('#swipe-right').fadeIn(1000, function(){
 	  animateSwipe('left', 'right')
     });
   }, 500)}
@@ -454,9 +454,9 @@ $(window).resize(function() {
 
 // the end point of the tutorial
 $('#front-explanation').click(function(){ tutorialMode = false;
-										  cubeNotLocked = 'all'; 
-										  $(this).fadeOut(1000, function(){ 
-												$('#linkToMap').fadeIn(500) }); 
+										  cubeNotLocked = 'all';
+										  $(this).fadeOut(1000, function(){
+												$('#linkToMap').fadeIn(500) });
 										  $('#curtain').fadeOut(1000)})
 
 //preventing the elastic bounce effect in Safari under iOS
@@ -468,20 +468,39 @@ $('img').on('dragstart', function(event) { event.preventDefault(); });
 // detecting when a key is pressed and passing this key to the keydownEvent
 // function
 $('body').keydown( function (evt){
-	  
-	  console.log(evt.keyCode);
-	  var type
-  	  if(evt.keyCode == 39){ type = 'left' }
-	  else if(evt.keyCode == 37) { type = 'right' }
-      else if(evt.keyCode == 40) { type = 'up' }
-      else if(evt.keyCode == 38) { type = 'down' }
-	  
-	  if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') || 
-							   (cubeNotLocked == 'right' && type == 'right') || 
-							   (cubeNotLocked == 'up' && type == 'up') || 
-							   (cubeNotLocked == 'down' && type == 'down')){
-		gesturePerformed(type);
-	  }
+
+    var type;
+    switch (evt.keyCode)
+    {
+      case 39:  // right arrow
+      case 68:  // d
+      case 102: // numpad 6
+        type = 'left';
+        break;
+      case 37:  // left arrow
+      case 65:  // a
+      case 100: // numpad 4
+        type = 'right';
+        break;
+      case 40:  // down arrow
+      case 83:  // s
+      case 98:  // numpad 2
+        type = 'up';
+        break;
+      case 38:  // up arrow
+      case 87:  // w
+      case 104: // numpad 8
+        type = 'down';
+        break;
+    }
+
+    if (cubeNotLocked == 'all' ||
+        (cubeNotLocked == 'left'  && type == 'left') ||
+        (cubeNotLocked == 'right' && type == 'right') ||
+        (cubeNotLocked == 'up'    && type == 'up') ||
+        (cubeNotLocked == 'down'  && type == 'down')){
+      gesturePerformed(type);
+    }
 });
 
 //detecting touch gestures on the screen (body)
@@ -500,9 +519,9 @@ Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragle
 	else if (event.type == "swipeup" || event.type == "dragup"){
 		type = "up";
 	}
-    if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') || 
-							   (cubeNotLocked == 'right' && type == 'right') || 
-							   (cubeNotLocked == 'up' && type == 'up') || 
+    if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') ||
+							   (cubeNotLocked == 'right' && type == 'right') ||
+							   (cubeNotLocked == 'up' && type == 'up') ||
 							   (cubeNotLocked == 'down' && type == 'down')){
       event.gesture.stopDetect();
       gesturePerformed(type);
@@ -721,7 +740,7 @@ function gesturePerformed(type)
         }
         break;
     }
-	
+
 	// if in tutorial mode hide the explanations that the user leaves behind
 	if(tutorialMode == true){
 		switch (currentWall){
@@ -739,9 +758,9 @@ function gesturePerformed(type)
 			break;
 			case 'front':
 			$('#swipe-left').fadeOut(1500)
-			$('#left-explanation').fadeOut(1500, function(){ 
+			$('#left-explanation').fadeOut(1500, function(){
 											$('#front-explanation').fadeIn(1000);
-											cubeNotLocked = ''; 
+											cubeNotLocked = '';
 											})
 			break;
 		}
