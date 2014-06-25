@@ -162,8 +162,6 @@
           wh_db_post_input_string ( "selectDaysViewTime{$sport_id}" );
       $select_days_view_price =
           wh_db_post_input_string ( "selectDaysViewPrice{$sport_id}" );
-      $select_days_view = ($select_days_view_time == $select_days_view_price) ?
-          $select_days_view_time : null;
       $times = array();
       $prices = array();
 
@@ -172,12 +170,23 @@
       {
         $times['open'] = wh_db_post_input_string ( "timeOpenAll{$sport_id}" );
         $times['close'] = wh_db_post_input_string ( "timeCloseAll{$sport_id}" );
+
+        // flag indicating whether the array is empty
+        $empty = false;
         //set variables to null if zeroes
         foreach ($times as $time) {
           if ( $time === null || $time === '00:00:00' ) {
             $times = [ 'open' => 'null', 'close' => 'null' ];
+            $empty = true;
             break;
           }
+        }
+        $times_t = [];
+        $times_t [8] = $times;
+        $times = $times_t;
+        unset ($times_t);
+        if ($empty) {
+          $select_days_view_time = '';
         }
       }
       elseif ( $select_days_view_time == 'workweekweekend' )
@@ -191,6 +200,8 @@
         $times['weekend']['close'] =
           wh_db_post_input_string ( "timeCloseWeekend{$sport_id}" );
 
+        // flag indicating whether the array is empty
+        $empty = true;
         //set variables to null if zeroes
         foreach ($times as &$times_t) {
           foreach ($times_t as $time) {
@@ -199,8 +210,19 @@
               break;
             }
           }
+          if ( $times_t ['open'] !== 'null' ) {
+            $empty = false;
+          }
         }
         unset($times_t);
+        $times_t = [];
+        $times_t [9]  = $times['workweek'];
+        $times_t [10] = $times['weekend'];
+        $times = $times_t;
+        unset ($times_t);
+        if ($empty) {
+          $select_days_view_time = '';
+        }
       }
       elseif ( $select_days_view_time == 'workweeksatsun' )
       {
@@ -217,6 +239,8 @@
         $times['sunday']['close'] =
           wh_db_post_input_string ( "timeCloseSun{$sport_id}" );
 
+        // flag indicating whether the array is empty
+        $empty = true;
         //set variables to null if zeroes
         foreach ($times as &$times_t) {
           foreach ($times_t as $time) {
@@ -225,11 +249,25 @@
               break;
             }
           }
+          if ( $times_t ['open'] !== 'null' ) {
+            $empty = false;
+          }
         }
         unset($times_t);
+        $times_t = [];
+        $times_t [6] = $times['saturday'];
+        $times_t [7] = $times['sunday'];
+        $times_t [9] = $times['workweek'];
+        $times = $times_t;
+        unset ($times_t);
+        if ($empty) {
+          $select_days_view_time = '';
+        }
       }
       elseif ( $select_days_view_time == 'separately' )
       {
+        // flag indicating whether the array is empty
+        $empty = true;
         for ($i = 1; $i < 8; ++$i)
         {
           $times[$i]['open'] =
@@ -244,6 +282,9 @@
               break;
             }
           }
+          if ( $times[$i]['open'] !== 'null' ) {
+            $empty = false;
+          }
         }
       }
       // Build prices array
@@ -253,13 +294,25 @@
           wh_db_post_input_string ( "priceMemberAll{$sport_id}" );
         $prices['nonmember'] =
           wh_db_post_input_string ( "priceNonmemberAll{$sport_id}" );
+
+        // flag indicating whether the array is empty
+        $empty = true;
         //set variables to null if zeroes
         foreach ($prices as &$price) {
           if ( (float) $price == 0.0 ) {
             $price = 'null';
+          } else {
+            $empty = false;
           }
         }
         unset($price);
+        $prices_t = [];
+        $prices_t [8] = $prices;
+        $prices = $prices_t;
+        unset ($prices_t);
+        if ($empty) {
+          $select_days_view_price = '';
+        }
       }
       elseif ( $select_days_view_price == 'workweekweekend' )
       {
@@ -272,16 +325,28 @@
         $prices['weekend']['nonmember'] =
           wh_db_post_input_string ( "priceNonmemberWeekend{$sport_id}" );
 
+        // flag indicating whether the array is empty
+        $empty = true;
         //set variables to null if zeroes
         foreach ($prices as &$prices_t) {
           foreach ($prices_t as &$price) {
             if ( (float) $price == 0.0 ) {
               $price = 'null';
+            } else {
+              $empty = false;
             }
           }
           unset($price);
         }
         unset($prices_t);
+        $prices_t = [];
+        $prices_t [9]  = $prices['workweek'];
+        $prices_t [10] = $prices['weekend'];
+        $prices = $prices_t;
+        unset ($prices_t);
+        if ($empty) {
+          $select_days_view_price = '';
+        }
       }
       elseif ( $select_days_view_price == 'workweeksatsun' )
       {
@@ -298,19 +363,34 @@
         $prices['sunday']['nonmember'] =
           wh_db_post_input_string ( "priceNonmemberSun{$sport_id}" );
 
+        // flag indicating whether the array is empty
+        $empty = true;
         //set variables to null if zeroes
         foreach ($prices as &$prices_t) {
           foreach ($prices_t as &$price) {
             if ( (float) $price == 0.0 ) {
               $price = 'null';
+            } else {
+              $empty = false;
             }
           }
           unset($price);
         }
         unset($prices_t);
+        $prices_t = [];
+        $prices_t [6] = $prices['saturday'];
+        $prices_t [7] = $prices['sunday'];
+        $prices_t [9] = $prices['workweek'];
+        $prices = $prices_t;
+        unset ($prices_t);
+        if ($empty) {
+          $select_days_view_price = '';
+        }
       }
       elseif ( $select_days_view_price == 'separately' )
       {
+        // flag indicating whether the array is empty
+        $empty = true;
         for ($i = 1; $i < 8; ++$i)
         {
           $prices[$i]['member'] =
@@ -322,54 +402,35 @@
           foreach ($prices[$i] as &$price) {
             if ( (float) $price == 0.0 ) {
               $price = 'null';
+            } else {
+              $empty = false;
             }
           }
           unset($price);
         }
+        if ($empty) {
+          $select_days_view_price = '';
+        }
       }
+      // Delete times and prices
+      deleteSportsTimePrice ( 'sports', $club_id, $sport_id );
       // Set times and prices when both schedules identical
-      if ( $select_days_view == 'all' ) {
-        setSportsTimePriceAll ( 'sports', $club_id, $sport_id, $times, $prices );
-      }
-      elseif ( $select_days_view == 'workweekweekend' ) {
-        setSportsTimePriceWorkweekWeekend ( 'sports', $club_id, $sport_id, $times, $prices );
-      }
-      elseif ( $select_days_view == 'workweeksatsun' ) {
-        setSportsTimePriceWorkweekSatSun ( 'sports', $club_id, $sport_id, $times, $prices );
-      }
-      elseif ( $select_days_view == 'separately' ) {
-        setSportsTimePriceSeparately ( 'sports', $club_id, $sport_id, $times, $prices );
-      }
-      else
-      {
+      $select_days_view = ($select_days_view_time === $select_days_view_price);
+      if ( $select_days_view ) {
+        if ( $select_days_view_time !== '' ) {
+          setSportsTimePrice ( 'sports', $club_id, $sport_id, $times, $prices );
+        }
+      } else {
         // Set times
-        if ( $select_days_view_time == 'all' ) {
-          setSportsTimeAll ( 'sports', $club_id, $sport_id, $times );
-        }
-        elseif ( $select_days_view_time == 'workweekweekend' ) {
-          setSportsTimeWorkweekWeekend ( 'sports', $club_id, $sport_id, $times );
-        }
-        elseif ( $select_days_view_time == 'workweeksatsun' ) {
-          setSportsTimeWorkweekSatSun ( 'sports', $club_id, $sport_id, $times );
-        }
-        elseif ( $select_days_view_time == 'separately' ) {
-          setSportsTimeSeparately ( 'sports', $club_id, $sport_id, $times );
+        if ( $select_days_view_time !== '' ) {
+          setSportsTime ( 'sports', $club_id, $sport_id, $times );
         }
         // Set prices
-        if ( $select_days_view_price == 'all' ) {
-          setSportsPriceAll ( 'sports', $club_id, $sport_id, $prices );
-        }
-        elseif ( $select_days_view_price == 'workweekweekend' ) {
-          setSportsPriceWorkweekWeekend ( 'sports', $club_id, $sport_id, $prices );
-        }
-        elseif ( $select_days_view_price == 'workweeksatsun' ) {
-          setSportsPriceWorkweekSatSun ( 'sports', $club_id, $sport_id, $prices );
-        }
-        elseif ( $select_days_view_price == 'separately' ) {
-          setSportsPriceSeparately ( 'sports', $club_id, $sport_id, $prices );
+        if ( $select_days_view_price !== '' ) {
+          setSportsPrice ( 'sports', $club_id, $sport_id, $prices );
         }
       }
-    } //end while $sport = wh_db_fetch...
+    } // while $sport = wh_db_fetch...
 
     // Delete empty entries from clubosport
     cleanClubosport ($club_id);

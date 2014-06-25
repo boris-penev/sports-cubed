@@ -186,8 +186,7 @@
         <td style='padding:0px 6px' rowspan="10">
 <?php
       $sport_selected = ( $clubosport_row &&
-          $clubosport_row->sport_id == $sport_id ) ?
-          true : false;
+          $clubosport_row->sport_id == $sport_id );
 
       echo wh_draw_checkbox_field_custom ( "selectSport_{$sport_id}",
           "selectSport_{$sport_id}", null, $sport_selected, 'class="selectSport"', 4, false );
@@ -235,8 +234,6 @@
         }
         else
         {
-          $i = 0;
-#         $day_id = $clubosport_row->day_id;
           do
           {
             $day_id = $clubosport_row->day_id;
