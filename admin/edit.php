@@ -183,7 +183,7 @@
     {
 ?>
       <tr>
-        <td style='padding:0px 6px' rowspan="10">
+        <td style='padding:0px 6px;' rowspan="10">
 <?php
       $sport_selected = ( $clubosport_row &&
           $clubosport_row->sport_id == $sport_id );
@@ -388,7 +388,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysAll<?php echo $sport_id; ?>">
+      <tr class="trDaysAll<?php echo $sport_id; ?>"
+          <?php if (! $all_select_time) { ?> style="visibility: collapse;" <?php } ?>  >
         <td style="text-align:center" colspan="7">
 <?php
 
@@ -402,7 +403,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>"
+          <?php if (! $workweek_weekend_select_time) { ?> style="visibility: collapse;" <?php } ?> >
         <td style="text-align:center" colspan="5">
 <?php
 
@@ -427,7 +429,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>"
+          <?php if (! $workweek_sat_sun_select_time) { ?> style="visibility: collapse;" <?php } ?> >
         <td style="text-align:center" colspan="5">
 <?php
 
@@ -468,7 +471,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysSeparately<?php echo $sport_id; ?>">
+      <tr class="trDaysSeparately<?php echo $sport_id; ?>"
+          <?php if (! $separately_select_time) { ?> style="visibility: collapse;" <?php } ?> >
 <?php
       for ($i = 1; $i < 8; ++$i)
       {
@@ -510,7 +514,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysAll<?php echo $sport_id; ?>">
+      <tr class="trDaysAll<?php echo $sport_id; ?>"
+          <?php if (! $all_select_price) { ?> style="visibility: collapse;" <?php } ?> >
         <td style="text-align:center" colspan="7">
 <?php
 
@@ -524,7 +529,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekWeekend<?php echo $sport_id; ?>"
+          <?php if (! $workweek_weekend_select_price) { ?> style="visibility: collapse;" <?php } ?> >
         <td style="text-align:center" colspan="5">
 <?php
 
@@ -549,7 +555,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>">
+      <tr class="trDaysWorkweekSatSun<?php echo $sport_id; ?>"
+          <?php if (! $workweek_sat_sun_select_price) { ?> style="visibility: collapse;" <?php } ?> >
         <td style="text-align:center" colspan="5">
 <?php
 
@@ -588,7 +595,8 @@
 ?>
         </td>
       </tr>
-      <tr class="trDaysSeparately<?php echo $sport_id; ?>">
+      <tr class="trDaysSeparately<?php echo $sport_id; ?>"
+          <?php if (! $separately_select_price) { ?> style="visibility: collapse;" <?php } ?> >
 <?php
       for ($i = 1; $i < 8; ++$i)
       {
