@@ -15,9 +15,10 @@
     'price_member' => '',
     'price_nonmember' => ''
   ];
-  
-  $day = '(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
+
+  $day = '(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
        . '|Mon|Tue|Wed|Thu|Fri|Sat|Sun)';
+  $hour = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
 
   function curl_get_file_contents_custom($URL)
   {
@@ -59,13 +60,13 @@
     curl_close($curl);
     return $data;
   }
-  
+
   function get_first_element ( $entity )
   {
     return count ( $entity ) > 0 ?
               (string) $entity[0] : '';
   }
-  
+
   function buildQuery ( $entity )
   {
     if ( $entity == 'club' )
@@ -106,7 +107,7 @@
     }
     return '';
   }
-  
+
   function loadXML ( )
   {
     $xml = curl_get_html_file_contents_custom (
@@ -115,7 +116,7 @@
 
     return new SimpleXMLElement($xml);
   }
-  
+
   function process_current_club ( $club )
   {
     global $club_init;
@@ -191,7 +192,7 @@
       $current_club = process_current_club ($club);
       parse_time ($current_club);
       $arr[] = $current_club;
-      var_dump ($current_club);
+#     var_dump ($current_club);
     }
   }
 
@@ -202,11 +203,14 @@
 #   var_export($arr);
   }
 
-  function parse_time ( &$club )
+  function parse_time ( $club )
   {
     global $day;
+    global $hour;
+
+    echo 'Club time' . PHP_EOL;
     var_dump($club['time']);
-    $subject = 'abcdef';
+/*    $subject = 'abcdef';
     $pattern = '/^def/';
     preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE, 3);
     var_dump($matches);
@@ -217,19 +221,45 @@
     $pattern = '/^\b'.$day.'\s*-\s*\b'.$day.'/';
     if (preg_match ($pattern, $club['time'], $matches)) {
       var_dump($matches);
-    }
-    $pattern = '/^\b(?P<left>'.$day.')\s*-\s*\b(?P<right>'.$day.')/';
-    if (preg_match ($pattern, $club['time'], $matches)) {
-      var_dump($matches);
+    }*/
+/*    $subject = 'abcdef';
+    $pattern = '/((no)?|n)?(d?|e?)?\s?.?\s*f/';
+    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+    preg_match($pattern, $subject, $matches);
+    var_dump($matches);*/
+#   var_dump ($pattern);
+#   test(wordwrap($pattern, 80, PHP_EOL, TRUE));
+/*    $count = 0;
+    $pattern = '/(?P<left>'.$day. ')(\s*-\s*(?P<right>'.$day. '))?' .
+               '(\s*(:|,)\s*(?P<open>'.$hour.')\s*-\s*(?P<close>'.$hour.'))?/';
+    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+    $subject = $club['time'];
+    while (preg_match ($pattern, $subject, $matches)) {
+      var_dump($matches[0]);
+      $subject = substr ($subject, strlen($matches[0]));
       $matches['left']  = (int) date('N', strtotime($matches['left']));
       $matches['right'] = (int) date('N', strtotime($matches['right']));
-      var_dump($matches['left']);
-      var_dump($matches['right']);
-      for ($i = $matches['left']; $i <= $matches['right']; ++$i) {
-        echo $i . ' ';
-      }
+      if ( ++$count > 10 ) break;
+    }*/
+    $subject = $club['time'];
+    $pattern = '/(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))?' .
+        '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
+        $hour.'))?/';
+#   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+    if (preg_match_all ($pattern, $subject, $matches)) {
+      var_dump($matches[0]);
     }
-    
+/*    $pattern = '/(?P<left>'.$day. ')(\s*-\s*(?P<right>'.$day. '))?/';
+    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+    if (preg_match_all ($pattern, $subject, $matches)) {
+      var_dump($matches[0]);
+    }
+    $pattern = '/(?P<open>'.$hour.')\s*-\s*(?P<close>'.$hour.')?/';
+    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+    if (preg_match_all ($pattern, $subject, $matches)) {
+      var_dump($matches[0]);
+    }*/
+
   }
 
 ?>

@@ -67,4 +67,26 @@
     $datetime = DateTime::createFromFormat($format, $time, $timezone);
     return $datetime && $datetime->format($format) == $time;
   }
+
+  /**
+   * Benchmarks a function and outputs to console
+   */
+  function test ( $func )
+  {
+    $php_sum = 0.0;
+    $php_max = 0.0;
+    for ( $i = 0; $i < 100; ++$i )
+    {
+      $starttime = microtime(true);
+      file_put_contents ( '/var/www/html/database/newest.txt', time () );
+      $endtime = microtime(true);
+      $t = $endtime - $starttime;
+      if ( $t > $php_max )
+        $php_max = $t;
+      $php_sum += $t;
+    }
+
+    echo 'Max     = ', $php_max,         ' <br />', PHP_EOL;
+    echo 'Average = ', $php_sum / 100.0, ' <br />', PHP_EOL;
+  }
 ?>
