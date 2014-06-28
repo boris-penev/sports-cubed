@@ -210,37 +210,7 @@
 
     echo 'Club time' . PHP_EOL;
     var_dump($club['time']);
-/*    $subject = 'abcdef';
-    $pattern = '/^def/';
-    preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE, 3);
-    var_dump($matches);
-    $subject = "abcdef";
-    $pattern = '/^def/';
-    preg_match($pattern, substr($subject,3), $matches, PREG_OFFSET_CAPTURE);
-    var_dump($matches);
-    $pattern = '/^\b'.$day.'\s*-\s*\b'.$day.'/';
-    if (preg_match ($pattern, $club['time'], $matches)) {
-      var_dump($matches);
-    }*/
-/*    $subject = 'abcdef';
-    $pattern = '/((no)?|n)?(d?|e?)?\s?.?\s*f/';
-    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
-    preg_match($pattern, $subject, $matches);
-    var_dump($matches);*/
-#   var_dump ($pattern);
-#   test(wordwrap($pattern, 80, PHP_EOL, TRUE));
-/*    $count = 0;
-    $pattern = '/(?P<left>'.$day. ')(\s*-\s*(?P<right>'.$day. '))?' .
-               '(\s*(:|,)\s*(?P<open>'.$hour.')\s*-\s*(?P<close>'.$hour.'))?/';
-    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
-    $subject = $club['time'];
-    while (preg_match ($pattern, $subject, $matches)) {
-      var_dump($matches[0]);
-      $subject = substr ($subject, strlen($matches[0]));
-      $matches['left']  = (int) date('N', strtotime($matches['left']));
-      $matches['right'] = (int) date('N', strtotime($matches['right']));
-      if ( ++$count > 10 ) break;
-    }*/
+
     $subject = $club['time'];
     $pattern = '/(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))?' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
@@ -249,16 +219,6 @@
     if (preg_match_all ($pattern, $subject, $matches)) {
       var_dump($matches[0]);
     }
-/*    $pattern = '/(?P<left>'.$day. ')(\s*-\s*(?P<right>'.$day. '))?/';
-    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
-    if (preg_match_all ($pattern, $subject, $matches)) {
-      var_dump($matches[0]);
-    }
-    $pattern = '/(?P<open>'.$hour.')\s*-\s*(?P<close>'.$hour.')?/';
-    var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
-    if (preg_match_all ($pattern, $subject, $matches)) {
-      var_dump($matches[0]);
-    }*/
 
   }
 
