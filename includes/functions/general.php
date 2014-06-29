@@ -168,15 +168,17 @@
 ////
 // Return all HTTP GET variables, except those passed as a parameter
   function wh_get_all_get_params($exclude_array = '') {
-    global $HTTP_GET_VARS;
-
     if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
-    if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
-      reset($HTTP_GET_VARS);
-      while (list($key, $value) = each($HTTP_GET_VARS)) {
-        if ( is_string($value) && (strlen($value) > 0) && ($key != wh_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      foreach ($_GET as $key => $value) {
+        if ( is_string($value) && (strlen($value) > 0) &&
+              ($key != wh_session_name()) && ($key != 'error') &&
+              (!in_array($key, $exclude_array)) &&
+              ($key != 'x') && ($key != 'y') )
+        {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
         }
       }
@@ -261,9 +263,7 @@
 ////
 // Returns the clients browser
   function wh_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 ////
@@ -947,9 +947,7 @@
       if (is_array($params) && (sizeof($params) > 0)) {
         $attributes_check = true;
         $attributes_ids = '';
-
-        reset($params);
-        while (list($option, $value) = each($params)) {
+        foreach ( $params as $option => $value ) {
           if (is_numeric($option) && is_numeric($value)) {
             $attributes_ids .= '{' . (int)$option . '}' . (int)$value;
           } else {
@@ -1152,7 +1150,7 @@
 
     $get_string = '';
     if (sizeof($array) > 0) {
-      while (list($key, $value) = each($array)) {
+      foreach ($array as $key => $value) {
         if ( (!in_array($key, $exclude)) && ($key != 'x') && ($key != 'y') ) {
           $get_string .= $key . $equals . $value . $separator;
         }
@@ -1302,13 +1300,11 @@
   }
 
   function wh_get_ip_address() {
-    global $HTTP_SERVER_VARS;
-
     $ip_address = null;
     $ip_addresses = array();
 
-    if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR']) && !empty($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
-      foreach ( array_reverse(explode(',', $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
+    if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+      foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
         $x_ip = trim($x_ip);
 
         if (wh_validate_ip_address($x_ip)) {
@@ -1317,19 +1313,19 @@
       }
     }
 
-    if (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
+    if (isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP'])) {
+      $ip_addresses[] = $_SERVER['HTTP_CLIENT_IP'];
     }
 
-    if (isset($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'];
+    if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($_SERVER['HTTP_X_CLUSTER_CLIENT_IP'])) {
+      $ip_addresses[] = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
     }
 
-    if (isset($HTTP_SERVER_VARS['HTTP_PROXY_USER']) && !empty($HTTP_SERVER_VARS['HTTP_PROXY_USER'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_PROXY_USER'];
+    if (isset($_SERVER['HTTP_PROXY_USER']) && !empty($_SERVER['HTTP_PROXY_USER'])) {
+      $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
     }
 
-    $ip_addresses[] = $HTTP_SERVER_VARS['REMOTE_ADDR'];
+    $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
 
     foreach ( $ip_addresses as $ip ) {
       if (!empty($ip) && wh_validate_ip_address($ip)) {

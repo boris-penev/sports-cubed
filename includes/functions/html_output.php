@@ -166,8 +166,6 @@
 ////
 // Output a form input field
   function wh_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
-    global $_GET, $_POST;
-
     $field = '<input type="' . wh_output_string($type) . '" name="' . wh_output_string($name) . '"';
 
     if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
@@ -198,8 +196,6 @@
 ////
 // Output a selection field - alias function for wh_draw_checkbox_field() and wh_draw_radio_field()
   function wh_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
-    global $_GET, $_POST;
-
     $selection = '<input type="' . wh_output_string($type) . '" name="' . wh_output_string($name) . '"';
 
     if (wh_not_null($value)) $selection .= ' value="' . wh_output_string($value) . '"';
@@ -231,8 +227,6 @@
 // Output a form textarea field
 // The $wrap parameter is no longer used in the core xhtml template
   function wh_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
-    global $_GET, $_POST;
-
     $field = '<textarea name="' . wh_output_string($name) . '" cols="' . wh_output_string($width) . '" rows="' . wh_output_string($height) . '"';
 
     if (wh_not_null($parameters)) $field .= ' ' . $parameters;
@@ -257,8 +251,6 @@
 ////
 // Output a form hidden field
   function wh_draw_hidden_field($name, $value = '', $parameters = '') {
-    global $_GET, $_POST;
-
     $field = '<input type="hidden" name="' . wh_output_string($name) . '"';
 
     if (wh_not_null($value)) {
@@ -291,8 +283,6 @@
 ////
 // Output a form pull down menu
   function wh_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
-    global $_GET, $_POST;
-
     $field = '<select name="' . wh_output_string($name) . '"';
 
     if (wh_not_null($parameters)) $field .= ' ' . $parameters;

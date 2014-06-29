@@ -5,7 +5,12 @@
    */
   function wh_error ( $error )
   {
-    die('<font color="#ff0000"><strong>' . $error . '<br /><br /><small><font color="#ff0000">[WHALE STOP]</font></small><br /><br /></strong></font>');
+    echo '<!DOCTYPE html>' . PHP_EOL;
+    echo '<div style="color:red">',
+          '<h1>' . nl2br ( $error ) . '</h1>',
+          '[WHALE STOP]'.'' . PHP_EOL,
+          '</div>';
+    die;
   }
 
   /**
@@ -71,22 +76,27 @@
   /**
    * Benchmarks a function and outputs to console
    */
-  function test ( $func )
+  function test ( $func, $iterations = 100, $flag = 'sum' )
   {
     $php_sum = 0.0;
     $php_max = 0.0;
-    for ( $i = 0; $i < 100; ++$i )
+    for ( $i = 0; $i < $iterations; ++$i )
     {
       $starttime = microtime(true);
-      file_put_contents ( '/var/www/html/database/newest.txt', time () );
+      $func();
       $endtime = microtime(true);
       $t = $endtime - $starttime;
       if ( $t > $php_max )
         $php_max = $t;
       $php_sum += $t;
     }
-
-    echo 'Max     = ', $php_max,         ' <br />', PHP_EOL;
-    echo 'Average = ', $php_sum / 100.0, ' <br />', PHP_EOL;
+    switch ( $flag ) {
+    case 'sum':
+      echo 'Sum     = ', $php_sum,         ' <br />', PHP_EOL; break;
+    case 'average':
+      echo 'Average = ', $php_sum / 100.0, ' <br />', PHP_EOL; break;
+    case 'max':
+      echo 'Max     = ', $php_max,         ' <br />', PHP_EOL; break;
+    }
   }
 ?>

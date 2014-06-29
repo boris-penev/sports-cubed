@@ -5,7 +5,6 @@
 
   $xml = loadXML ();
   $query = buildQuery ( 'club' );
-
   process_clubs ($xml, $query);
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');

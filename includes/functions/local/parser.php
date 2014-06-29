@@ -36,29 +36,26 @@
 
   function curl_get_html_file_contents_custom($url)
   {
-
-    $headers[]  = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:30.0) " .
-                  "Gecko/20140610 Firefox/30.0";
-    $headers[]  = "Accept: text/html;q=0.8, application/xhtml+xml;q=1, "
-                . "application/xml;q=0.9,*/*;q=0.7";
-    $headers[]  = "Accept-Language: en-us;q=1, en-gb;q=0.8, en;q=0.5";
-    $headers[]  = "Accept-Encoding: gzip;q=1, deflate;q=0.5, compress;q=0.3, " .
-                  "identity;q=0.1";
-    $headers[]  = "Accept-Charset: utf-8;q=1, ISO-8859-1;q=0.7, *;q=0.6";
-    $headers[]  = "DNT: 1";
-    $headers[]  = "Keep-Alive:115";
-    $headers[]  = "Connection:keep-alive";
-    $headers[]  = "Cache-Control:max-age=0";
-
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_USERAGENT, 'curl');
     curl_setopt($curl, CURLOPT_ENCODING, "gzip");
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    // enable FOLLOWLOCATION if the location of the xml can be changed
+    // and the old one URL link to the new
+    // curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
     $data = curl_exec($curl);
     curl_close($curl);
     return $data;
+//    CLI equivalents
+//    This will be removed but can be found with `$ hg grep`
+//    wget --quiet --output-document=- \'.$url.\' > /dev/null
+//    curl --silent \'.$url.\' > /dev/null
+//     $out = array();
+//     $status = -1;
+//     exec( '/path/to/sync.sh', $out, $status );
+//     if ( $status != 0 ) {
+//         // shell script indicated an error return
+//     }
   }
 
   function get_first_element ( $entity )
@@ -114,7 +111,13 @@
       'http://www.edinburgh.gov.uk/api/directories/25/entries.xml?api_key=' .
       COUNCIL_API_KEY . '&per_page=100&page=1' );
 
-    return new SimpleXMLElement($xml);
+    try {
+      return new SimpleXMLElement($xml);
+    } catch (Exception $e) {
+      $error = 'The XML could not be loaded.<br />' .
+               'Possibly the contacted server is down.';
+      wh_error ( $error );
+    }
   }
 
   function process_current_club ( $club )
@@ -203,21 +206,44 @@
 #   var_export($arr);
   }
 
+  function output_xml ( $xml )
+  {
+    echo nl2br ( wh_output_string_protected (
+          preg_replace ( "/(?:\\n)+/", "\n",
+              str_replace ( '&#13;', '', $xml ) ) ) );
+  }
+
   function parse_time ( $club )
   {
     global $day;
     global $hour;
 
-    echo 'Club time' . PHP_EOL;
-    var_dump($club['time']);
+    echo '<p><strong>' . wh_output_string_protected ($club ['name']) .
+         '</strong></p>' . PHP_EOL;
+
+    if ( $club ['time'] === '' ) {
+      return;
+    }
+
+#   var_dump($club ['time']);
+
+    echo '<p>' . nl2br (wh_output_string_protected ($club ['time'])) .
+         '</p>' . PHP_EOL;
 
     $subject = $club['time'];
-    $pattern = '/(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))?' .
+    $pattern = '/(?:(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))?'.
+        '|Workweek|Weekend)' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
         $hour.'))?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
     if (preg_match_all ($pattern, $subject, $matches)) {
-      var_dump($matches[0]);
+#     var_dump($matches[0]);
+      echo '<p style="color:red">';
+      foreach ($matches[0] as $match) {
+        echo '' . wh_output_string_protected ($match) .
+         '<br />' . PHP_EOL;
+      }
+      echo '</p>' . PHP_EOL;
     }
 
   }
