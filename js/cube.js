@@ -13,6 +13,9 @@ var xAngle = 90, yAngle = 0;
 // visually "resized"
 var depth;
 
+// flag that determines in which direction the cube should go - inwards for
+// zoom in or backwards for zoom out
+var inwards = false;
 // specifies the current wall so that the others can be made invisible
 var currentWall = "bottom";
 
@@ -98,25 +101,52 @@ function adjust(){
     // It's 620 because when one of the sides that is 500px is translated
     // 360px towards us (280 + 80)it becomes as if it is 610px. We add 10px
     // for both up and bottom margins.
-    if (determiningSide < 620) {
+    if (determiningSide < 610) {
       $('#cube').css('margin-left', "-" + (250 - determiningSide / 2) + "px");
     }
   }
   else {
     determiningSide = height;
-    if (determiningSide < 620){
+    if (determiningSide < 610){
       $('#cube').css('margin-top', "-" + (250 - determiningSide / 2) + "px");
     }
   }
+  
+  //alert('Determinig Side: '+determiningSide);
 
   // Here is the GOLDEN FORMULA according to which happens the calculation of
-  // the distance of translation; we use 610 because in the beginning the
+  // the distance of translation; we use 630 because in the beginning the
   // side of the cube is 500px but after we translate it 360px towards us on
-  // the Y axis in order to get the 3D effect it seems as it is 610px.
-  depth = 2000 * (610 / determiningSide - 1);
-
+  // the Y axis in order to get the 3D effect it seems as it is 610px. We add
+  // 20 extra px for the up and bottom margins of 10px each
+  
+  if( (determiningSide < 700 && inwards) || (determiningSide > 700 && inwards == false)  ){
+  	if(determinerDirection == '+'){
+	    determinerDirection = '-';
+		currentDeterminerDirection = '+';
+	}
+	else{
+	    determinerDirection = '+';
+		currentDeterminerDirection = '-';
+	}
+  }
+  
+  // balances the the cube from coming too inwards the user
+  var inwardsOffset = 0;
+  inwards = false;
+  // the default on my laptop is 643
+  if(determiningSide > 700){
+  // 100 works fine on chrome and mozilla but because of the viewport problem in
+  // the android default is like this. TO DO - split it in 2 cases
+  inwardsOffset = 240;
+  inwards = true;
+  }
+  depth = 2000 * (630 / (determiningSide-inwardsOffset) - 1);
+  
+  //alert(depth);
+  
   if (depth < 0){
-    depth = 0;
+    depth = Math.abs(depth);
   }
 
   // the actual transition
@@ -205,13 +235,18 @@ $(document).ready(function() {
 	
   // set some default properties and rotate the cube to the Bottom (Intro) side
   
+  // debuging
+  //alert("Width: "+$(window).width()+", Height: "+ $(window).height())
+
   windowHeight = $(window).height();
 	
   $('#bigWrapper').css('width', "100%");
   $('#bigWrapper').css('height', windowHeight);
   $('#bigWrapper').css('position', "absolute");
   $('#bigWrapper').css('left', "0");
-
+  
+  //alert("Width: "+$('#bigWrapper').css('width')+", Height: "+ $('#bigWrapper').css('height'))
+  
   document.getElementById('cube').style[prop] =
                           "rotateX(" + xAngle + "deg) rotateY("+yAngle+"deg)";
   determinerAxis = "Y";
@@ -269,21 +304,6 @@ $('#sports-right-navigator').click(function(){
 		currentSportsPage += 1;
 	}
 })
-
-$('#rangeInput').mousedown(function(){ cubeNotLocked='' });
-
-$('#rangeInput').mouseup(function(){ cubeNotLocked='all' });
-
-$('form').on('input',function(){ 
-	var value = $('#rangeInput').val()
-	if( value == 0 ){
-		$('#pounds').hide()
-		$('output').html('Free')
-	}
-	else{
-		$('#pounds').show()
-	}
-});
 
 // draws all the choices on the activities side of the cube
 // takes an array of sports that is fetched from the DB
@@ -491,6 +511,12 @@ $(window).resize(function() {
   $('#bigWrapper').css('width', $(window).width());
   $('#bigWrapper').css('height', $(window).height());
 // here we pass the new window height for the next check about the address bar
+
+// debuging
+//alert("Width: "+$(window).width()+", Height: "+ $(window).height())
+
+//alert("Width: "+$('#bigWrapper').css('width')+", Height: "+ $('#bigWrapper').css('height'))
+
   windowHeight = $(window).height();
 
 })
@@ -808,6 +834,18 @@ function gesturePerformed(type)
 			break;
 		}
 	}
+	
+	//alert(inwards + '|' + determinerDirection + "|" + currentDeterminerDirection);
+	// if the cube is supposed to come inwards just swap the the direction
+	if(inwards){
+        if(determinerDirection == '+'){
+		    determinerDirection = '-';
+		}
+		else{
+		    determinerDirection = '+';
+		}
+	}
+	//alert(determinerDirection + "|" + currentDeterminerDirection);
 
 	// check the beginning of the document for the variables that follow
 	// when we rotate the cube and it is moved inwards to make it fit the screen
