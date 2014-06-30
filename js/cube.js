@@ -2,7 +2,7 @@
 // to the browser's storage when going to the map
 var sportsToBeSubmitted = new Array();
 var daysToBeSubmitted = new Array();
-var priceToBeSubmitted = "all";
+var priceToBeSubmitted = "membership,free";
 
 // the xAngle is set to 90 degrees because initially when the cube is spawned
 // it has to be rotated on 90 degrees. Therefore initially the user sees
@@ -131,6 +131,7 @@ $(document).ready(function() {
 // that the user had already selected
 // in this way we remember his/her preferences and they don't have to
 // input them again at each transition between the map and the cube
+
   if (sessionStorage.isComingFromMap === "yes"){
     sessionStorage.isComingFromMap = "no";
     var days = sessionStorage.days.split(",");
@@ -157,7 +158,7 @@ $(document).ready(function() {
     sessionStorage.price = 'all';
     $('#all_toggler > div').trigger("click");
   }
-
+  
   // draw and populate the activities side
   var sportsList = ['Football', 'Basketball', 'Golf', 'Swimming','Cricket','BMX',
 				  'Cycling','Badminton','Gym','Skateboard','Gymnastics',
@@ -201,14 +202,16 @@ $(document).ready(function() {
     }, 500)}
 
   })
-
+	
   // set some default properties and rotate the cube to the Bottom (Intro) side
+  
+  windowHeight = $(window).height();
+	
   $('#bigWrapper').css('width', "100%");
-  $('#bigWrapper').css('height', "100%");
+  $('#bigWrapper').css('height', windowHeight);
   $('#bigWrapper').css('position', "absolute");
   $('#bigWrapper').css('left', "0");
 
-  windowHeight = $(window).height();
   document.getElementById('cube').style[prop] =
                           "rotateX(" + xAngle + "deg) rotateY("+yAngle+"deg)";
   determinerAxis = "Y";
@@ -217,7 +220,7 @@ $(document).ready(function() {
   currentDeterminerDirection = "+";
 
   adjust();
-
+  
 })
 
 // using the HTML5 web storage instead of cookies to remember the user's
@@ -367,43 +370,57 @@ if(swipeAllowed){
 
 // setting what will be saved in the browser storage as price once we go to
 // the map
-$('.yes-no-button-price').click(function(){
+$('#one-time').click(function(){ 
 
-var btn = $(this)
+	var oneTimeCombo = $('#one-time').parent().find('select');
+	var membershipCombo = $('#membership').parent().find('select');
+	oneTimeCombo.removeAttr('disabled');
+	membershipCombo.prop('disabled','disabled');
+	priceToBeSubmitted = '';
+	priceToBeSubmitted = 'one-time,' + oneTimeCombo.val();
+	
+})
 
-var state = btn.data('clicked');
-  if (state == "no")
-  {
-	$('html').removeClass('active').addClass('disabled')
-	document.getElementById("rangeInput").disabled = true;
-	$('#priceSliderLabel').css('color', 'grey');
-	$('#pounds').css('color', 'grey')
-    btn.css('background-position','0px -35px');
-    btn.data('clicked','yes');
+$('#membership').click(function(){ 
 
-	var price = $('#rangeInput').val();
-    priceToBeSubmitted = price;
-  }
-  else{
-	$('html').removeClass('disabled').addClass('active')
-	document.getElementById("rangeInput").disabled = false;
-	$('#priceSliderLabel').css('color', 'white')
-	$('#pounds').css('color', 'white')
-	btn.css('background-position','0px 0px');
-    btn.data('clicked','no')
-  }
-
-
-  // if in tutorial mode - display the explanations
-  if(tutorialMode == true){
-	  setTimeout(function(){$('#left-explanation').fadeIn(1000);
-	  $('#swipe-left').fadeIn(1000, function(){
-	  animateSwipe('left', 'left')
-    });
-  }, 500)}
+	var oneTimeCombo = $('#one-time').parent().find('select');
+	var membershipCombo = $('#membership').parent().find('select');
+	oneTimeCombo.prop('disabled','disabled');
+	membershipCombo.removeAttr('disabled');
+	priceToBeSubmitted = '';
+	priceToBeSubmitted = 'membership,' + membershipCombo.val()
 
 })
 
+$('#membership').parent().find('select').change(function(){
+
+  // if in tutorial mode - display the explanations
+	if(tutorialMode == true){
+		setTimeout(function(){$('#left-explanation').fadeIn(1000);
+		$('#swipe-left').fadeIn(1000, function(){
+		animateSwipe('left', 'left')
+		});
+	}, 500)}
+	
+	var temp = priceToBeSubmitted.split(',')[0];
+	priceToBeSubmitted = temp + ',' + $(this).val().replace('Below ','').replace('£','');
+
+})
+
+$('#one-time').parent().find('select').change(function(){
+
+  // if in tutorial mode - display the explanations
+	if(tutorialMode == true){
+		setTimeout(function(){$('#left-explanation').fadeIn(1000);
+		$('#swipe-left').fadeIn(1000, function(){
+		animateSwipe('left', 'left')
+		});
+	}, 500)}
+  
+	var temp = priceToBeSubmitted.split(',')[0];
+	priceToBeSubmitted = temp + ',' + $(this).val().replace('Below ','').replace('£','');
+
+})
 
 // setting what will be saved in the browser storage as days once we go to
 // the map
