@@ -33,7 +33,16 @@ input[type=range] {
 	margin-top: 15px;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+.disabled ::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: grey;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+	box-shadow: 1px 1px 1px black;
+}
+
+.active ::-webkit-slider-thumb {
     -webkit-appearance: none;
     background: #00b7ea; /* Old browsers */
 	background: -moz-linear-gradient(top, #00b7ea 0%, #009ec3 100%); /* FF3.6+ */
@@ -45,7 +54,41 @@ input[type="range"]::-webkit-slider-thumb {
 	box-shadow: 1px 1px 1px black;
 }
 
+input[type=range]::-moz-range-track{
+    -moz-appearance: none;
+    background-color: silver;
+    width: 400px;
+    height:30px;
+    border-radius: 10px;
+    outline: none;
+	box-shadow: inset 1px 1px 1px black;
+	margin-top: 15px;
+}
+
+.disabled ::-moz-range-thumb {
+    -moz-appearance: none;
+    background: grey;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+	box-shadow: 1px 1px 1px black;
+}
+
+.active ::-moz-range-thumb {
+    -moz-appearance: none;
+    background: #00b7ea; /* Old browsers */
+	background: -moz-linear-gradient(top, #00b7ea 0%, #009ec3 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00b7ea), color-stop(100%,#009ec3)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #00b7ea 0%,#009ec3 100%); /* Chrome10+,Safari5.1+ */
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+	box-shadow: 1px 1px 1px black;
+}
+
+/*##################################################### */
 /*#################   classes   ####################### */
+/*##################################################### */
 
 .face {
   background:#8C8C8C;
@@ -172,10 +215,13 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
+/*##################################################### */
 /*#################   classes   ####################### */
+/*##################################################### */
 
-
+/*##################################################### */
 /*###################   ids   ######################### */
+/*##################################################### */
 
 /*** The wrapper that contains everything and is resized respectively to the screen,
 makes the application responsive ***/
@@ -356,13 +402,14 @@ makes the application responsive ***/
 }
 
 #priceSlider{
-	margin-top: 50px;
+	margin-top: 60px;
 }
 
 #priceSliderLabel{
 	font-size: 50px;
 	font-family: cursive;
 	text-shadow: 2px 2px black;
+	color: #49BB0E;
 	
 }
 
@@ -380,9 +427,12 @@ makes the application responsive ***/
 #pounds{
 	font-size: 50px;
 	font-family: cursive;
+	color: #49BB0E;
 	text-shadow: 2px 2px black;
 	margin-left:10px; 
 	display: none;
 }
 
+/*##################################################### */
 /*###################   ids   ######################### */
+/*##################################################### */

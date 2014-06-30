@@ -374,7 +374,10 @@ var btn = $(this)
 var state = btn.data('clicked');
   if (state == "no")
   {
-	$('#priceSliderLabel').css('color', 'white')
+	$('html').removeClass('active').addClass('disabled')
+	document.getElementById("rangeInput").disabled = true;
+	$('#priceSliderLabel').css('color', 'grey');
+	$('#pounds').css('color', 'grey')
     btn.css('background-position','0px -35px');
     btn.data('clicked','yes');
 
@@ -382,7 +385,10 @@ var state = btn.data('clicked');
     priceToBeSubmitted = price;
   }
   else{
-	$('#priceSliderLabel').css('color', 'lightgrey')
+	$('html').removeClass('disabled').addClass('active')
+	document.getElementById("rangeInput").disabled = false;
+	$('#priceSliderLabel').css('color', 'white')
+	$('#pounds').css('color', 'white')
 	btn.css('background-position','0px 0px');
     btn.data('clicked','no')
   }
