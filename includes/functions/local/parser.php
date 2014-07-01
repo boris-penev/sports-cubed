@@ -231,17 +231,55 @@
          '</p>' . PHP_EOL;
 
     $subject = $club['time'];
-    $pattern = '/(?:(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))?'.
-        '|Workweek|Weekend)' .
+    // Replacing m dashes and other characters
+    // source: http://www.toao.net/48-replacing-smart-quotes-and-em-dashes-in-mysql
+    // First, replace UTF-8 characters.
+    $subject = str_replace(
+        array("\xe2\x80\x98", "\xe2\x80\x99", "\xe2\x80\x9c", "\xe2\x80\x9d",
+              "\xe2\x80\x93", "\xe2\x80\x94", "\xe2\x80\xa6"),
+        array("'", "'", '"', '"', '-', '--', '...'),
+        $subject);
+    // Next, replace their Windows-1252 equivalents.
+    $subject = str_replace(
+        array(chr(145), chr(146), chr(147), chr(148),
+              chr(150), chr(151), chr(133)),
+        array("'", "'", '"', '"', '-', '--', '...'),
+        $subject);
+
+    $pattern = '/(?:(?:(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))'.
+        '|Workweek|Weekend|Everyday)|' .
+        '(?:(?:(?P<day1>(?:'.$day.'|Workweek|Weekend)))';
+    for ( $i = 2; $i < 8; ++$i ) {
+      $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day."|Workweek|Weekend)))?";
+    }
+    $pattern .= '))' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
         $hour.'))?/';
+//     $pattern = '/' .
+//         '(?:(?:(?P<day1>(?:'.$day.'|Workweek|Weekend)))' .
+//         '(?:\s*.\s*(?P<dayn>(?:'.$day.'|Workweek|Weekend)))*)' .
+//         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
+//         $hour.'))?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+#   echo nl2br ( wordwrap ( wh_output_string_protected
+#         ($pattern), 80, PHP_EOL, TRUE));
     if (preg_match_all ($pattern, $subject, $matches)) {
 #     var_dump($matches[0]);
       echo '<p style="color:red">';
-      foreach ($matches[0] as $match) {
-        echo '' . wh_output_string_protected ($match) .
-         '<br />' . PHP_EOL;
+      foreach ($matches[0] as $key => $match) {
+        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
+        echo wh_output_string ($match), '<br />', PHP_EOL;
+      }
+      foreach ($matches as $key => $match) {
+        if ( is_numeric ($key) ) {
+          continue;
+        }
+        foreach ( $match as $key2 => $value ) {
+          if ( $value === '' ) continue;
+          echo '<span style="color:initial">', $key,
+              ' [', $key2, ']', ' - ', '</span>';
+          echo wh_output_string ($value), '<br />' . PHP_EOL;
+        }
       }
       echo '</p>' . PHP_EOL;
     }
