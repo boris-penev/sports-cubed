@@ -36,6 +36,9 @@ var currentDeterminerDirection;
 // "resized"
 var determinerAxis;
 
+// used to "recognize" the browser
+var version
+
 // + or - direction of translation in the axis
 var determinerDirection;
 
@@ -137,8 +140,15 @@ function adjust(){
   // the default on my laptop is 643
   if(determiningSide > 700){
   // 100 works fine on chrome and mozilla but because of the viewport problem in
-  // the android default is like this. TO DO - split it in 2 cases
-  inwardsOffset = 240;
+  // the android default browser and safari mobile we differentiate it in 2 cases:
+  // when the user has android default or mobile safari we do not zoom the cube
+  // too much if the screen is bigger, hence the 2 values - 100 and 250
+  if(version == 'chrome' || version == 'firefox'){
+      inwardsOffset = 100;
+  }
+  else{
+      inwardsOffset = 250;
+  }
   inwards = true;
   }
   depth = 2000 * (630 / (determiningSide-inwardsOffset) - 1);
@@ -157,6 +167,23 @@ function adjust(){
 
 $(document).ready(function() {  
 
+  // tries to differentiate between chrome, firefox and default android/safari 
+  // browsers to determine how much closer to bring the cube inwards in case the 
+  // screen is too big. If it is the default android browser and safari the cube
+  // goes out of the viewport when it comes too close, unlike chrome and firefox
+  if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1)
+      version = "chrome"
+  else if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
+      version = "firefox"
+  else if(navigator.userAgent.toLowerCase().indexOf('android') > -1 || 
+          navigator.userAgent.toLowerCase().indexOf('mobile safari') > -1 || 
+          navigator.userAgent.toLowerCase().indexOf('iphone') > -1 || 
+          navigator.userAgent.toLowerCase().indexOf('ipad') > -1)
+	  version = "android/safari/iphone/ipad"
+  else if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1 &&
+          navigator.userAgent.toLowerCase().indexOf('safari') > -1)
+      version = "safari"
+	  
   // draw and populate the activities side
   var sportsList = ['Football', 'Basketball', 'Golf', 'Swimming','Cricket','BMX',
 				  'Cycling','Badminton','Gym','Skateboard','Gymnastics',
