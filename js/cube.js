@@ -155,40 +155,8 @@ function adjust(){
 }
 
 
-$(document).ready(function() {
+$(document).ready(function() {  
 
-// check if we are coming from the map and "click" on the filters
-// that the user had already selected
-// in this way we remember his/her preferences and they don't have to
-// input them again at each transition between the map and the cube
-
-  if (sessionStorage.isComingFromMap === "yes"){
-    sessionStorage.isComingFromMap = "no";
-    var days = sessionStorage.days.split(",");
-    if (days.length === 7){
-      $("#whole_toggler > a").trigger("click");
-    }
-    else {
-      for (var x in days){
-        $("#" + days[x] + "_toggler > a").trigger("click");
-      }
-    }
-
-    var sports = sessionStorage.sports.split(",");
-    for (var x in sports){
-      $("#" + sports[x].replace(" ", "") + "_toggler > a").trigger("click");
-    }
-
-    var price = sessionStorage.price;
-      $('#'+price+'_toggler > a').trigger("click");
-  }
-  else {
-    sessionStorage.sports = null;
-    sessionStorage.days = null;
-    sessionStorage.price = 'all';
-    $('#all_toggler > div').trigger("click");
-  }
-  
   // draw and populate the activities side
   var sportsList = ['Football', 'Basketball', 'Golf', 'Swimming','Cricket','BMX',
 				  'Cycling','Badminton','Gym','Skateboard','Gymnastics',
@@ -201,7 +169,7 @@ $(document).ready(function() {
 				  'test1', 'test2', 'test3']
   numberOfSportsPages = Math.ceil(sportsList.length / 18);
   drawActivities(sportsList);
-
+  
   // we have the click handler for the sports togglers here because unlike the
   // price and time togglers, the activities ones are generated dynamically by
   // the function above - drawActivities
@@ -232,6 +200,39 @@ $(document).ready(function() {
     }, 500)}
 
   })
+
+// check if we are coming from the map and "click" on the filters
+// that the user had already selected
+// in this way we remember his/her preferences and they don't have to
+// input them again at each transition between the map and the cube
+
+  if (sessionStorage.isComingFromMap === "yes"){
+    alert('From Map')
+	console.log(sessionStorage.days+"|"+sessionStorage.sports+"|"+sessionStorage.price)
+    sessionStorage.isComingFromMap = "no";
+    var days = sessionStorage.days.split(",");
+    if (days.length === 7){
+      $("#whole_toggler > div").trigger("click");
+    }
+    else {
+      for (var x in days){
+        $("#" + days[x] + "_toggler > div").trigger("click");
+      }
+    }
+
+    var sports = sessionStorage.sports.split(",");
+    for (var x in sports){
+      $("#" + sports[x].replace(" ", "") + "_toggler > div").trigger("click");
+    }
+
+    var price = sessionStorage.price.split(',')[0];
+      $("#"+price).trigger("click");
+  }
+  else {
+    sessionStorage.sports = null;
+    sessionStorage.days = null;
+    sessionStorage.price = 'membership, free';
+  }
 	
   // set some default properties and rotate the cube to the Bottom (Intro) side
   

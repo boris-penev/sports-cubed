@@ -69,25 +69,42 @@
 		<!-- Left side of the cube containing the Price filter -->
         <section class="face left" id = "left">
 		
-		  <img src="img/left-expl.jpg" id="left-explanation"  class="tutorial-explanation" />
-		  <img id="swipe-left" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px; top:0; left:0"/>
+			<img src="img/left-expl.jpg" id="left-explanation"  class="tutorial-explanation" />
+			<img id="swipe-left" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px; top:0; left:0"/>
 		  
-          <div><img src="img/Price_label.jpg"></div>
-		  
-              <div class="price-togglers" id="all_toggler">All<br/><div class="yes-no-button-price" data-clicked="no"></div></div>
+			<div><img src="img/Price_label.jpg"></div>	
 			  
-			  <div id="priceSlider">
-			    <form oninput="amount.value=rangeInput.value">
-					<output id="priceSliderLabel" name="amount" for="rangeInput">Free</output>
-					<label id="pounds">Pounds</label>
-					<br/>
-					<input type="range" id="rangeInput" name="rangeInput" min="0" max="50" value="0" step="1"> 
-                </form>
-			  </div>
-			  
-			  <div id="disclaimer">
-			  Disclaimer: venues with unknown price will always be visualized on the map as yellow markers.
-			  </div>
+			<div class="price-wrapper">
+				<input type="radio" id="membership" name="radios" value="false" checked>
+					<label for="membership">Membership Tax</label>
+				<select>
+					<option>Free</option>
+					<option>Below 15£</option>
+					<option>Below 20£</option>
+					<option>Below 25£</option>
+					<option>Below 30£</option>
+					<option>Below 35£</option>
+				</select>
+			</div>
+			
+			<div class="price-wrapper">
+			<input type="radio" id="one-time" name="radios" value="all">
+				<label for="one-time">One-time Visit Cost</label>
+				<select disabled>
+					<option>Free</option>
+					<option>Below 5£</option>
+					<option>Below 8£</option>
+					<option>Below 10£</option>
+					<option>Below 12£</option>
+					<option>Below 15£</option>
+				</select>
+			</div>
+			
+			<div style="clear:both"></div>
+			
+			<div id="disclaimer">
+				Disclaimer: venues with unknown price will always be visualized on the map as yellow markers.
+			</div>
 
         </section>
 
@@ -96,13 +113,6 @@
 		
 		  <img src="img/right-expl.jpg" id="right-explanation"  class="tutorial-explanation"/>
 		  <img id="swipe-right" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px;top0; left:0"/>
-		  
-		  <!-- Tutorial screen
-          <div id="time-explanation" class="tutorial-explanation" >
-            <img src="img/time-expl.jpg"/>
-            <img id="next-time" class="tutorial-button" src="img/next.jpg" />
-          </div>
-		   End of tutorial screen -->
 		  
           <div><img src="img/Time_label.jpg"></div>
 		  
