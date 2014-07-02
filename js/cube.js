@@ -171,6 +171,7 @@ $(document).ready(function() {
   // browsers to determine how much closer to bring the cube inwards in case the 
   // screen is too big. If it is the default android browser and safari the cube
   // goes out of the viewport when it comes too close, unlike chrome and firefox
+  // TO-DO - make it a function
   if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1)
       version = "chrome"
   else if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
@@ -294,7 +295,7 @@ $('#linkToMap').click(function(){
   sessionStorage.price = priceToBeSubmitted;
   alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
   sessionStorage.isComingFromMap = "yes";
-  window.location = "http://testpilot.x10.mx/cubedtouch/map.html";
+  window.location = "http://testpilot.x10.mx/sportscubed/map.html";
 })
 
 // this is the animation showing how to use the cube [TO BE CHANGED]
@@ -557,7 +558,7 @@ $('#front-explanation').click(function(){ tutorialMode = false;
 										  $('#curtain').fadeOut(1000)})
 
 //preventing the elastic bounce effect in Safari under iOS
-$(document).bind('touchmove', function(e) { e.preventDefault();});
+$(document).bind('touchmove', function(event) { event.preventDefault();});
 
 // prevents images from being draggable
 $('img').on('dragstart', function(event) { event.preventDefault(); });
@@ -599,6 +600,7 @@ $('body').keydown( function (evt){
       gesturePerformed(type);
     }
 });
+
 
 //detecting touch gestures on the screen (body)
 Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragleft dragright",

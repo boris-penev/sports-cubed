@@ -5,6 +5,7 @@ var contentStrings = new Array();
 var lat1;
 var lon1;
 
+// TODO for tomorrow - refactor the file thoroughly!!!
 $(document).bind( "mobileinit", function(event) {
     $.extend($.mobile.zoom, {locked:false,enabled:true});
 });
@@ -42,8 +43,6 @@ switch(sessionStorage.price){
     break;
 }
 
-//alert(price);
-
 // TODO: Set the variable names to something sensible
 // aaa should be something for sports
 // bbb should be something for days
@@ -63,7 +62,6 @@ else{
   bbb=bbb.substring(1,bbb.length-1);
   bbb = bbb.replace(/"/g, '\\"');
 }
-//alert("sports="+aaa+"&days="+bbb+"&price="+price);
 request.open("GET","http://testpilot.x10.mx/sports/query.php?sports=" +
              aaa + "&days=" + bbb + "&price=" + price,true);
 request.send (null);
@@ -72,7 +70,7 @@ request.onreadystatechange = function()
   if (request.readyState==4 && request.status==200)
   {
     data = JSON.parse(request.responseText);
-    //alert(request.responseText);
+    console.log(data);
     // creating the map
     var myLatlng = new google.maps.LatLng(55.970, -3.150);
 
