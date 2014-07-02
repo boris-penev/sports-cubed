@@ -265,6 +265,7 @@
 #         ($pattern), 80, PHP_EOL, TRUE));
     if (preg_match_all ($pattern, $subject, $matches)) {
 #     var_dump($matches[0]);
+      $count = count ($matches [0]);
       echo '<p style="color:red">';
       foreach ($matches[0] as $key => $match) {
         echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
@@ -279,6 +280,21 @@
           echo '<span style="color:initial">', $key,
               ' [', $key2, ']', ' - ', '</span>';
           echo wh_output_string ($value), '<br />' . PHP_EOL;
+        }
+      }
+      $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
+      for ( $i = 0; $i < $count; ++$i )
+      {
+        if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
+        {
+          if ( $matches['open_time'][$i] !== '' && $matches['close_time'][$i] !== '' ) {
+            $times [$i]['open']  = $matches ['open_time'][$i];
+            $times [$i]['close'] = $matches ['close_time'][$i];
+          } else {
+            $times [$i]['open']  = $times [$i]['close'] = true;
+          }
+        } elseif ( true ) {
+          // loop here
         }
       }
       echo '</p>' . PHP_EOL;
