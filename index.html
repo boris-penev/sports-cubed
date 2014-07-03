@@ -18,21 +18,23 @@
 
 	<!-- Dims the screen for the tutorial -->
     <div id="curtain"></div>
-	
+	 
 	<!-- This is the wrapper that basically has the dimensions of the screen and
     that is resized whenever the screen dimensions are changed -->
     <section id="bigWrapper">
 	
+	  <img id="help" src="img/help.png" title="Help"/>
+	  	  
 	  <!-- Cube frame is used for the perspective and 3D transformations -->
       <section id="cubeFrame">
-	    
+		
 		<!-- This is the actual cube positioned in the Cube frame
 		The sides are named assuming that we are facing the one with the Map link -->
         <section id="cube">
 		
 		<!-- Back side of the cube containing the Activities filter -->
         <section class="face back" id = "back">
-		  
+		<div>  
           <div><img src="img/Activities_label.jpg"></div>
 		  
 		  <img src="img/back-expl.jpg" id="back-explanation"  class="tutorial-explanation" />
@@ -50,29 +52,31 @@
 		  <section id="sports-right-navigator">
 			<img src="img/navigate-sports-right.png"/>
 		  </section>
-
+        </div>
         </section>
 
 		<!-- Front side of the cube containing the link to the map with results -->
         <section class="face front" id = "front">
-		
+		<div>
 		<img src="img/front-expl.jpg" id="front-explanation"  class="tutorial-explanation" />
 		  
 		  <!-- Button redirecting to the map with results -->
           <div id="linkToMap"><img src="img/mapExpand2.png"></div>
 		  
           <img src="img/map-screen.jpg" style="z-index:1; margin-top:5px;">
-		  
+		</div>  
         </section>
 
 		<!-- Top side of the cube containing the prospective advertisements -->
         <section class="face top" id = "top">
-          <a href="http://edinburghleisure.co.uk/" target="blank"><img src="img/edinburgh-leisure.jpg" style="margin-top:5px;"><a>
+		<div>
+          <a href="http://edinburghleisure.co.uk/" target="blank"><img src="img/edinburgh-leisure.jpg" style="margin-top:5px;"></a>
+		</div>  
         </section>
 
 		<!-- Left side of the cube containing the Price filter -->
         <section class="face left" id = "left">
-		
+		<div>
 			<img src="img/left-expl.jpg" id="left-explanation"  class="tutorial-explanation" />
 			<img id="swipe-left" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px; top:0; left:0"/>
 		  
@@ -109,12 +113,12 @@
 			<div id="disclaimer">
 				Disclaimer: venues with unknown price will always be visualized on the map as yellow markers.
 			</div>
-
+        </div>
         </section>
 
 		<!-- Right side of the cube containing the Time (days) filter -->
         <section class="face right" id = "right">
-		
+		<div>
 		  <img src="img/right-expl.jpg" id="right-explanation"  class="tutorial-explanation"/>
 		  <img id="swipe-right" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px;top0; left:0"/>
 		  
@@ -133,24 +137,23 @@
             <div class="time-togglers" id="saturday_toggler">Saturday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
             <div class="time-togglers" id="sunday_toggler">Sunday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
           </section>
-		  
+		</div>  
         </section>
 		
 		<!-- Bottom side of the cube containing the Intro screen -->
         <section class="face bottom" id = "bottom">
-		
+		<div>
 		  <img src="img/intro-expl.jpg" id="bottom-explanation"  class="tutorial-explanation" />
 		  <img id="swipe-bottom" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px;"/>
 		  
           <img src="img/intro-image.jpg" style="width:500px; height: 430px;">
-          <a href="#" id="how-to"><img src="img/how-to.jpg"></a>
-		  
+		</div>  
         </section>
 		
       </section>
 	  
     </section>
-	
+	  
     </section>
 		
 	<script type="text/javascript" src="js/jquery.js"></script>

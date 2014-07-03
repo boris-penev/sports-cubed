@@ -300,15 +300,70 @@ $('#linkToMap').click(function(){
 
 // this is the animation showing how to use the cube [TO BE CHANGED]
 // TODO Change this
-$('#how-to').click(function(){
+$(document).on( "click", "#how-to", function(){
+
+  cubeNotLocked = "all";
+  $('#help-window').remove();
+  $('#'+currentWall+' > div').show();
+  
+  switch(currentWall){
+     case "front":
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "left":
+	 gesturePerformed("left")
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "right":
+	 gesturePerformed("right")
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "back":
+	 gesturePerformed("left")
+	 gesturePerformed("left")
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "top":
+	 gesturePerformed("up")
+	 gesturePerformed("up")
+	 break;
+  }
+  
   tutorialMode = true;
   cubeNotLocked = 'left';
-  $('#curtain').fadeIn();
   setTimeout(function(){$('#bottom-explanation').fadeIn(1000);},500);
   setTimeout(function(){$('#swipe-bottom').fadeIn(1000, function(){
 	animateSwipe('left', 'bottom')
   });},500);
 })
+
+
+$('#help').click(function(){
+  
+  cubeNotLocked = '';
+  $('#'+currentWall+' > div').hide();
+  $('#'+currentWall).append('<div id="help-window">' +
+		'<div id="close-help"></div><br/><br/><br/>'+
+		'Sports Cubed Help' +
+	    '<img id="how-to" src="img/how-to.jpg">'+
+		'<img id="how-to" src="img/how-to.jpg">'+
+        '</div>')
+  $('#curtain').fadeIn();
+  
+  
+})
+
+$( document ).on( "click", "#close-help", function() {
+
+  cubeNotLocked = 'all';
+  $('#help-window').remove();
+  $('#'+currentWall+' > div').show();
+  $('#curtain').hide();
+});
 
 $('#sports-left-navigator').click(function(){
 	if(currentSportsPage > 0){
