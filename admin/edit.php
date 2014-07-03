@@ -26,7 +26,8 @@
 <div class="contentContainer">
 
 <?php
-    if (defined ('TEXT_SUCCESS')) {
+    if (defined ('TEXT_SUCCESS'))
+    {
 ?>
 
   <div class="contentText">
@@ -37,7 +38,8 @@
 
 <?php
     }
-    if (defined ('TEXT_ERROR')) {
+    if (defined ('TEXT_ERROR'))
+    {
 ?>
 
   <div class="contentText">
@@ -64,7 +66,7 @@
 #   echo wh_draw_hidden_field ( 'action', 'select' ) . PHP_EOL;
 #   var_dump ( $clubs );
     echo wh_draw_pull_down_menu_label ( 'club_search', $clubs, '', 'Club Name',
-        '', $club->id, 'size="1"', false, true, 2, false );
+        '', isset($club) ? $club->id : '', 'size="1"', false, true, 2, false );
     $sports_query = getSports ( );
     $sports = array ( 0 => '' );
     while ($row_obj = wh_db_fetch_object_custom($sports_query)) {
@@ -79,7 +81,7 @@
   </form>
 
 <?php
-    if ( ! is_null  ( $club )
+    if ( isset($club) && ! is_null  ( $club )
         && ! is_null ( $club->id ) && is_numeric ( $club->id )
         && wh_db_fetch_object_custom ( getClubByName ($club->name) ) != false )
     {
@@ -196,181 +198,16 @@
         <td colspan="7" style="text-align:center">
 <?php
 #     $days_selected = array ();
-      $days_selected = array_fill ( 1 , 7, '' );
-      $prices_member = array ();
-      $prices_nonmember = array ();
-      $times_open = array ();
-      $times_close = array ();
+#     $days_selected = array_fill ( 1 , 7, '' );
+      $prices_member = array_fill ( 1 , 7, '' );
+      $prices_nonmember = array_fill ( 1 , 7, '' );
+      $times_open = array_fill ( 1 , 7, '' );
+      $times_close = array_fill ( 1 , 7, '' );
       $days_type = '';
       $days_type_price = '';
       $days_type_time = '';
 
-      if ( $clubosport_row && $clubosport_row->sport_id == $sport_id )
-      {
-        $prices_member = array_fill ( 1 , 7, '' );
-        $prices_nonmember = $prices_member;
-        $times_open = $prices_member;
-        $times_close = $prices_member;
-        do
-        {
-          $day_id = $clubosport_row->day_id;
-#         echoQuery ( $clubosport_row->day_id );
-          if ( $day_id == 8 )
-          {
-            $price_member = wh_get_price ($clubosport_row->price_member);
-            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
-            $time_open  = wh_get_time ($clubosport_row->opening_time);
-            $time_close = wh_get_time ($clubosport_row->closing_time);
-#           $days_selected = array_fill(1, 7, true);
-            if ( $time_open === null || $time_close === null ) {
-              $time_open = $time_close = null;
-            }
-            if ( $price_member !== null ) {
-              $prices_member = array_fill ( 1 , 7, $price_member );
-            }
-            if ( $price_nonmember !== null ) {
-              $prices_nonmember = array_fill ( 1 , 7, $price_nonmember );
-            }
-            if ( $time_open !== null ) {
-              $times_open  = array_fill ( 1 , 7, $time_open );
-              $times_close = array_fill ( 1 , 7, $time_close );
-            }
-          }
-          elseif ( $day_id == 9 )
-          {
-            $price_member = wh_get_price ($clubosport_row->price_member);
-            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
-            $time_open  = wh_get_time ($clubosport_row->opening_time);
-            $time_close = wh_get_time ($clubosport_row->closing_time);
-            if ( $time_open === null || $time_close === null ) {
-              $time_open = $time_close = null;
-            }
-            for ($i = 1; $i < 6; ++$i)
-            {
-#             $days_selected [$i] = true;
-              if ($price_member !== null) {
-                $prices_member [$i] = $price_member;
-              }
-              if ($price_nonmember !== null) {
-                $prices_nonmember [$i] = $price_nonmember;
-              }
-              if ($time_open !== null) {
-                $times_open  [$i] = $time_open;
-                $times_close [$i] = $time_close;
-              }
-            }
-          }
-          elseif ( $day_id == 10 )
-          {
-            $price_member = wh_get_price ($clubosport_row->price_member);
-            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
-            $time_open  = wh_get_time ($clubosport_row->opening_time);
-            $time_close = wh_get_time ($clubosport_row->closing_time);
-            if ( $time_open === null || $time_close === null ) {
-              $time_open = $time_close = null;
-            }
-            for ($i = 6; $i < 8; ++$i)
-            {
-#             $days_selected [$i] = true;
-              if ($price_member !== null) {
-                $prices_member [$i] = $price_member;
-              }
-              if ($price_nonmember !== null) {
-                $prices_nonmember [$i] = $price_nonmember;
-              }
-              if ($time_open !== null) {
-                $times_open  [$i] = $time_open;
-                $times_close [$i] = $time_close;
-              }
-            }
-          }
-          elseif ( 0 < $day_id && $day_id < 8 )
-          {
-            $price_member = wh_get_price ($clubosport_row->price_member);
-            $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
-            $time_open  = wh_get_time ($clubosport_row->opening_time);
-            $time_close = wh_get_time ($clubosport_row->closing_time);
-            if ( $time_open === null || $time_close === null ) {
-              $time_open = $time_close = null;
-            }
-#           $days_selected [$day_id] = true;
-            if ($price_member !== null) {
-              $prices_member [$day_id] = $price_member;
-            }
-            if ($price_nonmember !== null) {
-              $prices_nonmember [$day_id] = $price_nonmember;
-            }
-            if ($time_open !== null) {
-              $times_open  [$day_id] = $time_open;
-              $times_close [$day_id] = $time_close;
-            }
-          }
-        }
-        while ( ($clubosport_row = wh_db_fetch_object_custom($clubosportquery))
-              && $clubosport_row->sport_id == $sport_id  );
-
-        // checking the most optimal way to represent the data
-        for ( $i = 1; $i < 5; ++$i )
-        {
-#         echoQuery ( $prices_member[$i] );
-          if ( $prices_member    [$i] != $prices_member    [$i+1] ||
-               $prices_nonmember [$i] != $prices_nonmember [$i+1] )
-          {
-            $days_type_price = 'separately';
-            break;
-          }
-        }
-        for ( $i = 1; $i < 5; ++$i )
-        {
-#         echoQuery ( $prices_member[$i] );
-          if ( $times_open  [$i] != $times_open  [$i+1] ||
-               $times_close [$i] != $times_close [$i+1] )
-          {
-            $days_type_time = 'separately';
-            break;
-          }
-        }
-        // if data type not set yet, at least workweek days are identical
-        if ( $days_type_price == '' )
-        {
-          if ( $prices_member    [6] != $prices_member    [7] ||
-               $prices_nonmember [6] != $prices_nonmember [7] )
-          {
-            $days_type_price = 'workweeksatsun';
-          }
-          elseif ( $prices_member    [5] == $prices_member    [6] &&
-                   $prices_nonmember [6] == $prices_nonmember [7]  )
-          {
-            $days_type_price = 'all';
-          }
-          else {
-            $days_type_price = 'workweekweekend';
-          }
-        }
-        if ( $days_type_time == '' )
-        {
-          if ( $times_open  [6] != $times_open  [7] ||
-               $times_close [6] != $times_close [7] )
-          {
-            $days_type_time = 'workweeksatsun';
-          }
-          elseif ( $times_open  [5] == $times_open  [6] &&
-                   $times_close [6] == $times_close [7]  )
-          {
-            $days_type_time = 'all';
-          }
-          else {
-            $days_type_time = 'workweekweekend';
-          }
-        }
-      }
-      // If there were no clubosport entries or the entries were empty
-      if ( $days_type_price == '' ) {
-        $days_type_price = 'all';
-      }
-      if ( $days_type_time == '' ) {
-        $days_type_time = 'all';
-      }
+      wh_fill_times_prices ();
 
       $all_select_time = ( $days_type_time == 'all' );
       $workweek_weekend_select_time = ( $days_type_time == 'workweekweekend' );

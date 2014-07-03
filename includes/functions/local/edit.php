@@ -416,6 +416,21 @@
           $select_days_view_price = '';
         }
       }
+
+//       These functions are not ready to operate
+//       The format for times and prices for this function and
+//       wh_determine_best_view are different
+//       $prices_member = array_fill ( 1 , 7, '' );
+//       $prices_nonmember = array_fill ( 1 , 7, '' );
+//       $times_open = array_fill ( 1 , 7, '' );
+//       $times_close = array_fill ( 1 , 7, '' );
+//       $days_type = '';
+//       $days_type_price = '';
+//       $days_type_time = '';
+//       wh_determine_best_view ();
+//       $select_days_view_time = $days_type_time;
+//       $select_days_view_price = $days_type_price;
+
       // TODO Smart selection of most compact representation of data
       // Delete times and prices
       deleteSportsTimePrice ( 'sports', $club_id, $sport_id );
@@ -478,7 +493,8 @@
     file_put_contents ( '/var/www/html/database/newest.txt', time () . PHP_EOL );
     // write the Unix timestamp to newest.txt
 
-    wh_define ( 'TEXT_SUCCESS', '<strong style="color: #00FF00">Successfully edited a club</strong>' );
+    wh_define ( 'TEXT_SUCCESS', '<strong style="color: #00FF00">'.
+        'Successfully edited a club</strong>' );
 
 
   }
@@ -557,6 +573,9 @@
       if ( $id == 'null' || $id == '0' ) {
         return;
       }
+      if ( ! isset ($_GET['club_search'] ) ) {
+        header ( 'Location: edit.php?club_search=' . $id . '&success' );
+      }
       if ( $row_obj = wh_db_fetch_object_custom ( getClubById ( $id ) ) )
       {
         $club -> id = wh_db_output ( $row_obj->id );
@@ -569,13 +588,12 @@
         $club -> website = wh_db_output ( $row_obj->website );
         $club -> email = wh_db_output ( $row_obj->email );
         $club -> phone = wh_db_output ( $row_obj->phone );
-        $club -> time_open = wh_db_output ( $row_obj->time_open );
-        $club -> time_close = wh_db_output ( $row_obj->time_close );
+        $club -> time_open = wh_db_output ( $row_obj->opening_time );
+        $club -> time_close = wh_db_output ( $row_obj->closing_time );
         $club -> price_member = wh_db_output ( $row_obj->price_member );
         $club -> price_nonmember = wh_db_output ( $row_obj->price_nonmember );
 #       var_dump ( get_object_vars ($club) );
 #       $club -> sports = getSportsByClub ( $club->id );
-
       }
 #     var_dump ( $club );
 #     die();
@@ -619,7 +637,194 @@
           $time : null );
   }
 
+  function wh_fill_times_prices ( )
+  {
+    global $clubosportquery, $clubosport_row, $sport_id,
+        $prices_member, $prices_nonmember, $times_open, $times_close,
+        $days_type, $days_type_price, $days_type_time;
+
+    if ( $clubosport_row && $clubosport_row->sport_id == $sport_id )
+    {
+      $prices_member = array_fill ( 1 , 7, '' );
+      $prices_nonmember = $prices_member;
+      $times_open = $prices_member;
+      $times_close = $prices_member;
+      do
+      {
+        $day_id = $clubosport_row->day_id;
+#         echoQuery ( $clubosport_row->day_id );
+        if ( $day_id == 8 )
+        {
+          $price_member = wh_get_price ($clubosport_row->price_member);
+          $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+          $time_open  = wh_get_time ($clubosport_row->opening_time);
+          $time_close = wh_get_time ($clubosport_row->closing_time);
+#           $days_selected = array_fill(1, 7, true);
+          if ( $time_open === null || $time_close === null ) {
+            $time_open = $time_close = null;
+          }
+          if ( $price_member !== null ) {
+            $prices_member = array_fill ( 1 , 7, $price_member );
+          }
+          if ( $price_nonmember !== null ) {
+            $prices_nonmember = array_fill ( 1 , 7, $price_nonmember );
+          }
+          if ( $time_open !== null ) {
+            $times_open  = array_fill ( 1 , 7, $time_open );
+            $times_close = array_fill ( 1 , 7, $time_close );
+          }
+        }
+        elseif ( $day_id == 9 )
+        {
+          $price_member = wh_get_price ($clubosport_row->price_member);
+          $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+          $time_open  = wh_get_time ($clubosport_row->opening_time);
+          $time_close = wh_get_time ($clubosport_row->closing_time);
+          if ( $time_open === null || $time_close === null ) {
+            $time_open = $time_close = null;
+          }
+          for ($i = 1; $i < 6; ++$i)
+          {
+#             $days_selected [$i] = true;
+            if ($price_member !== null) {
+              $prices_member [$i] = $price_member;
+            }
+            if ($price_nonmember !== null) {
+              $prices_nonmember [$i] = $price_nonmember;
+            }
+            if ($time_open !== null) {
+              $times_open  [$i] = $time_open;
+              $times_close [$i] = $time_close;
+            }
+          }
+        }
+        elseif ( $day_id == 10 )
+        {
+          $price_member = wh_get_price ($clubosport_row->price_member);
+          $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+          $time_open  = wh_get_time ($clubosport_row->opening_time);
+          $time_close = wh_get_time ($clubosport_row->closing_time);
+          if ( $time_open === null || $time_close === null ) {
+            $time_open = $time_close = null;
+          }
+          for ($i = 6; $i < 8; ++$i)
+          {
+#             $days_selected [$i] = true;
+            if ($price_member !== null) {
+              $prices_member [$i] = $price_member;
+            }
+            if ($price_nonmember !== null) {
+              $prices_nonmember [$i] = $price_nonmember;
+            }
+            if ($time_open !== null) {
+              $times_open  [$i] = $time_open;
+              $times_close [$i] = $time_close;
+            }
+          }
+        }
+        elseif ( 0 < $day_id && $day_id < 8 )
+        {
+          $price_member = wh_get_price ($clubosport_row->price_member);
+          $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
+          $time_open  = wh_get_time ($clubosport_row->opening_time);
+          $time_close = wh_get_time ($clubosport_row->closing_time);
+          if ( $time_open === null || $time_close === null ) {
+            $time_open = $time_close = null;
+          }
+#           $days_selected [$day_id] = true;
+          if ($price_member !== null) {
+            $prices_member [$day_id] = $price_member;
+          }
+          if ($price_nonmember !== null) {
+            $prices_nonmember [$day_id] = $price_nonmember;
+          }
+          if ($time_open !== null) {
+            $times_open  [$day_id] = $time_open;
+            $times_close [$day_id] = $time_close;
+          }
+        }
+      }
+      while ( ($clubosport_row = wh_db_fetch_object_custom($clubosportquery))
+            && $clubosport_row->sport_id == $sport_id  );
+
+      // checking the most optimal way to represent the data
+      wh_determine_best_view ( );
+    }
+    // If there were no clubosport entries or the entries were empty
+    if ( $days_type_price == '' ) {
+      $days_type_price = 'all';
+    }
+    if ( $days_type_time == '' ) {
+      $days_type_time = 'all';
+    }
+  }
+
+  function wh_determine_best_view ( )
+  {
+    global $prices_member, $prices_nonmember, $times_open, $times_close,
+        $days_type_price, $days_type_time;
+
+    for ( $i = 1; $i < 5; ++$i )
+    {
+#         echoQuery ( $prices_member[$i] );
+      if ( $prices_member    [$i] != $prices_member    [$i+1] ||
+            $prices_nonmember [$i] != $prices_nonmember [$i+1] )
+      {
+        $days_type_price = 'separately';
+        break;
+      }
+    }
+    for ( $i = 1; $i < 5; ++$i )
+    {
+#         echoQuery ( $prices_member[$i] );
+      if ( $times_open  [$i] != $times_open  [$i+1] ||
+            $times_close [$i] != $times_close [$i+1] )
+      {
+        $days_type_time = 'separately';
+        break;
+      }
+    }
+    // if data type not set yet, at least workweek days are identical
+    if ( $days_type_price == '' )
+    {
+      if ( $prices_member    [6] != $prices_member    [7] ||
+            $prices_nonmember [6] != $prices_nonmember [7] )
+      {
+        $days_type_price = 'workweeksatsun';
+      }
+      elseif ( $prices_member    [5] == $prices_member    [6] &&
+                $prices_nonmember [6] == $prices_nonmember [7]  )
+      {
+        $days_type_price = 'all';
+      }
+      else {
+        $days_type_price = 'workweekweekend';
+      }
+    }
+    if ( $days_type_time == '' )
+    {
+      if ( $times_open  [6] != $times_open  [7] ||
+            $times_close [6] != $times_close [7] )
+      {
+        $days_type_time = 'workweeksatsun';
+      }
+      elseif ( $times_open  [5] == $times_open  [6] &&
+                $times_close [6] == $times_close [7]  )
+      {
+        $days_type_time = 'all';
+      }
+      else {
+        $days_type_time = 'workweekweekend';
+      }
+    }
+  }
+
   editClub ( );
   selectClub ( );
+  //if ( wh_db_get_input_string ('success') == '1' ) {
+  if ( isset ( $_GET ['success'] ) ) {
+    wh_define ( 'TEXT_SUCCESS', '<strong style="color: #00FF00">'.
+        'Successfully edited a club</strong>' );
+  }
 # var_dump (get_object_vars($club));
 ?>

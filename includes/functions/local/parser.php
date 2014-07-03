@@ -295,6 +295,66 @@
     return $times;
   }
 
+  /**
+   * @return false if empty or true otherwise
+   */
+  function time_check ( &$times )
+  {
+    // flag indicating whether there are valid times
+    $empty = true;
+    for ( $i = 1; $i < 8; ++$i )
+    {
+      foreach ( $times [$i] as &$time )
+      {
+        if ( $time === '' || $time === true ) {
+          continue;
+        }
+        $time = strtolower ( $time );
+        if ( strpos ($time, 'noon') !== false ) {
+          $time = str_replace ( 'noon' ,  'pm', $time );
+        }
+        if ( strpos ($time, 'am') !== false || strpos ($time, 'pm') !== false )
+        {
+          if ( strpos ( $time, ':' ) === false ) {
+            $format = 'ga';
+          } else {
+            $format = 'g:ia';
+          }
+        } else {
+          if ( strpos ( $time, ':' ) === false ) {
+            $format = 'h';
+          } else {
+            $format = 'h:i';
+          }
+        }
+        $timezone = new DateTimeZone('UTC');
+        $datetime = DateTime::createFromFormat($format, $time, $timezone);
+        if ( $datetime ) {
+          $empty = false;
+          $time = $datetime->format ( 'H:i' );
+        } else {
+          $time = true;
+        }
+      }
+      unset ($time);
+    }
+    echo '<p><strong>times:</strong></p>';
+    for ( $i = 1; $i < 8; ++$i )
+    {
+      echo '<span style="color:initial">',
+            '[', $i, '] ', '</span>';
+      foreach ( $times [$i] as $key => $time )
+      {
+        if ( $time !== '' && $time !== true ) {
+          echo $key, ' - ',
+              '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
+        }
+      }
+      echo '<br />';
+    }
+    return ! $empty;
+  }
+
   function parse_time ( $club )
   {
     global $day;
@@ -332,7 +392,7 @@
     if (preg_match_all ($pattern, $subject, $matches)) {
 #     var_dump($matches[0]);
       $count = count ($matches [0]);
-      echo '<p style="color:red">';
+      echo '<p style="color:#E80000">';
       foreach ($matches[0] as $key => $match) {
         echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
         echo wh_output_string ($match), '<br />', PHP_EOL;
@@ -388,35 +448,15 @@
 //      var_dump ( $times );
       // test times whether they are legal
       // convert to 24 hour format
+      // identify the correct club
       // call the sql queries with the times array
       // the code below is still sample
-      // it must be put into a function with parameter times
-      for ( $i = 1; $i < 8; ++$i )
-      {
-        foreach ( $times [$i] as $time )
-        {
-          $time = strtolower ( $time );
-          if ( strpos ($time, 'am') !== false && strpos ($time, 'pm') !== false )
-          {
-            if ( strpos ( $time, ':' ) === false ) {
-              $format = 'ga';
-            } else {
-              $format = 'g:ia';
-            }
-          } else {
-            if ( strpos ( $time, ':' ) === false ) {
-              $format = 'ha';
-            } else {
-              $format = 'h:i';
-            }
-          }
-          $timezone = new DateTimeZone('UTC');
-          $datetime = DateTime::createFromFormat($format, $time, $timezone);
-          if ( $datetime ) {
-            $time = $datetime->format ( 'H:i' );
-          }
-        }
-      }
+      // the structure
+
+      $empty = ! time_check ( $times );
+//       if ( ! $empty ) {
+//         setTime ( 'sports', $club_id, $times );
+//       }
     }
 
   }
