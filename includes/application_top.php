@@ -3,9 +3,6 @@
 // start the timer for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
 
-// set the level of error reporting
-  error_reporting(E_ALL);
-
 // load server configuration parameters
   require('includes/configure.php');
 

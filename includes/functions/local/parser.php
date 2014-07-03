@@ -213,6 +213,88 @@
               str_replace ( '&#13;', '', $xml ) ) ) );
   }
 
+  /**
+   * Replacing em dashes and other characters
+   * Fix for the parser
+   * source: http://www.toao.net/48-replacing-smart-quotes-and-em-dashes-in-mysql
+   */
+  function unicode_fix ( $string )
+  {
+//     // First, replace UTF-8 characters.
+//     $string = str_replace(
+//         array("\xe2\x80\x98", "\xe2\x80\x99", "\xe2\x80\x9c", "\xe2\x80\x9d",
+//               "\xe2\x80\x93", "\xe2\x80\x94", "\xe2\x80\xa6"),
+//         array("'", "'", '"', '"', '-', '--', '...'),
+//         $string);
+//     // Next, replace their Windows-1252 equivalents.
+//     $string = str_replace(
+//         array(chr(145), chr(146), chr(147), chr(148),
+//               chr(150), chr(151), chr(133)),
+//         array("'", "'", '"', '"', '-', '--', '...'),
+//         $string);
+    return str_replace(
+        array("\xe2\x80\x98", "\xe2\x80\x99", "\xe2\x80\x9c", "\xe2\x80\x9d",
+              "\xe2\x80\x93", "\xe2\x80\x94", "\xe2\x80\xa6",
+              chr(145), chr(146), chr(147), chr(148),
+              chr(150), chr(151), chr(133)),
+        array("'", "'", '"', '"', '-', '--', '...',
+              "'", "'", '"', '"', '-', '--', '...'),
+        $string);
+  }
+
+  /**
+   * Convert a day to its number in the week
+   */
+  function day_to_number ( $day )
+  {
+#   return (int) date('N', strtotime($matches['left']));
+    switch ( $day )
+    {
+    case 'Mon': case 'Monday':
+      return 1; break;
+    case 'Tue': case 'Tuesday':
+      return 2; break;
+    case 'Wed': case 'Wednesday':
+      return 3; break;
+    case 'Thu': case 'Thursday':
+      return 4; break;
+    case 'Fri': case 'Friday':
+      return 5; break;
+    case 'Sat': case 'Saturday':
+      return 6; break;
+    case 'Sun': case 'Sunday':
+      return 7; break;
+    }
+  }
+
+  /**
+   * Reads i-th entry from the matches array (returned by preg_match_all).
+   * If the time open_time and close_time variables are not nulls,
+   * it sets the i-th entry of the times array to them.
+   * If they are nulls, but the times array does not contain a time,
+   * it sets it to true.
+   * If they are nulls, but the times array already contains a time,
+   * it does nothing.
+   * This function must be called as the following:
+   * $times [$j] = set_time ( $matches, $times[$j], $i );
+   */
+  function set_time ( $matches, $times, $i )
+  {
+    // If the current entry in matches array contains a valid time,
+    // overwrite the times array
+    if ( $matches['open_time'][$i] !== '' &&
+         $matches['close_time'][$i] !== '') {
+        return [ 'open'  => $matches['open_time'] [$i],
+                 'close' => $matches['close_time'][$i] ];
+    }
+    // If the day is not selected, select it without specifying time
+    if ( $times['open'] === '' && $times['close'] === '' ) {
+      return [ 'open'  => true, 'close' => true ];
+    }
+    // Otherwise, just return the current times
+    return $times;
+  }
+
   function parse_time ( $club )
   {
     global $day;
@@ -232,19 +314,8 @@
 
     $subject = $club['time'];
     // Replacing m dashes and other characters
-    // source: http://www.toao.net/48-replacing-smart-quotes-and-em-dashes-in-mysql
-    // First, replace UTF-8 characters.
-    $subject = str_replace(
-        array("\xe2\x80\x98", "\xe2\x80\x99", "\xe2\x80\x9c", "\xe2\x80\x9d",
-              "\xe2\x80\x93", "\xe2\x80\x94", "\xe2\x80\xa6"),
-        array("'", "'", '"', '"', '-', '--', '...'),
-        $subject);
-    // Next, replace their Windows-1252 equivalents.
-    $subject = str_replace(
-        array(chr(145), chr(146), chr(147), chr(148),
-              chr(150), chr(151), chr(133)),
-        array("'", "'", '"', '"', '-', '--', '...'),
-        $subject);
+    // Otherwise the parsing did not parse em dash
+    $subject = unicode_fix ( $subject );
 
     $pattern = '/(?:(?:(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))'.
         '|Workweek|Weekend|Everyday)|' .
@@ -255,11 +326,6 @@
     $pattern .= '))' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
         $hour.'))?/';
-//     $pattern = '/' .
-//         '(?:(?:(?P<day1>(?:'.$day.'|Workweek|Weekend)))' .
-//         '(?:\s*.\s*(?P<dayn>(?:'.$day.'|Workweek|Weekend)))*)' .
-//         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
-//         $hour.'))?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
@@ -285,19 +351,72 @@
       $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
       for ( $i = 0; $i < $count; ++$i )
       {
+        // The current matched entry represents a day interval
         if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
         {
-          if ( $matches['open_time'][$i] !== '' && $matches['close_time'][$i] !== '' ) {
-            $times [$i]['open']  = $matches ['open_time'][$i];
-            $times [$i]['close'] = $matches ['close_time'][$i];
-          } else {
-            $times [$i]['open']  = $times [$i]['close'] = true;
+          $begin = day_to_number ( $matches['start_day'][$i] );
+          $end   = day_to_number ( $matches['end_day']  [$i] );
+          for ( $j = $begin; $j <= $end; ++$j ) {
+            $times [$j] = set_time ( $matches, $times[$j], $i );
           }
-        } elseif ( true ) {
-          // loop here
+          continue;
+        }
+        // The current matched entry represents a sequence of days
+        for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k ) {
+          switch ( $matches['day'.$k][$i] ) {
+          case 'Workweek':
+            for ( $l = 1; $l < 6; ++$l ) {
+              $times [$l] = set_time ( $matches, $times[$l], $i );
+            }
+            break;
+          case 'Weekend':
+            for ( $l = 6; $l < 8; ++$l ) {
+              $times [$l] = set_time ( $matches, $times[$l], $i );
+            }
+            break;
+          default:
+            $l = day_to_number ( $matches['day'.$k][$i] );
+            if ( ! isset ( $l ) ) {
+              break;
+            }
+            $times [$l] = set_time ( $matches, $times[$l], $i );
+          }
         }
       }
       echo '</p>' . PHP_EOL;
+//      echo 'times: <br />';
+//      var_dump ( $times );
+      // test times whether they are legal
+      // convert to 24 hour format
+      // call the sql queries with the times array
+      // the code below is still sample
+      // it must be put into a function with parameter times
+      for ( $i = 1; $i < 8; ++$i )
+      {
+        foreach ( $times [$i] as $time )
+        {
+          $time = strtolower ( $time );
+          if ( strpos ($time, 'am') !== false && strpos ($time, 'pm') !== false )
+          {
+            if ( strpos ( $time, ':' ) === false ) {
+              $format = 'ga';
+            } else {
+              $format = 'g:ia';
+            }
+          } else {
+            if ( strpos ( $time, ':' ) === false ) {
+              $format = 'ha';
+            } else {
+              $format = 'h:i';
+            }
+          }
+          $timezone = new DateTimeZone('UTC');
+          $datetime = DateTime::createFromFormat($format, $time, $timezone);
+          if ( $datetime ) {
+            $time = $datetime->format ( 'H:i' );
+          }
+        }
+      }
     }
 
   }
