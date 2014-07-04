@@ -199,10 +199,8 @@
 <?php
 #     $days_selected = array ();
 #     $days_selected = array_fill ( 1 , 7, '' );
-      $prices_member = array_fill ( 1 , 7, '' );
-      $prices_nonmember = array_fill ( 1 , 7, '' );
-      $times_open = array_fill ( 1 , 7, '' );
-      $times_close = array_fill ( 1 , 7, '' );
+      $prices = array_fill ( 1 , 7, ['member' => '', 'nonmember' => ''] );
+      $times = array_fill ( 1 , 7, ['open' => '', 'close' => ''] );
       $days_type = '';
       $days_type_price = '';
       $days_type_time = '';
@@ -231,10 +229,10 @@
 
       echo wh_draw_label ( 'All days', '' , '', 7, false );
       echo wh_draw_input_field_custom ( "timeOpenAll{$sport_id}",
-        "timeOpenAll{$sport_id}", $times_open [1], ' size = "8" placeholder = ""',
+        "timeOpenAll{$sport_id}", $times [1] ['open'], ' size = "8" placeholder = ""',
         'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseAll{$sport_id}",
-        "timeCloseAll{$sport_id}", $times_close [1], ' size = "8" placeholder = ""',
+        "timeCloseAll{$sport_id}", $times [1] ['close'], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -244,10 +242,10 @@
 <?php
 
       echo wh_draw_input_field_label ( "timeOpenWorkweek1{$sport_id}",
-        "timeOpenWorkweek1{$sport_id}", 'Workweek', '' , $times_open [1],
+        "timeOpenWorkweek1{$sport_id}", 'Workweek', '' , $times [1] ['open'],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWorkweek1{$sport_id}",
-        "timeCloseWorkweek1{$sport_id}", $times_close [1], ' size = "8" placeholder = ""',
+        "timeCloseWorkweek1{$sport_id}", $times [1] ['close'], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -256,10 +254,10 @@
 
       echo wh_draw_label ( 'Weekend', '' , '', 5, true );
       echo wh_draw_input_field_custom ( "timeOpenWeekend{$sport_id}",
-        "timeOpenWeekend{$sport_id}", $times_open [6], ' size = "5" placeholder = ""',
+        "timeOpenWeekend{$sport_id}", $times [6] ['open'], ' size = "5" placeholder = ""',
         'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWeekend{$sport_id}",
-        "timeCloseWeekend{$sport_id}", $times_close [6], ' size = "5" placeholder = ""',
+        "timeCloseWeekend{$sport_id}", $times [6] ['close'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -269,10 +267,10 @@
 <?php
 
       echo wh_draw_input_field_label ( "timeOpenWorkweek2{$sport_id}",
-        "timeOpenWorkweek2{$sport_id}", 'Workweek', '' , $times_open [1],
+        "timeOpenWorkweek2{$sport_id}", 'Workweek', '' , $times [1] ['open'],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "timeCloseWorkweek2{$sport_id}",
-        "timeCloseWorkweek2{$sport_id}", $times_close [1], ' size = "8" placeholder = ""',
+        "timeCloseWorkweek2{$sport_id}", $times [1] ['close'], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -283,10 +281,10 @@
 #       'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "timeOpenSat{$sport_id}",
-        "timeOpenSat{$sport_id}", $times_open [6], ' size = "5" placeholder = ""',
+        "timeOpenSat{$sport_id}", $times [6] ['open'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "timeCloseSat{$sport_id}",
-        "timeCloseSat{$sport_id}", $times_close [6], ' size = "5" placeholder = ""',
+        "timeCloseSat{$sport_id}", $times [6] ['close'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -297,10 +295,10 @@
 #       'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "timeOpenSun{$sport_id}",
-        "timeOpenSun{$sport_id}", $times_open [7], ' size = "5" placeholder = ""',
+        "timeOpenSun{$sport_id}", $times [7] ['open'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "timeCloseSun{$sport_id}",
-        "timeCloseSun{$sport_id}", $times_close [7], ' size = "5" placeholder = ""',
+        "timeCloseSun{$sport_id}", $times [7] ['close'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -317,10 +315,10 @@
 #         "selectDay{$i}_{$sport_id}", null, $days_selected [$i], 'style="display: block; margin: auto"', 4, false );
 
         echo wh_draw_input_field_custom ( "timeOpenDay{$i}_{$sport_id}",
-          "timeOpenDay{$i}_{$sport_id}", $times_open [$i],  ' size = "5" placeholder = ""',
+          "timeOpenDay{$i}_{$sport_id}", $times [$i] ['open'],  ' size = "5" placeholder = ""',
           'text', false, 5, true );
         echo wh_draw_input_field_custom ( "timeCloseDay{$i}_{$sport_id}",
-          "timeCloseDay{$i}_{$sport_id}", $times_close [$i],  ' size = "5" placeholder = ""',
+          "timeCloseDay{$i}_{$sport_id}", $times [$i] ['close'],  ' size = "5" placeholder = ""',
           'text', false, 5, true );
 ?>
         </td>
@@ -353,11 +351,11 @@
 
       echo wh_draw_label ( 'All days', '' , '', 7, false );
       echo wh_draw_input_field_custom ( "priceMemberAll{$sport_id}",
-        "priceMemberAll{$sport_id}", $prices_member [1], ' size = "8" placeholder = ""',
-        'text', false, 5, false );
+        "priceMemberAll{$sport_id}", $prices [1] ['member'],
+        ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberAll{$sport_id}",
-        "priceNonmemberAll{$sport_id}", $prices_nonmember [1], ' size = "8" placeholder = ""',
-        'text', false, 5, true );
+        "priceNonmemberAll{$sport_id}", $prices [1] ['nonmember'],
+        ' size = "8" placeholder = ""', 'text', false, 5, true );
 ?>
         </td>
       </tr>
@@ -366,11 +364,11 @@
 <?php
 
       echo wh_draw_input_field_label ( "priceMemberWorkweek1{$sport_id}",
-        "priceMemberWorkweek1{$sport_id}", 'Workweek', '' , $prices_member [1],
+        "priceMemberWorkweek1{$sport_id}", 'Workweek', '' , $prices [1] ['member'],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWorkweek1{$sport_id}",
-        "priceNonmemberWorkweek1{$sport_id}", $prices_nonmember [1], ' size = "8" placeholder = ""',
-        'text', false, 5, true );
+        "priceNonmemberWorkweek1{$sport_id}", $prices [1] ['nonmember'],
+        ' size = "8" placeholder = ""', 'text', false, 5, true );
 ?>
         </td>
         <td style="text-align:center" colspan="2">
@@ -378,11 +376,11 @@
 
       echo wh_draw_label ( 'Weekend', '' , '', 5, true );
       echo wh_draw_input_field_custom ( "priceMemberWeekend{$sport_id}",
-        "priceMemberWeekend{$sport_id}", $prices_member [6], ' size = "5" placeholder = ""',
-        'text', false, 5, false );
+        "priceMemberWeekend{$sport_id}", $prices [6] ['member'],
+        ' size = "5" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWeekend{$sport_id}",
-        "priceNonmemberWeekend{$sport_id}", $prices_nonmember [6], ' size = "5" placeholder = ""',
-        'text', false, 5, true );
+        "priceNonmemberWeekend{$sport_id}", $prices [6] ['nonmember'],
+        ' size = "5" placeholder = ""', 'text', false, 5, true );
 ?>
         </td>
       </tr>
@@ -391,10 +389,10 @@
 <?php
 
       echo wh_draw_input_field_label ( "priceMemberWorkweek2{$sport_id}",
-        "priceMemberWorkweek2{$sport_id}", 'Workweek', '' , $prices_member [1],
+        "priceMemberWorkweek2{$sport_id}", 'Workweek', '' , $prices [1] ['member'],
         ' size = "8" placeholder = ""', 'text', false, 5, false );
       echo wh_draw_input_field_custom ( "priceNonmemberWorkweek2{$sport_id}",
-        "priceNonmemberWorkweek2{$sport_id}", $prices_nonmember [1], ' size = "8" placeholder = ""',
+        "priceNonmemberWorkweek2{$sport_id}", $prices [1] ['nonmember'], ' size = "8" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -404,10 +402,10 @@
 #         "selectSat{$sport_id}", null, $days_selected [6], 'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "priceMemberSat{$sport_id}",
-        "priceMemberSat{$sport_id}", $prices_member [6], ' size = "5" placeholder = ""',
+        "priceMemberSat{$sport_id}", $prices [6] ['member'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "priceNonmemberSat{$sport_id}",
-        "priceNonmemberSat{$sport_id}", $prices_nonmember [6], ' size = "5" placeholder = ""',
+        "priceNonmemberSat{$sport_id}", $prices [6] ['nonmember'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -417,10 +415,10 @@
 #         "selectSun{$sport_id}", null, $days_selected [7], 'style="display: block; margin: auto"', 4, false );
 
       echo wh_draw_input_field_custom ( "priceMemberSun{$sport_id}",
-        "priceMemberSun{$sport_id}", $prices_member [7], ' size = "5" placeholder = ""',
+        "priceMemberSun{$sport_id}", $prices [7] ['member'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
       echo wh_draw_input_field_custom ( "priceNonmemberSun{$sport_id}",
-        "priceNonmemberSun{$sport_id}", $prices_nonmember [7], ' size = "5" placeholder = ""',
+        "priceNonmemberSun{$sport_id}", $prices [7] ['nonmember'], ' size = "5" placeholder = ""',
         'text', false, 5, true );
 ?>
         </td>
@@ -437,10 +435,10 @@
 #         "selectDay{$i}_{$sport_id}", null, $days_selected [$i], 'style="display: block; margin: auto"', 4, false );
 
         echo wh_draw_input_field_custom ( "priceMemberDay{$i}_{$sport_id}",
-          "priceMemberDay{$i}_{$sport_id}", $prices_member [$i],  ' size = "5" placeholder = ""',
+          "priceMemberDay{$i}_{$sport_id}", $prices [$i] ['member'],  ' size = "5" placeholder = ""',
           'text', false, 5, true );
         echo wh_draw_input_field_custom ( "priceNonmemberDay{$i}_{$sport_id}",
-          "priceNonmemberDay{$i}_{$sport_id}", $prices_nonmember [$i],  ' size = "5" placeholder = ""',
+          "priceNonmemberDay{$i}_{$sport_id}", $prices [$i] ['nonmember'],  ' size = "5" placeholder = ""',
           'text', false, 5, true );
 ?>
         </td>
