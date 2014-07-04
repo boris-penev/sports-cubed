@@ -748,10 +748,10 @@
             && $clubosport_row->sport_id == $sport_id  );
 
       // checking the most optimal way to represent the data
-      wh_determine_best_view_prices ( );
-      wh_determine_best_view_times ( );
+      $days_type_price = wh_determine_best_view_prices ( $prices );
+      $days_type_time  = wh_determine_best_view_times ( $times );
     }
-    // If there were no clubosport entries or the entries were empty
+    // If there were no clubosport entries
     if ( $days_type_price == '' ) {
       $days_type_price = 'all';
     }
@@ -760,68 +760,52 @@
     }
   }
 
-  function wh_determine_best_view_prices ( )
+  function wh_determine_best_view_prices ( $prices )
   {
-    global $prices, $days_type_price;
-
     for ( $i = 1; $i < 5; ++$i )
     {
       if ( $prices [$i] ['member']    != $prices [$i+1] ['member'] ||
            $prices [$i] ['nonmember'] != $prices [$i+1] ['nonmember'] )
       {
-        $days_type_price = 'separately';
-        break;
+        return 'separately';
       }
     }
     // if data type not set yet, check if at least workweek days identical
-    if ( $days_type_price == '' )
+    if ( $prices [6] ['member']    != $prices [7] ['member'] ||
+         $prices [6] ['nonmember'] != $prices [7] ['nonmember'] )
     {
-      if ( $prices [6] ['member']    != $prices [7] ['member'] ||
-           $prices [6] ['nonmember'] != $prices [7] ['nonmember'] )
-      {
-        $days_type_price = 'workweeksatsun';
-      }
-      elseif ( $prices [5] ['member'] == $prices [6] ['member'] &&
-                $prices [6] ['nonmember'] == $prices [7] ['nonmember']  )
-      {
-        $days_type_price = 'all';
-      }
-      else {
-        $days_type_price = 'workweekweekend';
-      }
+      return 'workweeksatsun';
     }
+    if ( $prices [5] ['member']    == $prices [6] ['member'] &&
+         $prices [6] ['nonmember'] == $prices [7] ['nonmember']  )
+    {
+      return 'all';
+    }
+    return 'workweekweekend';
   }
 
-  function wh_determine_best_view_times ( )
+  function wh_determine_best_view_times ( $times )
   {
-    global $times, $days_type_time;
-
     for ( $i = 1; $i < 5; ++$i )
     {
       if ( $times [$i] ['open']  != $times [$i+1] ['open'] ||
            $times [$i] ['close'] != $times [$i+1] ['close'] )
       {
-        $days_type_time = 'separately';
-        break;
+        return 'separately';
       }
     }
     // if data type not set yet, check if at least workweek days identical
-    if ( $days_type_time == '' )
+    if ( $times [6] ['open']  != $times [7] ['open'] ||
+         $times [6] ['close'] != $times [7] ['close'] )
     {
-      if ( $times [6] ['open']  != $times [7] ['open'] ||
-           $times [6] ['close'] != $times [7] ['close'] )
-      {
-        $days_type_time = 'workweeksatsun';
-      }
-      elseif ( $times [5] ['open']  == $times [6] ['open'] &&
-               $times [6] ['close'] == $times [7] ['close']  )
-      {
-        $days_type_time = 'all';
-      }
-      else {
-        $days_type_time = 'workweekweekend';
-      }
+      return 'workweeksatsun';
     }
+    if ( $times [5] ['open']  == $times [6] ['open'] &&
+         $times [6] ['close'] == $times [7] ['close']  )
+    {
+      return 'all';
+    }
+    return 'workweekweekend';
   }
 
   editClub ( );
