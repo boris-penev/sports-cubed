@@ -185,10 +185,7 @@
             break;
           }
         }
-        $times_t = [];
-        $times_t [8] = $times;
-        $times = $times_t;
-        unset ($times_t);
+        $times = [ 8 => $times ];
         if ($empty) {
           $select_days_view_time = '';
         }
@@ -219,11 +216,7 @@
           }
         }
         unset($times_t);
-        $times_t = [];
-        $times_t [9]  = $times['workweek'];
-        $times_t [10] = $times['weekend'];
-        $times = $times_t;
-        unset ($times_t);
+        $times = [ 9 => $times['workweek'], 10 => $times['weekend'] ];
         if ($empty) {
           $select_days_view_time = '';
         }
@@ -258,12 +251,8 @@
           }
         }
         unset($times_t);
-        $times_t = [];
-        $times_t [6] = $times['saturday'];
-        $times_t [7] = $times['sunday'];
-        $times_t [9] = $times['workweek'];
-        $times = $times_t;
-        unset ($times_t);
+        $times = [ 6 => $times ['saturday'], 7 => $times ['sunday'],
+                   9 => $times ['workweek'] ];
         if ($empty) {
           $select_days_view_time = '';
         }
@@ -310,10 +299,7 @@
           }
         }
         unset($price);
-        $prices_t = [];
-        $prices_t [8] = $prices;
-        $prices = $prices_t;
-        unset ($prices_t);
+        $prices = [ 8 => $prices ];
         if ($empty) {
           $select_days_view_price = '';
         }
@@ -343,11 +329,7 @@
           unset($price);
         }
         unset($prices_t);
-        $prices_t = [];
-        $prices_t [9]  = $prices['workweek'];
-        $prices_t [10] = $prices['weekend'];
-        $prices = $prices_t;
-        unset ($prices_t);
+        $prices = [ 9 => $prices['workweek'], 10 => $prices['weekend'] ];
         if ($empty) {
           $select_days_view_price = '';
         }
@@ -381,12 +363,8 @@
           unset($price);
         }
         unset($prices_t);
-        $prices_t = [];
-        $prices_t [6] = $prices['saturday'];
-        $prices_t [7] = $prices['sunday'];
-        $prices_t [9] = $prices['workweek'];
-        $prices = $prices_t;
-        unset ($prices_t);
+        $prices = [ 6 => $prices ['saturday'], 7 => $prices ['sunday'],
+                    9 => $prices ['workweek'] ];
         if ($empty) {
           $select_days_view_price = '';
         }
@@ -417,20 +395,27 @@
         }
       }
 
-//       These functions are not ready to operate
-//       The format for times and prices for this function and
-//       wh_determine_best_view are different
-//       $prices = array_fill ( 1 , 7, ['member' => '', 'nonmember' => ''] );
-//       $times = array_fill ( 1 , 7, ['open' => '', 'close' => ''] );
-//       $days_type = '';
-//       $days_type_price = '';
-//       $days_type_time = '';
-//       wh_determine_best_view_prices ();
-//       wh_determine_best_view_times ();
-//       $select_days_view_time = $days_type_time;
-//       $select_days_view_price = $days_type_price;
+      if ( $select_days_view_time !== '' && $select_days_view_time !== 'all' )
+      {
+        $times_t = wh_times_prices_assoc_to_num ($times,
+                $select_days_view_time);
+        $days_type_time  = wh_determine_best_view_times ($times_t);
+        if ($days_type_time !== $select_days_view_time) {
+          $select_days_view_time = $days_type_time;
+          $times = wh_times_prices_num_to_assoc ($times_t, $days_type_time);
+        }
+      }
+      if ( $select_days_view_price !== '' && $select_days_view_price !== 'all' )
+      {
+        $prices_t = wh_times_prices_assoc_to_num ($prices,
+                $select_days_view_price);
+        $days_type_price  = wh_determine_best_view_prices ($prices_t);
+        if ($days_type_price !== $select_days_view_price) {
+          $select_days_view_price = $days_type_price;
+          $prices = wh_prices_prices_num_to_assoc ($prices_t, $days_type_price);
+        }
+      }
 
-      // TODO Smart selection of most compact representation of data
       // Delete times and prices
       deleteSportsTimePrice ( 'sports', $club_id, $sport_id );
       // Set times and prices when both schedules identical
@@ -655,7 +640,7 @@
           $price_nonmember = wh_get_price ($clubosport_row->price_nonmember);
           $time_open  = wh_get_time ($clubosport_row->opening_time);
           $time_close = wh_get_time ($clubosport_row->closing_time);
-#           $days_selected = array_fill(1, 7, true);
+#         $days_selected = array_fill(1, 7, true);
           if ( $time_open === null || $time_close === null ) {
             $time_open = $time_close = null;
           }
@@ -709,7 +694,7 @@
           }
           for ($i = 6; $i < 8; ++$i)
           {
-#             $days_selected [$i] = true;
+#           $days_selected [$i] = true;
             if ($price_member !== null) {
               $prices [$i] ['member'] = $price_member;
             }
@@ -806,6 +791,42 @@
       return 'all';
     }
     return 'workweekweekend';
+  }
+
+  function wh_times_prices_assoc_to_num ( $array, $type )
+  {
+    switch ( $type )
+    {
+    case 'separately':
+      return $array;
+    case 'all':
+      return array_fill ( 1, 7, $array [8] );
+    case 'workweekweekend':
+      $array_t = array_fill ( 1, 5, $array [9] );
+      $array_t [6] = $array_t [7] = $array [10];
+      return $array_t;
+    case 'workweeksatsun':
+      $array_t = array_fill ( 1, 5, $array [9] );
+      $array_t [6] = $array [7];
+      $array_t [6] = $array [7];
+      return $array_t;
+    }
+  }
+
+  function wh_times_prices_num_to_assoc ( $array, $type )
+  {
+    switch ( $type )
+    {
+    case 'separately':
+      return $array;
+    case 'all':
+      return [ 8 => $array ];
+    case 'workweekweekend':
+      return [ 9 => $array [1], 10 => $array [6] ];
+    case 'workweeksatsun':
+      return [ 6 => $array [6], 7 => $array [7],
+               9 => $array [1] ];
+    }
   }
 
   editClub ( );
