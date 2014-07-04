@@ -412,7 +412,7 @@
         $days_type_price  = wh_determine_best_view_prices ($prices_t);
         if ($days_type_price !== $select_days_view_price) {
           $select_days_view_price = $days_type_price;
-          $prices = wh_prices_prices_num_to_assoc ($prices_t, $days_type_price);
+          $prices = wh_times_prices_num_to_assoc ($prices_t, $days_type_price);
         }
       }
 
