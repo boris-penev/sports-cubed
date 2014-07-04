@@ -656,7 +656,7 @@
           }
           if ( $time_open !== null ) {
             $times = array_fill ( 1 , 7,
-                ['open' => $time_open, 'close' => $time_open] );
+                ['open' => $time_open, 'close' => $time_close] );
           }
         }
         elseif ( $day_id == 9 )
