@@ -408,6 +408,7 @@
           echo wh_output_string ($value), '<br />' . PHP_EOL;
         }
       }
+      // Fills the times array
       $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
       for ( $i = 0; $i < $count; ++$i )
       {
@@ -453,10 +454,33 @@
       // the code below is still sample
       // the structure
 
-      $empty = ! time_check ( $times );
+      $days_type_time = '';
+      $times_empty = ! time_check ( $times );
 //       if ( ! $empty ) {
 //         setTime ( 'sports', $club_id, $times );
 //       }
+      if ( $times_empty === false )
+      {
+        $days_type_time  = wh_determine_best_view_times ($times);
+        if ($days_type_time !== 'separately') {
+          $times = wh_times_prices_num_to_assoc ($times, $days_type_time);
+        }
+      }
+    }
+
+    echo '<p><strong>times:</strong></p>';
+    foreach ( $times as $time_key => $time_day )
+    {
+      echo '<span style="color:initial">',
+            '[', $time_key, '] ', '</span>';
+      foreach ( $time_day as $key => $time )
+      {
+        if ( $time !== '' && $time !== true ) {
+          echo $key, ' - ',
+              '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
+        }
+      }
+      echo '<br />';
     }
 
   }
