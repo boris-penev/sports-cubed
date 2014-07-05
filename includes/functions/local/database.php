@@ -886,4 +886,88 @@
     return wh_db_query ( $query );
   }
 
+  function wh_determine_best_view_prices ( $prices )
+  {
+    for ( $i = 1; $i < 5; ++$i )
+    {
+      if ( $prices [$i] ['member']    != $prices [$i+1] ['member'] ||
+           $prices [$i] ['nonmember'] != $prices [$i+1] ['nonmember'] )
+      {
+        return 'separately';
+      }
+    }
+    // if data type not set yet, check if at least workweek days identical
+    if ( $prices [6] ['member']    != $prices [7] ['member'] ||
+         $prices [6] ['nonmember'] != $prices [7] ['nonmember'] )
+    {
+      return 'workweeksatsun';
+    }
+    if ( $prices [5] ['member']    == $prices [6] ['member'] &&
+         $prices [6] ['nonmember'] == $prices [7] ['nonmember']  )
+    {
+      return 'all';
+    }
+    return 'workweekweekend';
+  }
+
+  function wh_determine_best_view_times ( $times )
+  {
+    for ( $i = 1; $i < 5; ++$i )
+    {
+      if ( $times [$i] ['open']  != $times [$i+1] ['open'] ||
+           $times [$i] ['close'] != $times [$i+1] ['close'] )
+      {
+        return 'separately';
+      }
+    }
+    // if data type not set yet, check if at least workweek days identical
+    if ( $times [6] ['open']  != $times [7] ['open'] ||
+         $times [6] ['close'] != $times [7] ['close'] )
+    {
+      return 'workweeksatsun';
+    }
+    if ( $times [5] ['open']  == $times [6] ['open'] &&
+         $times [6] ['close'] == $times [7] ['close']  )
+    {
+      return 'all';
+    }
+    return 'workweekweekend';
+  }
+
+  function wh_times_prices_assoc_to_num ( $array, $type )
+  {
+    switch ( $type )
+    {
+    case 'separately':
+      return $array;
+    case 'all':
+      return array_fill ( 1, 7, $array [8] );
+    case 'workweekweekend':
+      $array_t = array_fill ( 1, 5, $array [9] );
+      $array_t [6] = $array_t [7] = $array [10];
+      return $array_t;
+    case 'workweeksatsun':
+      $array_t = array_fill ( 1, 5, $array [9] );
+      $array_t [6] = $array [7];
+      $array_t [6] = $array [7];
+      return $array_t;
+    }
+  }
+
+  function wh_times_prices_num_to_assoc ( $array, $type )
+  {
+    switch ( $type )
+    {
+    case 'separately':
+      return $array;
+    case 'all':
+      return [ 8 => $array ];
+    case 'workweekweekend':
+      return [ 9 => $array [1], 10 => $array [6] ];
+    case 'workweeksatsun':
+      return [ 6 => $array [6], 7 => $array [7],
+               9 => $array [1] ];
+    }
+  }
+
 ?>
