@@ -10,15 +10,13 @@
     'email' => '',
     'phone' => '',
     'comment' => '',
-    'opening_time' => '',
-    'closing_time' => '',
-    'price_member' => '',
-    'price_nonmember' => ''
+    'time' => '',
+    'price' => '',
   ];
 
-  $day = '(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
+  $day_regex = '(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
        . '|Mon|Tue|Wed|Thu|Fri|Sat|Sun)';
-  $hour = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
+  $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
 
   function curl_get_file_contents_custom($URL)
   {
@@ -190,10 +188,65 @@
 
   function process_clubs ( $xml, $query )
   {
+    $arr = [];
+    delete_clubs ();
     foreach ( $xml->xpath('/entries/entry' . $query) as $club )
     {
       $current_club = process_current_club ($club);
-      parse_time ($current_club);
+
+      $data = $current_club;
+
+      // These are raw unparsed fields and should not be submitted
+      unset ($data['time']);
+      unset ($data['price']);
+      unset ($data['sports']);
+      unset ($data['facilities']);
+
+      echo '<p><strong>' . wh_output_string_protected ($current_club ['name']) .
+           '</strong></p>' . PHP_EOL;
+
+      foreach ( $arr as $club_t ) {
+        if ( $club_t ['name'] == $current_club['name'] ) {
+#         wh_error ('There is another club with the same name');
+          $error = 'There is another club with the same name';
+          echo '<div style="color:red">',
+                '<h1>' . nl2br ( $error ) . '</h1>', PHP_EOL,
+                '</div>';
+          break;
+        }
+      }
+      if ( isset ($error) && $error !== '' ) {
+        $error = '';
+        continue;
+      }
+
+      $times = parse_time ($current_club ['time']);
+      if ( isset ($times [8]) ) {
+        $data ['opening_time'] = $times [8] ['open'];
+        $data ['closing_time'] = $times [8] ['close'];
+      }
+
+      wh_db_perform ( 'clubs', $data, 'insert' );
+      $id = wh_db_insert_id ();
+      $data = [];
+
+      if ( (count ($times) > 0) && (! isset ($times [8])) )
+      {
+        $data ['club_id'] = $id;
+        foreach ( $times as $day => $time )
+        {
+          $data ['day_id'] = $day;
+          if ( $time ['open'] === true && $time ['close'] === true ) {
+            $data ['opening_time'] = 'null';
+            $data ['closing_time'] = 'null';
+          } else if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
+            $data ['opening_time'] = $time ['open'];
+            $data ['closing_time'] = $time ['close'];
+          } else continue;
+          wh_db_perform ( 'club_schedule', $data, 'insert' );
+        }
+      }
+
       $arr[] = $current_club;
 #     var_dump ($current_club);
     }
@@ -288,7 +341,7 @@
                  'close' => $matches['close_time'][$i] ];
     }
     // If the day is not selected, select it without specifying time
-    if ( $times['open'] === '' && $times['close'] === '' ) {
+    if ( $times['open'] === '' || $times['close'] === '' ) {
       return [ 'open'  => true, 'close' => true ];
     }
     // Otherwise, just return the current times
@@ -306,7 +359,11 @@
     {
       foreach ( $times [$i] as &$time )
       {
-        if ( $time === '' || $time === true ) {
+        if ( $time === '' ) {
+          continue;
+        }
+        $empty = false;
+        if ( $time === true ) {
           continue;
         }
         $time = strtolower ( $time );
@@ -330,7 +387,6 @@
         $timezone = new DateTimeZone('UTC');
         $datetime = DateTime::createFromFormat($format, $time, $timezone);
         if ( $datetime ) {
-          $empty = false;
           $time = $datetime->format ( 'H:i' );
         } else {
           $time = true;
@@ -355,41 +411,37 @@
     return ! $empty;
   }
 
-  function parse_time ( $club )
+  function parse_time ( $time )
   {
-    global $day;
-    global $hour;
+    global $day_regex;
+    global $hour_regex;
 
-    echo '<p><strong>' . wh_output_string_protected ($club ['name']) .
-         '</strong></p>' . PHP_EOL;
-
-    if ( $club ['time'] === '' ) {
+    if ( $time === '' ) {
       return;
     }
 
-#   var_dump($club ['time']);
-
-    echo '<p>' . nl2br (wh_output_string_protected ($club ['time'])) .
+    echo '<p>' . nl2br (wh_output_string_protected ($time)) .
          '</p>' . PHP_EOL;
 
-    $subject = $club['time'];
+    $subject = $time;
     // Replacing m dashes and other characters
     // Otherwise the parsing did not parse em dash
     $subject = unicode_fix ( $subject );
 
-    $pattern = '/(?:(?:(?P<start_day>'.$day.')(?:\s*-\s*(?P<end_day>'.$day.'))'.
+    $pattern = '/(?:(?:(?P<start_day>'.$day_regex.')(?:\s*-\s*(?P<end_day>'.$day_regex.'))'.
         '|Workweek|Weekend|Everyday)|' .
-        '(?:(?:(?P<day1>(?:'.$day.'|Workweek|Weekend)))';
+        '(?:(?:(?P<day1>(?:'.$day_regex.'|Workweek|Weekend)))';
     for ( $i = 2; $i < 8; ++$i ) {
-      $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day."|Workweek|Weekend)))?";
+      $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day_regex."|Workweek|Weekend)))?";
     }
     $pattern .= '))' .
-        '(?:\s*(?::|,)\s*(?P<open_time>'.$hour.')\s*-\s*(?P<close_time>'.
-        $hour.'))?/';
+        '(?:\s*(?::|,)\s*(?P<open_time>'.$hour_regex.')\s*-\s*(?P<close_time>'.
+        $hour_regex.'))?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
-    if (preg_match_all ($pattern, $subject, $matches)) {
+    if (preg_match_all ($pattern, $subject, $matches))
+    {
 #     var_dump($matches[0]);
       $count = count ($matches [0]);
       echo '<p style="color:#E80000">';
@@ -456,9 +508,6 @@
 
       $days_type_time = '';
       $times_empty = ! time_check ( $times );
-//       if ( ! $empty ) {
-//         setTime ( 'sports', $club_id, $times );
-//       }
       if ( $times_empty === false )
       {
         $days_type_time  = wh_determine_best_view_times ($times);
@@ -466,23 +515,25 @@
           $times = wh_times_prices_num_to_assoc ($times, $days_type_time);
         }
       }
-    }
 
-    echo '<p><strong>times:</strong></p>';
-    foreach ( $times as $time_key => $time_day )
-    {
-      echo '<span style="color:initial">',
-            '[', $time_key, '] ', '</span>';
-      foreach ( $time_day as $key => $time )
+      echo '<p><strong>times:</strong></p>';
+      foreach ( $times as $time_key => $time_day )
       {
-        if ( $time !== '' && $time !== true ) {
-          echo $key, ' - ',
-              '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
+        echo '<span style="color:initial">',
+              '[', $time_key, '] ', '</span>';
+        foreach ( $time_day as $key => $time )
+        {
+          if ( $time !== '' && $time !== true ) {
+            echo $key, ' - ',
+                '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
+          }
         }
+        echo '<br />';
       }
-      echo '<br />';
-    }
 
+      return $times;
+    }
+    return [];
   }
 
 ?>
