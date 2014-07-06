@@ -143,7 +143,8 @@ function adjust(){
   // the android default browser and safari mobile we differentiate it in 2 cases:
   // when the user has android default or mobile safari we do not zoom the cube
   // too much if the screen is bigger, hence the 2 values - 100 and 250
-  if(version == 'chrome' || version == 'firefox'){
+  // 100 comes from the zoomIn func - 80px inwards + 20px margin
+  if(version == 'chrome' || version == 'firefox' || version == 'iphone'){
       inwardsOffset = 100;
   }
   else{
@@ -165,25 +166,33 @@ function adjust(){
 }
 
 
+function browserRec( userAgent ){
+  if(userAgent.indexOf('chrome') > -1)
+      version = "chrome"
+  else if(userAgent.indexOf('firefox') > -1)
+      version = "firefox"
+  else if(userAgent.indexOf('android') > -1 || 
+          userAgent.indexOf('mobile safari') > -1)
+	  version = "default android"
+  else if(userAgent.indexOf('iphone') > -1)
+	  version = "iphone";
+  else if(userAgent.indexOf('ipad') > -1)
+      version = "ipad"
+  else if(userAgent.indexOf('chrome') == -1 &&
+          userAgent.indexOf('safari') > -1)
+      version = "safari"
+}
+
+var setOfBrowsers = ['chrome','firefox','android','mobile safari','iphone','ipad','','','']
+
 $(document).ready(function() {  
 
   // tries to differentiate between chrome, firefox and default android/safari 
   // browsers to determine how much closer to bring the cube inwards in case the 
   // screen is too big. If it is the default android browser and safari the cube
   // goes out of the viewport when it comes too close, unlike chrome and firefox
-  // TO-DO - make it a function
-  if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1)
-      version = "chrome"
-  else if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
-      version = "firefox"
-  else if(navigator.userAgent.toLowerCase().indexOf('android') > -1 || 
-          navigator.userAgent.toLowerCase().indexOf('mobile safari') > -1 || 
-          navigator.userAgent.toLowerCase().indexOf('iphone') > -1 || 
-          navigator.userAgent.toLowerCase().indexOf('ipad') > -1)
-	  version = "android/safari/iphone/ipad"
-  else if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1 &&
-          navigator.userAgent.toLowerCase().indexOf('safari') > -1)
-      version = "safari"
+  
+  browserRec(navigator.userAgent.toLowerCase());
 	  
   // draw and populate the activities side
   var sportsList = ['Football', 'Basketball', 'Golf', 'Swimming','Cricket','BMX',
