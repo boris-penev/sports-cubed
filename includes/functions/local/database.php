@@ -886,6 +886,15 @@
     return wh_db_query ( $query );
   }
 
+  /**
+   * Truncates database table clubs and cascades constraints
+   */
+  function delete_clubs ( )
+  {
+    $query = 'delete from clubs;';
+    return wh_db_query ( $query );
+  }
+
   function wh_determine_best_view_prices ( $prices )
   {
     for ( $i = 1; $i < 5; ++$i )
@@ -948,8 +957,8 @@
       return $array_t;
     case 'workweeksatsun':
       $array_t = array_fill ( 1, 5, $array [9] );
-      $array_t [6] = $array [7];
-      $array_t [6] = $array [7];
+      $array_t [6] = $array [6];
+      $array_t [7] = $array [7];
       return $array_t;
     }
   }
@@ -961,7 +970,7 @@
     case 'separately':
       return $array;
     case 'all':
-      return [ 8 => $array ];
+      return [ 8 => $array[1] ];
     case 'workweekweekend':
       return [ 9 => $array [1], 10 => $array [6] ];
     case 'workweeksatsun':

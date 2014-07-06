@@ -5,10 +5,9 @@
    */
   function wh_error ( $error )
   {
-    echo '<!DOCTYPE html>' . PHP_EOL;
     echo '<div style="color:red">',
           '<h1>' . nl2br ( $error ) . '</h1>',
-          '[WHALE STOP]'.'' . PHP_EOL,
+          '[WHALE STOP]', PHP_EOL,
           '</div>';
     die;
   }
