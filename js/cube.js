@@ -50,6 +50,7 @@ var windowHeight;
 var cubeNotLocked = 'all';
 
 var tutorialMode = false;
+var helpPressed = false;
 
 var numberOfSportsPages;
 
@@ -86,6 +87,9 @@ function adjust(){
   var height = $(window).height();
   var width = $(window).width();
 
+  //putting the help button on the right of the screen
+  $('#help').css('margin-left', (width-60) + "px");
+  
   // aligning the cube equally from the left and the righr of the screen;
   // 500 is the side of the cube
   $('#cube').css('margin-top', ((height - 500) / 2) + "px");
@@ -183,7 +187,6 @@ function browserRec( userAgent ){
       version = "safari"
 }
 
-var setOfBrowsers = ['chrome','firefox','android','mobile safari','iphone','ipad','','','']
 
 $(document).ready(function() {  
 
@@ -350,24 +353,31 @@ $(document).on( "click", "#how-to", function(){
   });},500);
 })
 
-
 $('#help').click(function(){
   
-  cubeNotLocked = '';
-  $('#'+currentWall+' > div').hide();
-  $('#'+currentWall).append('<div id="help-window">' +
-		'<div id="close-help"></div><br/><br/><br/>'+
-		'Sports Cubed Help' +
-	    '<img id="how-to" src="img/how-to.jpg">'+
-		'<img id="how-to" src="img/how-to.jpg">'+
+  if(helpPressed == false){
+    $(this).attr('src','img/help-dis.png').css('cursor','default')
+    helpPressed = true;
+    cubeNotLocked = '';
+    $('#'+currentWall+' > div').hide();
+    $('#'+currentWall).append('<div id="help-window">' +
+  		'<img id="close-help" src="img/help-close.png"><br/><br/><br/><br/>'+
+  		'Sports Cubed <br/><br/><br/> Help' +
+  	    '<img id="how-to" class="help-buttons" src="img/how-to.jpg">'+
+  		'<a href="about.html" target="blank">' +
+		     '<img id="about-auth" class="help-buttons" src="img/about-auth.jpg">'+
+	    '</a>' +
         '</div>')
-  $('#curtain').fadeIn();
+    $('#curtain').fadeIn();
+  }
   
   
 })
 
 $( document ).on( "click", "#close-help", function() {
 
+  $('#help').attr('src','img/help.png').css('cursor','pointer')
+  helpPressed = false;
   cubeNotLocked = 'all';
   $('#help-window').remove();
   $('#'+currentWall+' > div').show();
@@ -596,20 +606,17 @@ $('.yes-no-button-time').click(function(){
 // triggered if the screen dimensions change
 $(window).resize(function() {
 
-// reseting the perpective and returning the center of the cube at (0,0,0)
+  // reseting the perpective and returning the center of the cube at (0,0,0)
   document.getElementById('cube').style[prop] +=
           "translate" + currentDeterminerAxis +
           "(" + currentDeterminerDirection + "" + depth +"px)";
+		  
   adjust();
+  
   $('#bigWrapper').css('width', $(window).width());
   $('#bigWrapper').css('height', $(window).height());
-// here we pass the new window height for the next check about the address bar
 
-// debuging
-//alert("Width: "+$(window).width()+", Height: "+ $(window).height())
-
-//alert("Width: "+$('#bigWrapper').css('width')+", Height: "+ $('#bigWrapper').css('height'))
-
+  // here we pass the new window height for the next check about the address bar
   windowHeight = $(window).height();
 
 })

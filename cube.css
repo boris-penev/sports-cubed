@@ -7,24 +7,23 @@ body {
   /*** disables text marking ***/
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -khtml-user-select: none;
   -moz-user-select: none;
+  -moz-touch-callout: none;
   -ms-user-select: none;
   user-select: none;
+  
+  -webkit-font-smoothing: antialiased;
 }
 
 p {
   font-size:24px;
   color:#4CBB17;
   font-weight:bold;
-  font-family:'Corben',cursive;
+  font-family:'Calibri';
   text-shadow:1px 1px black;
   margin-top:5px;
 }
 
-body {
- font-family: calibri;
-}
 input[type=radio]{
 		display:none;
 	}
@@ -166,7 +165,7 @@ select[disabled]{
   font-size:30px;
   color:#4CBB17;
   font-weight:bold;
-  font-family:'Corben',cursive;
+  font-family:'Calibri';
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin-top:10px;
   text-align: center;
@@ -177,7 +176,7 @@ select[disabled]{
   font-size:22px;
   color:#4CBB17;
   font-weight:bold;
-  font-family:'Corben',cursive;
+  font-family:'Calibri';
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin: 4px auto 0 auto;
   text-align: center;
@@ -187,7 +186,7 @@ select[disabled]{
   font-size:35px;
   color:#4CBB17;
   font-weight:bold;
-  font-family:'Corben',cursive;
+  font-family:'Calibri';
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin-top:25px;
   margin-bottom: 10px;
@@ -224,6 +223,16 @@ select[disabled]{
   height: 200px; 
   float: left; 
   margin: 60px auto 30px auto;
+}
+
+.help-buttons {
+  cursor: pointer;
+  width:400px; 
+  height: 50px; 
+  border-radius: 10px; 
+  margin: 50px 50px 0 50px;
+  float: left;
+  box-shadow: 2px 2px 2px black;
 }
 
 /*##################################################### */
@@ -338,15 +347,6 @@ makes the application responsive ***/
   z-index:5;
 }
 
-#how-to {
-  cursor: pointer;
-  width:400px; 
-  height: 50px; 
-  border-radius: 10px; 
-  margin: 30px 50px 0 50px;
-  float: left;
-}
-
 #sports-left-navigator{
   width: 30px;
   height: 410px;
@@ -386,7 +386,7 @@ makes the application responsive ***/
   font-size:50px;
   color:#4CBB17;
   font-weight:bold;
-  font-family:'Corben',cursive;
+  font-family:'Calibri';
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin-top:20px;
   text-align: center;
@@ -455,20 +455,19 @@ makes the application responsive ***/
 
 #help-window{
   text-align: center;
-  color: white;
-  font-size: 50px;
-  text-shadow: 2px 2px black;
+  color: #2D720C;
+  font-size: 70px;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   width: 500px;
   height: 500px;
-  background-color: red;
 }
 
 #close-help{
    width: 50px; 
-   height: 50px; 
-   background-color:green;
+   height: 50px;
+   cursor: pointer;
    position: absolute;
-   margin-left: 440px;
+   margin-left: 190px;
    margin-top: 10px;
 }
 
