@@ -891,7 +891,9 @@
    */
   function delete_clubs ( )
   {
-    $query = 'delete from clubs;';
+    $query = 'delete from clubs';
+    wh_db_query ( $query );
+    $query = 'alter table clubs auto_increment = 1';
     return wh_db_query ( $query );
   }
 
