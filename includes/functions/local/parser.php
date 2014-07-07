@@ -17,6 +17,7 @@
   $day_regex = '(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
        . '|Mon|Tue|Wed|Thu|Fri|Sat|Sun)';
   $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
+  $price_regex = '(?:Free|(?:\d+?(?:\.\d\d)*))';
 
   function curl_get_file_contents_custom($URL)
   {
@@ -108,6 +109,7 @@
     $xml = curl_get_html_file_contents_custom (
       'http://www.edinburgh.gov.uk/api/directories/25/entries.xml?api_key=' .
       COUNCIL_API_KEY . '&per_page=100&page=1' );
+#     'http://localhost/database/entries.edit.xml' );
 
     try {
       return new SimpleXMLElement($xml);
@@ -436,7 +438,7 @@
     }
     $pattern .= '))' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour_regex.')\s*-\s*(?P<close_time>'.
-        $hour_regex.'))?/';
+        $hour_regex.'))?/i';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
