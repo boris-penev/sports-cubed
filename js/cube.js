@@ -247,8 +247,6 @@ $(document).ready(function() {
 // input them again at each transition between the map and the cube
 
   if (sessionStorage.isComingFromMap === "yes"){
-    alert('From Map')
-	console.log(sessionStorage.days+"|"+sessionStorage.sports+"|"+sessionStorage.price)
     sessionStorage.isComingFromMap = "no";
     var days = sessionStorage.days.split(",");
     if (days.length === 7){
