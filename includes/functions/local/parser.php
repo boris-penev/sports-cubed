@@ -17,7 +17,7 @@
   $day_regex = '(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
        . '|Mon|Tue|Wed|Thu|Fri|Sat|Sun)';
   $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
-  $price_regex = '(?:Free|(?:\d+?(?:\.\d\d)*))';
+  $price_regex = '(?:Free|(?:\d+(?:\.\d\d)*))';
 
   function curl_get_file_contents_custom($URL)
   {
@@ -228,9 +228,17 @@
         $data ['closing_time'] = $times [8] ['close'];
       }
 
+      $prices = parse_price ($current_club ['price']);
+      if ( isset ($prices [8]) ) {
+        $data ['price_member']    = $prices [8] ['member'];
+        $data ['price_nonmember'] = $prices [8] ['nonmember'];
+      }
+
       wh_db_perform ( 'clubs', $data, 'insert' );
       $id = wh_db_insert_id ();
       $data = [];
+
+      // TODO The queries can be made in one query
 
       if ( (count ($times) > 0) && (! isset ($times [8])) )
       {
@@ -246,6 +254,29 @@
             $data ['closing_time'] = $time ['close'];
           } else continue;
           wh_db_perform ( 'club_schedule', $data, 'insert' );
+        }
+      }
+
+      unset ($data ['opening_time']);
+      unset ($data ['closing_time']);
+
+      if ( (count ($prices) > 0) && (! isset ($prices [8])) )
+      {
+        $data ['club_id'] = $id;
+        foreach ( $prices as $day => $price )
+        {
+          if ( $price ['nonmember'] === '' && $price ['member'] === '' ) {
+            continue;
+          }
+          $data ['day_id'] = $day;
+          if ( $price ['member'] !== '' ) {
+            $data ['price_member'] = $price ['member'];
+          }
+          if ( $price ['nonmember'] !== '' ) {
+            $data ['price_nonmember'] = $price ['nonmember'];
+          }
+          wh_db_perform ( 'club_schedule', $data,
+                          'insert on duplicate key update' );
         }
       }
 
@@ -351,6 +382,34 @@
   }
 
   /**
+   * Reads i-th entry from the matches array (returned by preg_match_all).
+   * If the price price_member or price_nonmember variables are not nulls,
+   * it sets the i-th entry of the prices array to them.
+   * If they are nulls, but the prices array already contains a price,
+   * it does nothing.
+   * This function must be called as the following:
+   * $prices [$j] = set_price ( $matches, $prices[$j], $i );
+   */
+  function set_price ( $matches, $prices, $i )
+  {
+    // If the current entry in matches array contains a valid price,
+    // overwrite the prices array
+    if ( $matches['price_member'][$i] !== '' ) {
+      $prices ['member'] = $matches['price_member'][$i];
+    }
+    if ( $matches['price_nonmember'][$i] !== '' ) {
+      $prices ['nonmember'] = $matches['price_nonmember'][$i];
+    }
+    foreach ( $prices as &$price ) {
+      if ( $price === 'Free' ) {
+        $price = '0';
+      }
+    }
+    unset ($price);
+    return $prices;
+  }
+
+  /**
    * @return false if empty or true otherwise
    */
   function time_check ( &$times )
@@ -413,6 +472,28 @@
     return ! $empty;
   }
 
+  /**
+   * @return false if empty or true otherwise
+   */
+  function price_check ( &$prices )
+  {
+    // flag indicating whether there are valid prices
+    $empty = true;
+    for ( $i = 1; $i < 8; ++$i )
+    {
+      foreach ( $prices [$i] as $price )
+      {
+        if ( $price === '' ) {
+          continue;
+        }
+        $empty = false;
+        break 2;
+#       return true;
+      }
+    }
+    return false;
+  }
+
   function parse_time ( $time )
   {
     global $day_regex;
@@ -429,12 +510,13 @@
     // Replacing m dashes and other characters
     // Otherwise the parsing did not parse em dash
     $subject = unicode_fix ( $subject );
+    $subject = str_ireplace ('weekday', 'workweek', $subject);
 
     $pattern = '/(?:(?:(?P<start_day>'.$day_regex.')(?:\s*-\s*(?P<end_day>'.$day_regex.'))'.
-        '|Workweek|Weekend|Everyday)|' .
-        '(?:(?:(?P<day1>(?:'.$day_regex.'|Workweek|Weekend)))';
+        ')|' .
+        '(?:(?:(?P<day1>(?:'.$day_regex.'|workweek|weekend|everyday)))';
     for ( $i = 2; $i < 8; ++$i ) {
-      $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day_regex."|Workweek|Weekend)))?";
+      $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day_regex."|workweek|weekend|everyday)))?";
     }
     $pattern .= '))' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour_regex.')\s*-\s*(?P<close_time>'.
@@ -479,12 +561,12 @@
         // The current matched entry represents a sequence of days
         for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k ) {
           switch ( $matches['day'.$k][$i] ) {
-          case 'Workweek':
+          case 'workweek':
             for ( $l = 1; $l < 6; ++$l ) {
               $times [$l] = set_time ( $matches, $times[$l], $i );
             }
             break;
-          case 'Weekend':
+          case 'weekend':
             for ( $l = 6; $l < 8; ++$l ) {
               $times [$l] = set_time ( $matches, $times[$l], $i );
             }
@@ -499,14 +581,6 @@
         }
       }
       echo '</p>' . PHP_EOL;
-//      echo 'times: <br />';
-//      var_dump ( $times );
-      // test times whether they are legal
-      // convert to 24 hour format
-      // identify the correct club
-      // call the sql queries with the times array
-      // the code below is still sample
-      // the structure
 
       $days_type_time = '';
       $times_empty = ! time_check ( $times );
@@ -534,6 +608,125 @@
       }
 
       return $times;
+    }
+    return [];
+  }
+
+  function parse_price ( $price )
+  {
+    global $day_regex;
+    global $price_regex;
+
+    if ( $price === '' ) {
+      return;
+    }
+
+    echo '<p>' . nl2br (wh_output_string_protected ($price)) .
+         '</p>' . PHP_EOL;
+
+    $subject = $price;
+    // Replacing m dashes and other characters
+    // Otherwise the parsing did not parse em dash
+    $subject = unicode_fix ( $subject );
+    $subject = str_ireplace ('weekday', 'workweek', $subject);
+    $subject = str_ireplace ('non member', 'nonmember', $subject);
+
+    $pattern = '/(?:(?:(?P<start_day>'.$day_regex.')(?:\s*-\s*(?P<end_day>'.$day_regex.'))'.
+        ')|' .
+        '(?:(?:(?P<day1>(?:'.$day_regex.'|workweek|weekend|everyday)))';
+    for ( $i = 2; $i < 8; ++$i ) {
+      $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day_regex."|workweek|weekend|everyday)))?";
+    }
+    $pattern .= '))' .
+        '\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>'.$price_regex.')'.
+        '\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>'.$price_regex.')/i';
+#   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+#   echo nl2br ( wordwrap ( wh_output_string_protected
+#         ($pattern), 80, PHP_EOL, TRUE));
+    if (preg_match_all ($pattern, $subject, $matches))
+    {
+#     var_dump($matches[0]);
+      $count = count ($matches [0]);
+      echo '<p style="color:#E80000">';
+      foreach ($matches[0] as $key => $match) {
+        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
+        echo wh_output_string ($match), '<br />', PHP_EOL;
+      }
+      foreach ($matches as $key => $match) {
+        if ( is_numeric ($key) ) {
+          continue;
+        }
+        foreach ( $match as $key2 => $value ) {
+          if ( $value === '' ) continue;
+          echo '<span style="color:initial">', $key,
+              ' [', $key2, ']', ' - ', '</span>';
+          echo wh_output_string ($value), '<br />' . PHP_EOL;
+        }
+      }
+      // Fills the prices array
+      $prices = array_fill_keys ( range(1 , 7), ['member' => '', 'nonmember' => ''] );
+      for ( $i = 0; $i < $count; ++$i )
+      {
+        // The current matched entry represents a day interval
+        if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
+        {
+          $begin = day_to_number ( $matches['start_day'][$i] );
+          $end   = day_to_number ( $matches['end_day']  [$i] );
+          for ( $j = $begin; $j <= $end; ++$j ) {
+            $prices [$j] = set_price ( $matches, $prices[$j], $i );
+          }
+          continue;
+        }
+        // The current matched entry represents a sequence of days
+        for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k ) {
+          switch ( $matches['day'.$k][$i] ) {
+          case 'workweek':
+            for ( $l = 1; $l < 6; ++$l ) {
+              $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            }
+            break;
+          case 'weekend':
+            for ( $l = 6; $l < 8; ++$l ) {
+              $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            }
+            break;
+          default:
+            $l = day_to_number ( $matches['day'.$k][$i] );
+            if ( ! isset ( $l ) ) {
+              break;
+            }
+            $prices [$l] = set_price ( $matches, $prices[$l], $i );
+          }
+        }
+      }
+      echo '</p>' . PHP_EOL;
+
+      $days_type_price = '';
+      $prices_empty = ! price_check ( $prices );
+      if ( $prices_empty === false )
+      {
+        $days_type_price  = wh_determine_best_view_prices ($prices);
+        if ($days_type_price !== 'separately') {
+          $prices = wh_times_prices_num_to_assoc ($prices, $days_type_price);
+        }
+      }
+
+      echo '<p><strong>prices:</strong></p>';
+      foreach ( $prices as $price_key => $price_day )
+      {
+        echo '<span style="color:initial">',
+              '[', $price_key, '] ', '</span>';
+        foreach ( $price_day as $key => $price )
+        {
+          if ( $price !== '' && $price !== true ) {
+            echo $key, ' - ',
+                '<span style="color:#E80000;margin:0.5%">', $price, ' </span>';
+          }
+        }
+        echo '<br />';
+      }
+
+      return $prices;
     }
     return [];
   }
