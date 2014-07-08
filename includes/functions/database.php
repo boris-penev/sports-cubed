@@ -88,6 +88,31 @@
         }
       }
       $query = substr($query, 0, -2) . ' where ' . $parameters;
+    } elseif ($action == 'insert on duplicate key update') {
+      $query = 'insert into ' . $table . ' (';
+      foreach ($data as $columns => $value) {
+        $query .= $columns . ', ';
+      }
+      $query = substr($query, 0, -2) . ') values (';
+      foreach ($data as $value) {
+        switch ((string)$value) {
+          case 'now()':
+            $query .= 'now(), ';
+            break;
+          case 'null':
+            $query .= 'null, ';
+            break;
+          default:
+            $query .= '\'' . wh_db_input($value) . '\', ';
+            break;
+        }
+      }
+      $query = substr($query, 0, -2) . ')';
+      $query .= ' on duplicate key update ';
+      foreach ($data as $columns => $value) {
+        $query .= $columns . ' = values (' . $columns . '), ';
+      }
+      $query = substr($query, 0, -2);
     }
 
 #    echoQuery ( $query );
