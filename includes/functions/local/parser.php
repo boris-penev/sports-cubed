@@ -14,8 +14,8 @@
     'price' => '',
   ];
 
-  $day_regex = '(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday'
-       . '|Mon|Tue|Wed|Thu|Fri|Sat|Sun)';
+  $day_regex = '(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday'
+       . '|mon|tue|wed|thu|fri|sat|sun)';
   $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
   $price_regex = '(?:Free|(?:\d+(?:\.\d\d)*))';
 
@@ -336,19 +336,19 @@
 #   return (int) date('N', strtotime($matches['left']));
     switch ( $day )
     {
-    case 'Mon': case 'Monday':
+    case 'mon': case 'monday':
       return 1; break;
-    case 'Tue': case 'Tuesday':
+    case 'tue': case 'tuesday':
       return 2; break;
-    case 'Wed': case 'Wednesday':
+    case 'wed': case 'wednesday':
       return 3; break;
-    case 'Thu': case 'Thursday':
+    case 'thu': case 'thursday':
       return 4; break;
-    case 'Fri': case 'Friday':
+    case 'fri': case 'friday':
       return 5; break;
-    case 'Sat': case 'Saturday':
+    case 'sat': case 'saturday':
       return 6; break;
-    case 'Sun': case 'Sunday':
+    case 'sun': case 'sunday':
       return 7; break;
     }
   }
