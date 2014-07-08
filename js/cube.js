@@ -217,7 +217,7 @@ $(document).ready(function() {
 
     var btn = $(this);
     var state = btn.data('clicked');
-    if (state === "yes"){
+    if (state == "yes"){
       btn.css('background-position','0px 0px');
       btn.data('clicked', 'no');
       var sport = btn.parent().text().toLowerCase();
@@ -228,7 +228,9 @@ $(document).ready(function() {
       btn.css('background-position','0px -35px');
       btn.data('clicked', 'yes');
       var sport = btn.parent().text().toLowerCase();
-      sportsToBeSubmitted.push(sport);
+	  if( sportsToBeSubmitted.indexOf( sport ) == -1 ){
+        sportsToBeSubmitted.push(sport);
+	  }
     }
 
     // if in tutorial mode - display the explanations
@@ -248,6 +250,11 @@ $(document).ready(function() {
 
   if (sessionStorage.isComingFromMap === "yes"){
     sessionStorage.isComingFromMap = "no";
+	
+	sportsToBeSubmitted = sessionStorage.sports.split(',')
+	daysToBeSubmitted = sessionStorage.days.split(',')
+	priceToBeSubmitted = sessionStorage.price
+	
     var days = sessionStorage.days.split(",");
     if (days.length === 7){
       $("#whole_toggler > div").trigger("click");
@@ -262,9 +269,7 @@ $(document).ready(function() {
     for (var x in sports){
       $("#" + sports[x].replace(" ", "") + "_toggler > div").trigger("click");
     }
-
-    var price = sessionStorage.price.split(',')[0];
-      $("#"+price).trigger("click");
+	
   }
   else {
     sessionStorage.sports = null;
@@ -558,8 +563,10 @@ $('.yes-no-button-time').click(function(){
 
 	  var length = daysToBeSubmitted.length;
       daysToBeSubmitted.splice(0, length);
+	  if( daysToBeSubmitted.length != 7 ){
       daysToBeSubmitted.push("monday", "tuesday", "wednesday",
                              "thursday", "friday", "saturday", "sunday");
+	  }
       break;
     case "yes":
       $('.yes-no-button-time').css('background-position','0px 0px');
@@ -576,7 +583,9 @@ $('.yes-no-button-time').click(function(){
       btn.data('clicked','yes');
 
 	  var day = btn.parent().text().toLowerCase();
-	  daysToBeSubmitted.push(day);
+	  if( daysToBeSubmitted.indexOf( day ) == -1 ){
+        daysToBeSubmitted.push(day);;
+	  }
       break;
     case "yes":
       btn.css('background-position','0px 0px');
