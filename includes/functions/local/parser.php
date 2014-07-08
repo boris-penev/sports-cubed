@@ -507,10 +507,11 @@
          '</p>' . PHP_EOL;
 
     $subject = $time;
+    $subject = strtolower ( $subject );
     // Replacing m dashes and other characters
     // Otherwise the parsing did not parse em dash
     $subject = unicode_fix ( $subject );
-    $subject = str_ireplace ('weekday', 'workweek', $subject);
+    $subject = str_replace ('weekday', 'workweek', $subject);
 
     $pattern = '/(?:(?:(?P<start_day>'.$day_regex.')(?:\s*-\s*(?P<end_day>'.$day_regex.'))'.
         ')|' .
@@ -520,7 +521,7 @@
     }
     $pattern .= '))' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour_regex.')\s*-\s*(?P<close_time>'.
-        $hour_regex.'))?/i';
+        $hour_regex.'))?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
@@ -625,11 +626,12 @@
          '</p>' . PHP_EOL;
 
     $subject = $price;
+    $subject = strtolower ( $subject );
     // Replacing m dashes and other characters
     // Otherwise the parsing did not parse em dash
     $subject = unicode_fix ( $subject );
-    $subject = str_ireplace ('weekday', 'workweek', $subject);
-    $subject = str_ireplace ('non member', 'nonmember', $subject);
+    $subject = str_replace ('weekday', 'workweek', $subject);
+    $subject = str_replace ('non member', 'nonmember', $subject);
 
     $pattern = '/(?:(?:(?P<start_day>'.$day_regex.')(?:\s*-\s*(?P<end_day>'.$day_regex.'))'.
         ')|' .
@@ -639,7 +641,7 @@
     }
     $pattern .= '))' .
         '\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>'.$price_regex.')'.
-        '\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>'.$price_regex.')/i';
+        '\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>'.$price_regex.')/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
