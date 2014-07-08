@@ -633,7 +633,10 @@ $('#front-explanation').click(function(){ tutorialMode = false;
 										  cubeNotLocked = 'all';
 										  $(this).fadeOut(1000, function(){
 												$('#linkToMap').fadeIn(500) });
-										  $('#curtain').fadeOut(1000)})
+										  
+  $('#curtain').fadeOut(1000)  
+  $('#help').attr('src','img/help.png').css('cursor','pointer')
+  helpPressed = false;})
 
 //preventing the elastic bounce effect in Safari under iOS
 $(document).bind('touchmove', function(event) { event.preventDefault();});
