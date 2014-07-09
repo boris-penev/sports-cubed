@@ -381,7 +381,7 @@
       $query .= " and {$entity_table}{$i}.id = {$junction_table}{$i}.{$entity_id}";
       $query .= " and {$entity_table}{$i}.name = '{$data[$i]}'";
     }
-    if ( is_array ( $days ) && count ( days ) ) {
+    if ( is_array ( $days ) && count ( $days ) ) {
       $days = filterDays ( $days );
     }
     if ( $days == false || ! is_array ( $days ) || count ( $days ) == 0 ) {
