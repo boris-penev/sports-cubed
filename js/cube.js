@@ -235,6 +235,7 @@ $(document).ready(function() {
 
     // if in tutorial mode - display the explanations
     if(tutorialMode == true){
+         cubeNotLocked = 'left';
     	 setTimeout(function(){$('#back-explanation').fadeIn(1000);
     	 $('#swipe-back').fadeIn(1000, function(){
     	 animateSwipe('left', 'back')
@@ -522,6 +523,7 @@ $('#membership').parent().find('select').change(function(){
 
   // if in tutorial mode - display the explanations
 	if(tutorialMode == true){
+        cubeNotLocked = 'left';
 		setTimeout(function(){$('#left-explanation').fadeIn(1000);
 		$('#swipe-left').fadeIn(1000, function(){
 		animateSwipe('left', 'left')
@@ -537,6 +539,7 @@ $('#one-time').parent().find('select').change(function(){
 
   // if in tutorial mode - display the explanations
 	if(tutorialMode == true){
+        cubeNotLocked = 'left';
 		setTimeout(function(){$('#left-explanation').fadeIn(1000);
 		$('#swipe-left').fadeIn(1000, function(){
 		animateSwipe('left', 'left')
@@ -602,6 +605,7 @@ $('.yes-no-button-time').click(function(){
 
   // if in tutorial mode - display the explanations
   if(tutorialMode == true){
+      cubeNotLocked = 'left';
 	  setTimeout(function(){$('#right-explanation').fadeIn(1000);
 	  $('#swipe-right').fadeIn(1000, function(){
 	  animateSwipe('left', 'right')
@@ -925,19 +929,22 @@ function gesturePerformed(type)
 	if(tutorialMode == true){
 		switch (currentWall){
 			case 'right':
-			$('#swipe-bottom').fadeOut(1500)
-			$('#bottom-explanation').fadeOut(1500)
+			$('#swipe-bottom').fadeOut(1500);
+			$('#bottom-explanation').fadeOut(1500);
+			cubeNotLocked = '';
 			break;
 			case 'back':
-			$('#swipe-right').fadeOut(1500)
-			$('#right-explanation').fadeOut(1500)
+			$('#swipe-right').fadeOut(1500);
+			$('#right-explanation').fadeOut(1500);
+			cubeNotLocked = '';
 			break;
 			case 'left':
-			$('#swipe-back').fadeOut(1500)
-			$('#back-explanation').fadeOut(1500)
+			$('#swipe-back').fadeOut(1500);
+			$('#back-explanation').fadeOut(1500);
+			cubeNotLocked = '';
 			break;
 			case 'front':
-			$('#swipe-left').fadeOut(1500)
+			$('#swipe-left').fadeOut(1500);
 			$('#left-explanation').fadeOut(1500, function(){
 											$('#front-explanation').fadeIn(1000);
 											cubeNotLocked = '';
