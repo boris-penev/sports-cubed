@@ -39,7 +39,7 @@
   $price = wh_db_get_input_string ( 'price' );
   if ( strlen ($price) != 0 && is_numeric ( $price ) )
   {
-    $price = (int) $price;
+    $price = (float) $price;
   } else {
     unset ($price);
   }
@@ -70,6 +70,7 @@
 # var_dump ( $sports );
 # var_dump ( $days );
 # var_dump ( $time );
+# var_dump ( $price );
 
 # $sports = array_values ( $sports );
 # $days = array_values ( $days );
