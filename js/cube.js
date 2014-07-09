@@ -49,9 +49,13 @@ var windowHeight;
 // used to lock cube when demonstrating the tutorial
 var cubeNotLocked = 'all';
 
+// determines whether the user is in tutorial mode
 var tutorialMode = false;
+
+// does not allow for the help button to be pressed multiple times
 var helpPressed = false;
 
+// the number of pages in the activities slider
 var numberOfSportsPages;
 
 // pointing the page which is currently showed on the sports slider
@@ -188,7 +192,19 @@ function browserRec( userAgent ){
 }
 
 
-$(document).ready(function() {  
+$(document).ready(function() {
+  
+  // finishes the tutorial if in tutorial mode
+  if( sessionStorage.tutorialModeOn == 'true'){
+	
+	$('#help').attr('src','img/help-dis.png').css('cursor','default')
+    helpPressed = true;
+	
+    $('#curtain').fadeIn(1000);
+	$('#front-explanation').show();
+    sessionStorage.tutorialModeOn = 'false';
+	cubeNotLocked = '';
+  }
 
   // tries to differentiate between chrome, firefox and default android/safari 
   // browsers to determine how much closer to bring the cube inwards in case the 
@@ -200,7 +216,7 @@ $(document).ready(function() {
   // draw and populate the activities side
   var sportsList = ['Football', 'Basketball', 'Golf', 'Swimming','Cricket','BMX',
 				  'Cycling','Badminton','Gym','Skateboard','Gymnastics',
-				  'Table tennins','Rugby','Hockey','Tennins','Athletics',
+				  'Table tennis','Rugby','Hockey','Tennis','Athletics',
 				  'Volleyball','Bowling', '1','2','3','4','5','6','7','8','9',
 				  '10','11','12','13','14','15','16','17','18','Football',
 				  'Basketball', 'Golf', 'Swimming','Cricket','BMX','Cycling',
@@ -238,7 +254,7 @@ $(document).ready(function() {
          cubeNotLocked = 'left';
     	 setTimeout(function(){$('#back-explanation').fadeIn(1000);
     	 $('#swipe-back').fadeIn(1000, function(){
-    	 animateSwipe('left', 'back')
+    	 animateSwipe('back')
      });
     }, 500)}
 
@@ -249,7 +265,7 @@ $(document).ready(function() {
 // in this way we remember his/her preferences and they don't have to
 // input them again at each transition between the map and the cube
 
-  if (sessionStorage.isComingFromMap === "yes"){
+  if (sessionStorage.isComingFromMap == "yes"){
     sessionStorage.isComingFromMap = "no";
 	
 	sportsToBeSubmitted = sessionStorage.sports.split(',')
@@ -309,13 +325,14 @@ $('#linkToMap').click(function(){
   sessionStorage.sports = sportsToBeSubmitted;
   sessionStorage.days = daysToBeSubmitted;
   sessionStorage.price = priceToBeSubmitted;
-  alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
+  sessionStorage.tutorialModeOn = tutorialMode;
   sessionStorage.isComingFromMap = "yes";
+  
+  alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
+ 
   window.location = "http://testpilot.x10.mx/sportscubed/map.html";
 })
 
-// this is the animation showing how to use the cube [TO BE CHANGED]
-// TODO Change this
 $(document).on( "click", "#how-to", function(){
 
   cubeNotLocked = "all";
@@ -353,7 +370,7 @@ $(document).on( "click", "#how-to", function(){
   cubeNotLocked = 'left';
   setTimeout(function(){$('#bottom-explanation').fadeIn(1000);},500);
   setTimeout(function(){$('#swipe-bottom').fadeIn(1000, function(){
-	animateSwipe('left', 'bottom')
+	animateSwipe('bottom')
   });},500);
 })
 
@@ -453,46 +470,18 @@ function drawSportsLine(element){
 
 
 // the repeating swiping animation for the tutorial
-function animateSwipe(direction, facingWall){
+function animateSwipe(facingWall){
 
-if(swipeAllowed){
-	var swipeimage = $('#swipe-'+facingWall);
+    if(swipeAllowed){
+	    var swipeimage = $('#swipe-'+facingWall);
 
-	switch (direction){
-	case 'left':
-		swipeimage.animate({
-			marginLeft: '10px'
-			}, 1500, function(){
-			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
-			}
-		)
-		break;
-	case 'right':
-		swipeimage.animate({
-			marginRight: '10px'
-			}, 1500, function(){
-			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
-			}
-		)
-		break;
-	case 'down':
-		swipeimage.animate({
-			marginBottom: '10px'
-			}, 1500, function(){
-			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
-			}
-		)
-		break;
-	case 'up':
-		swipeimage.animate({
-			marginTop: '10px'
-			}, 1500, function(){
-			setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(direction, facingWall);}, 1000)
-			}
-		)
-		break;
+	    swipeimage.animate({
+		    marginLeft: '10px'
+		    }, 1500, function(){
+		    setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(facingWall);}, 1000)
+		    }
+	    )
 	}
-}
 }
 
 // setting what will be saved in the browser storage as price once we go to
@@ -526,7 +515,7 @@ $('#membership').parent().find('select').change(function(){
         cubeNotLocked = 'left';
 		setTimeout(function(){$('#left-explanation').fadeIn(1000);
 		$('#swipe-left').fadeIn(1000, function(){
-		animateSwipe('left', 'left')
+		animateSwipe('left')
 		});
 	}, 500)}
 	
@@ -542,7 +531,7 @@ $('#one-time').parent().find('select').change(function(){
         cubeNotLocked = 'left';
 		setTimeout(function(){$('#left-explanation').fadeIn(1000);
 		$('#swipe-left').fadeIn(1000, function(){
-		animateSwipe('left', 'left')
+		animateSwipe('left')
 		});
 	}, 500)}
   
@@ -608,7 +597,7 @@ $('.yes-no-button-time').click(function(){
       cubeNotLocked = 'left';
 	  setTimeout(function(){$('#right-explanation').fadeIn(1000);
 	  $('#swipe-right').fadeIn(1000, function(){
-	  animateSwipe('left', 'right')
+	  animateSwipe('right')
     });
   }, 500)}
 })
@@ -945,10 +934,8 @@ function gesturePerformed(type)
 			break;
 			case 'front':
 			$('#swipe-left').fadeOut(1500);
-			$('#left-explanation').fadeOut(1500, function(){
-											$('#front-explanation').fadeIn(1000);
-											cubeNotLocked = '';
-											})
+			$('#left-explanation').fadeOut(1500);
+			cubeNotLocked = '';
 			break;
 		}
 	}
@@ -1043,9 +1030,7 @@ function getBackPanel() {
 
 // executed when the user is facing the Front (Map) side of the cube
 function frontpanel(){
-  if(tutorialMode == false){
     $('#linkToMap').delay(500).fadeIn(800);
-  }
 }
 
 // checks which side we are facing and zooms it by making all other sides
