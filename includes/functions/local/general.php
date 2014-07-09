@@ -1,6 +1,18 @@
 <?php
 
   /**
+   * Display notice
+   */
+  function wh_notice ( $notice )
+  {
+    echo '<div style="color:red">',
+          '<h1>' . nl2br ( $notice ) . '</h1>',
+          '[WHALE STOP]', PHP_EOL,
+          '</div>';
+    die;
+  }
+
+  /**
    * Die with error
    */
   function wh_error ( $error )
