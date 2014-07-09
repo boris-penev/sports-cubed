@@ -455,11 +455,13 @@
     {
       $query .= " and (";
       $query .= " ({$junction_table}{$i}.day_id = 8";
-      $query .= " and {$junction_table}{$i}.price_nonmember <= {$price})";
+      $query .= " and ({$junction_table}{$i}.price_nonmember is null";
+      $query .= " or {$junction_table}{$i}.price_nonmember <= {$price})";
       foreach ( $days as $day )
       {
         $query .= " or ({$junction_table}{$i}.day_id = {$day}";
-        $query .= " and {$junction_table}{$i}.price_nonmember <= {$price})";
+        $query .= " and ({$junction_table}{$i}.price_nonmember is null";
+        $query .= " or {$junction_table}{$i}.price_nonmember <= {$price})";
       }
       $query .= " )";
     }
@@ -648,13 +650,15 @@
     {
       $query .= " and (";
       $query .= " ({$junction_table}{$i}.day_id = 8";
-      $query .= " and {$junction_table}{$i}.price_nonmember <= {$price}";
+      $query .= " and ({$junction_table}{$i}.price_nonmember is null";
+      $query .= " or {$junction_table}{$i}.price_nonmember <= {$price})";
       $query .= " and not ( '{$time_close}' <= {$junction_table}{$i}.opening_time";
       $query .= " or {$junction_table}{$i}.closing_time <= '{$time_open}' ) )";
       foreach ( $days as $day )
       {
         $query .= " or ({$junction_table}{$i}.day_id = {$day}";
-        $query .= " and {$junction_table}{$i}.price_nonmember <= {$price}";
+        $query .= " and ({$junction_table}{$i}.price_nonmember is null";
+        $query .= " or {$junction_table}{$i}.price_nonmember <= {$price})";
         $query .= " and not ( {$time_close} <= {$junction_table}{$i}.opening_time";
         $query .= " or {$junction_table}{$i}.closing_time <= {$time_open} ) )";
       }
