@@ -436,8 +436,8 @@
     $counter = count ( $data );
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= ", {$junction_table} as" . $junction_table . $i;
-      $query .= ", {$entity_table} as" . $entity_table . $i;
+      $query .= ", {$junction_table} as " . $junction_table . $i;
+      $query .= ", {$entity_table} as " . $entity_table . $i;
     }
     $query .= ' where 1';
     for ( $i = 0; $i < $counter; ++$i )
@@ -485,6 +485,55 @@
   /**
    * @param $table entity table - sports or facilities
    * @param $data array with entities - sports or facilities
+   * @param $price array with prices for selected days
+   * @return query result
+   */
+  function getClubsBySportsPrice ( $table, $data, $price )
+  {
+    if ( $table == 'sports' )
+    {
+      $entity_table = 'sports';
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
+    }
+    else if ( $table == 'facilities' )
+    {
+      $entity_table = 'facilities';
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
+    }
+    $query = 'select clubs.id as id, clubs.name as name';
+    $query .= ', clubs.latitude, clubs.longtitude';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
+    $query .= ' from clubs';
+    $data = array_values ( $data );
+    $counter = count ( $data );
+    for ( $i = 0; $i < $counter; ++$i )
+    {
+      $query .= ", {$junction_table} as " . $junction_table . $i;
+      $query .= ", {$entity_table} as " . $entity_table . $i;
+    }
+    $query .= ' where 0';
+    for ( $i = 0; $i < $counter; ++$i )
+    {
+      $query .= " or (clubs.id = {$junction_table}{$i}.club_id";
+      $query .= " and {$entity_table}{$i}.id = {$junction_table}{$i}.{$entity_id}";
+      $query .= " and {$entity_table}{$i}.name = '{$data[$i]}'";
+      $query .= " and ({$junction_table}{$i}.price_nonmember is null";
+      $query .= " or {$junction_table}{$i}.price_nonmember <= {$price})";
+      $query .= ')';
+    }
+    $query .= ' group by id';
+#   $query .= ' order by id';
+#   echoQuery ($query);
+    return wh_db_query ( $query );
+  }
+
+  /**
+   * @param $table entity table - sports or facilities
+   * @param $data array with entities - sports or facilities
    * @param $days array with selected days
    * @param $time array with time schedules for selected days
    * @return query result
@@ -515,8 +564,8 @@
     $time_close = $time[1];
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= ", {$junction_table} as" . $junction_table . $i;
-      $query .= ", {$entity_table} as" . $entity_table . $i;
+      $query .= ", {$junction_table} as " . $junction_table . $i;
+      $query .= ", {$entity_table} as " . $entity_table . $i;
     }
     $query .= ' where 1';
     for ( $i = 0; $i < $counter; ++$i )
@@ -582,8 +631,8 @@
     $time_close = $time[1];
     for ( $i = 0; $i < $counter; ++$i )
     {
-      $query .= ", {$junction_table} as" . $junction_table . $i;
-      $query .= ", {$entity_table} as" . $entity_table . $i;
+      $query .= ", {$junction_table} as " . $junction_table . $i;
+      $query .= ", {$entity_table} as " . $entity_table . $i;
     }
     $query .= ' where 1';
     for ( $i = 0; $i < $counter; ++$i )
