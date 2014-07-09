@@ -2,6 +2,7 @@
 
   header ("Access-Control-Allow-Origin: *");
 
+# define('DB_DATABASE', 'clubs');
   //cp query.php ..; cp -r includes ..;
   require('includes/application_top.php');
 
@@ -76,8 +77,8 @@
 
   if ( isset ($sports) && isset ($price) && isset ($time) )
   {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysPriceTime ( $sports,
-      $days, $price, $time ), MYSQLI_ASSOC );
+    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysPriceTime ( 'sports',
+      $sports, $days, $price, $time ), MYSQLI_ASSOC );
     if ( $clubs === false) {
       $clubs = array ();
     }
@@ -90,8 +91,8 @@
   }
   elseif ( isset ($sports) && isset ($price) )
   {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysPrice ( $sports,
-      $days, $price ), MYSQLI_ASSOC );
+    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysPrice ( 'sports',
+    $sports, $days, $price ), MYSQLI_ASSOC );
     if ( $clubs === false) {
       $clubs = array ();
     }
@@ -104,8 +105,8 @@
   }
   elseif ( isset ($sports) && isset ($time) )
   {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysTime ( $sports,
-      $days, $time ), MYSQLI_ASSOC );
+    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysTime ( 'sports',
+      $sports, $days, $time ), MYSQLI_ASSOC );
     if ( $clubs === false) {
       $clubs = array ();
     }
@@ -115,9 +116,10 @@
 #   echo var_dump ( $clubs );
     echo json_encode ( $clubs );
   }
-  elseif ( wh_not_null ($sports) && wh_not_null ($days) )
+  elseif ( isset ($sports) && isset ($days) )
   {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDays ( $sports, $days ), MYSQLI_ASSOC );
+    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDays ( 'sports', $sports,
+            $days ), MYSQLI_ASSOC );
     if ( $clubs === false) {
       $clubs = array ();
     }
@@ -127,9 +129,10 @@
 #   echo var_dump ( $clubs );
     echo json_encode ( $clubs );
   }
-  elseif ( wh_not_null ($sports) )
+  elseif ( isset ($sports) )
   {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySports ( $sports ), MYSQLI_ASSOC );
+    $clubs = wh_db_fetch_all_custom ( getClubsBySports ( 'sports', $sports ),
+                                      MYSQLI_ASSOC );
 #   var_dump ( $club );
     if ( $clubs === false) {
       $clubs = array ();
