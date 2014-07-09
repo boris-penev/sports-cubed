@@ -92,8 +92,8 @@
   }
   elseif ( isset ($sports) && isset ($price) )
   {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysPrice ( 'sports',
-    $sports, $days, $price ), MYSQLI_ASSOC );
+    $clubs = wh_db_fetch_all_custom ( getClubsBySportsPrice ( 'sports',
+        $sports, $price ), MYSQLI_ASSOC );
     if ( $clubs === false) {
       $clubs = array ();
     }
