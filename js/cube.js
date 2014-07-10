@@ -153,7 +153,10 @@ function adjust(){
   // too much if the screen is bigger, hence the 2 values - 100 and 250
   // 100 comes from the zoomIn func - 80px inwards + 20px margin
   if(version == 'chrome' || version == 'firefox' || version == 'iphone'){
-      inwardsOffset = 100;
+    inwardsOffset = 100;
+  }
+  else if( version == 'ipad' ){
+	inwardsOffset = determiningSide - 630;
   }
   else{
       inwardsOffset = 250;
@@ -196,12 +199,12 @@ $(document).ready(function() {
   
   // finishes the tutorial if in tutorial mode
   if( sessionStorage.tutorialModeOn == 'true'){
-	
+
 	$('#help').attr('src','img/help-dis.png').css('cursor','default')
     helpPressed = true;
 	
     $('#curtain').fadeIn(1000);
-	$('#front-explanation').show();
+	setTimeout(function(){$('#front-explanation').fadeIn(1000)}, 2000);
     sessionStorage.tutorialModeOn = 'false';
 	cubeNotLocked = '';
   }
@@ -641,7 +644,7 @@ $('img').on('dragstart', function(event) { event.preventDefault(); });
 // function
 $('body').keydown( function (evt){
 
-    var type;
+    var type = '';
     switch (evt.keyCode)
     {
       case 39:  // right arrow
@@ -666,7 +669,7 @@ $('body').keydown( function (evt){
         break;
     }
 
-    if (cubeNotLocked == 'all' ||
+    if ((cubeNotLocked == 'all' && (type=='up' || type=='down' || type=='left' || type=='right')) ||
         (cubeNotLocked == 'left'  && type == 'left') ||
         (cubeNotLocked == 'right' && type == 'right') ||
         (cubeNotLocked == 'up'    && type == 'up') ||
