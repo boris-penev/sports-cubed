@@ -9,31 +9,20 @@
 # $array_input = json_decode ( wh_db_get_input_string ( 'array' ) ) or die();
 
   $sports = wh_db_get_input_string ( 'sports' );
-  if ( wh_not_null ($sports) )
+  if ( wh_not_null ($sports) && ($json = json_decode ( $sports )) !== false )
   {
-    $json = json_decode ( $sports );
-    if ( $json !== false )
-    {
-      $sports = $json;
-    } else {
-      unset ($sports);
-    }
+    $sports = $json;
+    $json = [];
   } else {
-    unset ($sports);
+    $sports = [];
   }
 
   $days = wh_db_get_input_string ( 'days' );
-  if ( wh_not_null ($days) )
+  if ( wh_not_null ($days) && ($json = json_decode ( $days )) !== false )
   {
-    $json = json_decode ( $days );
-    if ( $json !== false )
-    {
-      $days = $json;
-    } else {
-      unset ($days);
-    }
+    $days = $json;
   } else {
-    unset ($days);
+    $days = [];
   }
 
   $price = wh_db_get_input_string ( 'price' );
@@ -41,30 +30,21 @@
   {
     $price = (float) $price;
   } else {
-    unset ($price);
+    $price = null;
   }
 
   $time_open = wh_db_get_input_string ( 'time_open' );
-  if ( strlen ($time_open) != 0 && wh_not_null ($time_open)
-    && $time_open != '00:00:00' && strtotime($time_open) != false )
-  {
-    //opening time is fine
-  } else {
-    unset ($time_open);
-  }
-
   $time_close = wh_db_get_input_string ( 'time_close' );
-  if ( isset ($time_open) && strlen ($time_close) != 0 && wh_not_null ($time_close)
-    && $time_close != '00:00:00' && strtotime($time_close) != false )
+  if ( strlen ($time_open) != 0 && wh_not_null ($time_open)
+      && $time_open != '00:00:00' && strtotime($time_open) != false &&
+      strlen ($time_close) != 0 && wh_not_null ($time_close) &&
+      $time_close != '00:00:00' && strtotime($time_close) != false )
   {
-    //closing time is fine
+    $time = ['open' => $time_open, 'close' => $time_close];
   } else {
     unset ($time_close);
     unset ($time_open);
-  }
-
-  if ( isset ($time_open) && isset ($time_close) ) {
-    $time = array ($time_open, $time_close);
+    $time = [];
   }
 
 # var_dump ( $sports );
@@ -76,10 +56,10 @@
 # $days = array_values ( $days );
 
 
-  if ( isset ($sports) && isset ($price) && isset ($time) )
+  if ( $sports !== [] && ($days !== [] || $time !== [] || $price !== null) )
   {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysPriceTime ( 'sports',
-      $sports, $days, $price, $time ), MYSQLI_ASSOC );
+    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysTimePrice ( 'sports',
+      $sports, $days, $time, $price ), MYSQLI_ASSOC );
     if ( $clubs === false) {
       $clubs = array ();
     }
@@ -87,74 +67,29 @@
       $clubs[$key]['sports'] = wh_db_fetch_all_custom (
         getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
     }
-#   echo var_dump ( $clubs );
     echo json_encode ( $clubs );
   }
-  elseif ( isset ($sports) && isset ($price) )
-  {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsPrice ( 'sports',
-        $sports, $price ), MYSQLI_ASSOC );
-    if ( $clubs === false) {
-      $clubs = array ();
-    }
-    foreach ( $clubs as $key => $value ) {
-      $clubs[$key]['sports'] = wh_db_fetch_all_custom (
-        getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
-    }
-#   echo var_dump ( $clubs );
-    echo json_encode ( $clubs );
-  }
-  elseif ( isset ($sports) && isset ($time) )
-  {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysTime ( 'sports',
-      $sports, $days, $time ), MYSQLI_ASSOC );
-    if ( $clubs === false) {
-      $clubs = array ();
-    }
-    foreach ( $clubs as $key => $value ) {
-      $clubs[$key]['sports'] = wh_db_fetch_all_custom ( getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
-    }
-#   echo var_dump ( $clubs );
-    echo json_encode ( $clubs );
-  }
-  elseif ( isset ($sports) && isset ($days) )
-  {
-    $clubs = wh_db_fetch_all_custom ( getClubsBySportsDays ( 'sports', $sports,
-            $days ), MYSQLI_ASSOC );
-    if ( $clubs === false) {
-      $clubs = array ();
-    }
-    foreach ( $clubs as $key => $value ) {
-      $clubs[$key]['sports'] = wh_db_fetch_all_custom ( getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
-    }
-#   echo var_dump ( $clubs );
-    echo json_encode ( $clubs );
-  }
-  elseif ( isset ($sports) )
+  elseif ( $sports !== [] )
   {
     $clubs = wh_db_fetch_all_custom ( getClubsBySports ( 'sports', $sports ),
                                       MYSQLI_ASSOC );
-#   var_dump ( $club );
     if ( $clubs === false) {
       $clubs = array ();
     }
     foreach ( $clubs as $key => $value ) {
       $clubs[$key]['sports'] = wh_db_fetch_all_custom ( getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
     }
-#   echo var_dump ( $clubs );
     echo json_encode ( $clubs );
   }
   else
   {
     $clubs = wh_db_fetch_all_custom ( getClubs ( ), MYSQLI_ASSOC );
-#   var_dump ( $club );
     if ( $clubs === false) {
       $clubs = array ();
     }
     foreach ( $clubs as $key => $value ) {
       $clubs[$key]['sports'] = wh_db_fetch_all_custom ( getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
     }
-#   echo var_dump ( $clubs );
     echo json_encode ( $clubs );
   }
 
