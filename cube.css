@@ -243,13 +243,13 @@ makes the application responsive ***/
 /*** Responsible for creating the perspective and the 3D effects ***/
 #cubeFrame {
   text-align: center;
-  perspective:2000px;
+  perspective:1500px;
   perspective-origin:50% 50%;
-  -webkit-perspective:2000px;
+  -webkit-perspective:1500px;
   -webkit-perspective-origin:50% 50%;
-  -moz-perspective:2000px;
+  -moz-perspective:1500px;
   -moz-perspective-origin:50% 50%;
-  -o-perspective:2000px;
+  -o-perspective:1500px;
   -o-perspective-origin:50% 50%;
   top:0;
   left:0;
@@ -456,7 +456,9 @@ makes the application responsive ***/
    height: 50px;
    cursor: pointer;
    position: absolute;
-   margin-left: 190px;
+   top: 0;
+   left: 0;
+   margin-left: 440px;
    margin-top: 10px;
 }
 

@@ -93,6 +93,12 @@ function adjust(){
 
   //putting the help button on the right of the screen
   $('#help').css('margin-left', (width-60) + "px");
+  if( width > height){
+    $('#help').css('margin-top', (height/2-20) + "px");
+  }
+  else{
+    $('#help').css('margin-top', "10px");
+  }
   
   // aligning the cube equally from the left and the righr of the screen;
   // 500 is the side of the cube
@@ -163,7 +169,7 @@ function adjust(){
   }
   inwards = true;
   }
-  depth = 2000 * (630 / (determiningSide-inwardsOffset) - 1);
+  depth = 1500 * (630 / (determiningSide-inwardsOffset) - 1);
   
   //alert(depth);
   
