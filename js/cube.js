@@ -46,6 +46,10 @@ var determinerDirection;
 // browser when in landscape mode and when the address bar hides
 var windowHeight;
 
+// determines whether the green slide buttons on Activities are allowed to be
+// pressed
+var allowedToPress = true;
+
 // used to lock cube when demonstrating the tutorial
 var cubeNotLocked = 'all';
 
@@ -415,24 +419,26 @@ $( document ).on( "click", "#close-help", function() {
 });
 
 $('#sports-left-navigator').click(function(){
-	if(currentSportsPage > 0){
+	if(currentSportsPage > 1 && allowedToPress == true){
+		allowedToPress = false;
 		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
 		if(currentMargin < 0){
 			currentMargin += 438;
 		$('#sports-slider').stop(true, false).animate({
-		'marginLeft': currentMargin + 'px'}, 200)
+		'marginLeft': currentMargin + 'px'}, 300, function(){ allowedToPress = true })
 		}
 		currentSportsPage -= 1;
 	}
 })
 
 $('#sports-right-navigator').click(function(){
-    if(currentSportsPage < 4){
+    if(currentSportsPage < numberOfSportsPages && allowedToPress == true){
+		allowedToPress = false;
 		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
 		if(currentMargin > -2190){
 		currentMargin -= 438;
 		$('#sports-slider').stop(true, false).animate({
-		'marginLeft': currentMargin + 'px'}, 200)
+		'marginLeft': currentMargin + 'px'}, 300, function(){ allowedToPress = true })
 		}
 		currentSportsPage += 1;
 	}
