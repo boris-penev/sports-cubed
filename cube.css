@@ -12,14 +12,13 @@ body {
   -ms-user-select: none;
   user-select: none;
   
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Verdana';
 }
 
 p {
   font-size:24px;
   color:#4CBB17;
   font-weight:bold;
-  font-family:'Calibri';
   text-shadow:1px 1px black;
   margin-top:5px;
 }
@@ -33,10 +32,8 @@ input[type=radio] + label{
 		display:inline-block;
 		padding: 5px;
 		text-align: center;
-		font-size: 25px;
-		line-height: 50px;
+		font-size: 22px;
 		color: black;
-		font-weight: bold;
 		text-align: center;
 		vertical-align: middle;
 		cursor: pointer;
@@ -136,7 +133,7 @@ select[disabled]{
   margin: 420px 0 0 0;
 }
 
-.time_wrapper {
+.time-wrapper {
   margin:10px 0 0 0;
   width:37%;
   float: left;
@@ -152,20 +149,11 @@ select[disabled]{
   padding:0px;
 }
 
-.price_wrapper {
-  margin:8px 0 0 0;
-  width:47%;
-  float: left;
-  text-align:center;
-  padding:5px 5px 10px 5px;
-}
-
 /*** time-togglers ***/
 .time-togglers {
-  font-size:30px;
-  color:#4CBB17;
+  font-size:25px;
+  color:white;
   font-weight:bold;
-  font-family:'Calibri';
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin-top:10px;
   text-align: center;
@@ -173,10 +161,9 @@ select[disabled]{
 
 /*** sports-togglers ***/
 .sports-togglers {
-  font-size:23px;
-  color:#4CBB17;
+  font-size:21px;
+  color:white;
   font-weight:bold;
-  font-family:'Calibri';
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin: 4px auto 0 auto;
   text-align: center;
@@ -208,10 +195,10 @@ select[disabled]{
 }
 
 .price-wrapper{
-  width: 250px; 
-  height: 200px; 
+  width: 500px; 
+  height: 60px; 
   float: left; 
-  margin: 60px auto 30px auto;
+  margin: 0px auto 10px auto;
 }
 
 .help-buttons {
@@ -243,13 +230,13 @@ makes the application responsive ***/
 /*** Responsible for creating the perspective and the 3D effects ***/
 #cubeFrame {
   text-align: center;
-  perspective:1500px;
+  perspective:1800px;
   perspective-origin:50% 50%;
-  -webkit-perspective:1500px;
+  -webkit-perspective:1800px;
   -webkit-perspective-origin:50% 50%;
-  -moz-perspective:1500px;
+  -moz-perspective:1800px;
   -moz-perspective-origin:50% 50%;
-  -o-perspective:1500px;
+  -o-perspective:1800px;
   -o-perspective-origin:50% 50%;
   top:0;
   left:0;
@@ -375,7 +362,6 @@ makes the application responsive ***/
   font-size:50px;
   color:#4CBB17;
   font-weight:bold;
-  font-family:'Calibri';
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin-top:20px;
   text-align: center;
@@ -406,28 +392,16 @@ makes the application responsive ***/
   left:0;
 }
 
-#priceSlider{
-	margin-top: 60px;
-}
-
-#priceSliderLabel{
-	font-size: 50px;
-	font-family: cursive;
-	text-shadow: 2px 2px black;
-	color: #49BB0E;
-	
-}
-
 #disclaimer{
 	width: 400px;
 	height: 90px;
 	background-color: #606060;
 	border-radius: 10px;
-	margin: 0px auto 10px auto;
+	margin: 100px auto 10px auto;
 	padding: 10px;
-	color: #49BB0E;
+	color: white;
 	text-shadow: 1px 1px black;
-	font-weight: bold;
+	font-size: 20px;
 }
 
 #help{

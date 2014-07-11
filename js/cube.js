@@ -173,7 +173,7 @@ function adjust(){
   }
   inwards = true;
   }
-  depth = 1500 * (630 / (determiningSide-inwardsOffset) - 1);
+  depth = 1800 * (650 / (determiningSide-inwardsOffset) - 1);
   
   //alert(depth);
   
