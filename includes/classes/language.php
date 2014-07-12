@@ -57,9 +57,9 @@
 
       $this->catalog_languages = array();
       $this->catalog_languages['en'] = array ('id' => '1',
-																							'name' => 'English',
-																							'image' => 'icon.gif',
-																							'directory' => 'english');
+                                              'name' => 'English',
+                                              'image' => 'icon.gif',
+                                              'directory' => 'english');
 
       $this->browser_languages = '';
       $this->language = '';
@@ -76,7 +76,7 @@
     }
 
     function get_browser_language() {
-		}
-      
+    }
+
   }
 ?>

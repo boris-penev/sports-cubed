@@ -18,8 +18,8 @@
 
 </div> <!-- bodyWrapper //-->
 
-	<!-- Custom Scripts -->
-	<script type="text/javascript" src="includes/general-local.js"></script>
+  <!-- Custom Scripts -->
+  <script type="text/javascript" src="includes/general-local.js"></script>
 
 </body>
 </html>
