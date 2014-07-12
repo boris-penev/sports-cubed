@@ -45,16 +45,6 @@
     $data = curl_exec($curl);
     curl_close($curl);
     return $data;
-//    CLI equivalents
-//    This will be removed but can be found with `$ hg grep`
-//    wget --quiet --output-document=- \'.$url.\' > /dev/null
-//    curl --silent \'.$url.\' > /dev/null
-//     $out = array();
-//     $status = -1;
-//     exec( '/path/to/sync.sh', $out, $status );
-//     if ( $status != 0 ) {
-//         // shell script indicated an error return
-//     }
   }
 
   function get_first_element ( $entity )
