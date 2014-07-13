@@ -71,7 +71,7 @@ input[type=radio]:checked + label{
 select {
        width: 240px;
        padding: 5px;
-       font-size: 25px;
+       font-size: 22px;
        background-color: white;
 	   margin: 50px auto 0 auto;
 	   text-align: center;
@@ -79,7 +79,6 @@ select {
        border: 0;
        border-radius: 5px;
        box-shadow: 1px 1px 1px black;
-       height: 40px;
        }
 select[disabled]{
 
