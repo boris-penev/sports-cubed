@@ -57,6 +57,10 @@
 # $sports = array_values ( $sports );
 # $days = array_values ( $days );
 
+  // TODO Fetch the sports and replace their names with their id's, so there to
+  // be no joins with the sports table
+  // TODO getClubsBySportsDaysTimePrice should only return club id's, so there
+  // to be no joins with the clubs table
 
   if ( $sports !== [] && ($days !== [] || $time !== [] || $price !== null) )
   {

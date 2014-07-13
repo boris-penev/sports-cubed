@@ -387,6 +387,12 @@
       $query .= ", {$entity_table} as " . $entity_table . $i;
     }
     $query .= ' where 1';
+    if ( ! is_null ($time) ) {
+      $query .= ' and not (clubs.opening_time is not null';
+      $query .= ' and clubs.closing_time is not null';
+      $query .= " and '{$time['close']}' <= clubs.opening_time";
+      $query .= " or clubs.closing_time <= '{$time['open']}')";
+    }
     for ( $i = 0; $i < $counter; ++$i )
     {
       $query .= " and clubs.id = {$junction_table}{$i}.club_id";
@@ -403,8 +409,10 @@
         $query .= " or {$junction_table}{$i}.price_nonmember <= {$price})";
       }
       if ( ! is_null ($time) ) {
-        $query .= " and not ( '{$time['close']}' <= {$junction_table}{$i}.opening_time";
-        $query .= " or {$junction_table}{$i}.closing_time <= '{$time['open']}' )";
+        $query .= ' and not (clubs.opening_time is not null';
+        $query .= ' and clubs.closing_time is not null';
+        $query .= " and '{$time['close']}' <= {$junction_table}{$i}.opening_time";
+        $query .= " or {$junction_table}{$i}.closing_time <= '{$time['open']}')";
       }
       foreach ( $days as $day )
       {
@@ -415,8 +423,10 @@
           $query .= " or {$junction_table}{$i}.price_nonmember <= {$price})";
         }
         if ( ! is_null ($time) ) {
-          $query .= " and not ( '{$time['close']}' <= {$junction_table}{$i}.opening_time";
-          $query .= " or {$junction_table}{$i}.closing_time <= '{$time['open']}' )";
+          $query .= ' and not (clubs.opening_time is not null';
+          $query .= ' and clubs.closing_time is not null';
+          $query .= " and '{$time['close']}' <= {$junction_table}{$i}.opening_time";
+          $query .= " or {$junction_table}{$i}.closing_time <= '{$time['open']}')";
         }
       }
       $query .= " )";
