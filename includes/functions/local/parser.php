@@ -12,6 +12,8 @@
     'comment' => '',
     'time' => '',
     'price' => '',
+    'sports' => '',
+    'facilities' => ''
   ];
 
   $day_regex = '(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday'
@@ -156,7 +158,7 @@
     $times = str_replace ( "\r", '', $times );
 #   $times = str_replace ( "\n", ', ', $times );
     $prices = str_replace ( "\r", '', $prices );
-    $prices = str_replace ( "\n", ', ', $prices );
+#   $prices = str_replace ( "\n", ', ', $prices );
 #   $comment = str_replace ( "\r", '', $comment );
 #   $comment = str_replace ( "\n", ', ', $comment );
     $current['sports'] = $sports;
@@ -181,6 +183,7 @@
   function process_clubs ( $xml, $query )
   {
     $arr = [];
+    $sports = wh_db_fetch_all_custom ( getSports ( ), MYSQLI_ASSOC );
     delete_clubs ();
     foreach ( $xml->xpath('/entries/entry' . $query) as $club )
     {
@@ -269,6 +272,8 @@
                           'insert on duplicate key update' );
         }
       }
+
+      $sports_club = parse_sports ($sports, $current_club ['sports']);
 
       $arr[] = $current_club;
 #     var_dump ($current_club);
@@ -719,6 +724,63 @@
       }
 
       return $prices;
+    }
+    return [];
+  }
+
+  function parse_sports ( $sports, $sports_club )
+  {
+    if ( $sports_club === '' ) {
+      return;
+    }
+    echo '<p>' . nl2br (wh_output_string_protected ($sports)) .
+         '</p>' . PHP_EOL;
+
+    $subject = $sports_club;
+    $subject = strtolower ( $subject );
+    // Replacing m dashes and other characters
+    // Otherwise the parsing did not parse em dash
+    $subject = unicode_fix ( $subject );
+    $subject = str_replace ('weekday', 'workweek', $subject);
+    $subject = str_replace ('non member', 'nonmember', $subject);
+
+    $sports_club = [];
+
+    for ( $sport in $sports )
+    {
+      $entry = $parse_sport ( $sport, $subject );
+      if ( $entry != [] ) {
+        $sports_club [] = $entry;
+      }
+    }
+    return $sports_club;
+  }
+
+  function parse_sport ( $sport, $sports_club )
+  {
+    global $day_regex;
+    global $time_regex;
+    global $price_regex;
+
+    $pattern = '/' . $sport .
+        '(?:(?:(?P<start_day>'.$day_regex.')(?:\s*-\s*(?P<end_day>'.$day_regex.'))'.
+        ')|' .
+        '(?:(?:(?P<day1>(?:'.$day_regex.'|workweek|weekend|everyday)))';
+    for ( $i = 2; $i < 8; ++$i ) {
+      $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day_regex."|workweek|weekend|everyday)))?";
+    }
+    $pattern .= '))' .
+        '(?:\s*(?::|,)\s*(?P<open_time>'.$hour_regex.')\s*-\s*(?P<close_time>'.
+        $hour_regex.'))?' .
+        '(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>'.$price_regex.')'.
+        '\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>'.$price_regex.'))?/';
+#   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
+#   echo nl2br ( wordwrap ( wh_output_string_protected
+#         ($pattern), 80, PHP_EOL, TRUE));
+    if (preg_match_all ($pattern, $subject, $matches))
+    {
+      // TODO Write code here
+      return $sports;
     }
     return [];
   }

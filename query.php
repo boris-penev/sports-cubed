@@ -57,6 +57,7 @@
 # $sports = array_values ( $sports );
 # $days = array_values ( $days );
 
+  // TODO Price member
   // TODO Fetch the sports and replace their names with their id's, so there to
   // be no joins with the sports table
   // TODO getClubsBySportsDaysTimePrice should only return club id's, so there
