@@ -277,6 +277,8 @@
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
     $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.opening_time, clubs.closing_time';
+    $query .= ', clubs.price_member, clubs.price_nonmember';
     $query .= ' from clubs';
     $data = array_values ( $data );
     $counter = count ( $data );
@@ -322,6 +324,8 @@
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
     $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.opening_time, clubs.closing_time';
+    $query .= ', clubs.price_member, clubs.price_nonmember';
     $query .= ' from clubs';
     $data = array_values ( $data );
     $counter = count ( $data );
@@ -380,6 +384,8 @@
     $query = 'select clubs.id as id, clubs.name as name';
     $query .= ', clubs.latitude, clubs.longtitude';
     $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.opening_time, clubs.closing_time';
+    $query .= ', clubs.price_member, clubs.price_nonmember';
     $query .= ' from clubs';
     $data = array_values ( $data );
     $counter = count ( $data );
