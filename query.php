@@ -27,10 +27,15 @@
     $days = [];
   }
 
-  $price = wh_db_get_input_string ( 'price' );
-  if ( strlen ($price) != 0 && is_numeric ( $price ) )
+  $price_member = wh_db_get_input_string ( 'price_member' );
+  $price_nonmember = wh_db_get_input_string ( 'price_nonmember' );
+  if ( strlen ($price_nonmember) != 0 && is_numeric ( $price_nonmember ) )
   {
-    $price = (float) $price;
+    $price = ['nonmember' => (float) $price_nonmember];
+  }
+  else if ( strlen ($price_member) != 0 && is_numeric ( $price_member ) )
+  {
+    $price = ['member' => (float) $price_member];
   } else {
     $price = null;
   }
@@ -57,7 +62,6 @@
 # $sports = array_values ( $sports );
 # $days = array_values ( $days );
 
-  // TODO Price member
   // TODO Fetch the sports and replace their names with their id's, so there to
   // be no joins with the sports table
   // TODO getClubsBySportsDaysTimePrice should only return club id's, so there
