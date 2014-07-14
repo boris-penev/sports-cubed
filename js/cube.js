@@ -395,7 +395,7 @@ $('#help').click(function(){
     cubeNotLocked = '';
     $('#'+currentWall+' > div').hide();
     $('#'+currentWall).append('<div id="help-window">' +
-  		'<img id="close-help" src="img/help-close.png"><br/><br/><br/><br/>'+
+  		'<img id="close-help" src="img/help-close.jpg"><br/><br/><br/><br/>'+
   		'Sports Cubed <br/><br/><br/> Help' +
   	    '<img id="how-to" class="help-buttons" src="img/how-to.jpg">'+
   		'<a href="about.html" target="blank">' +
@@ -410,7 +410,7 @@ $('#help').click(function(){
 
 $( document ).on( "click", "#close-help", function() {
 
-  $('#help').attr('src','img/help.png').css('cursor','pointer')
+  $('#help').attr('src','img/help.jpg').css('cursor','pointer')
   helpPressed = false;
   cubeNotLocked = 'all';
   $('#help-window').remove();
