@@ -67,7 +67,7 @@
   // TODO getClubsBySportsDaysTimePrice should only return club id's, so there
   // to be no joins with the clubs table
 
-  if ( $sports !== [] && ($days !== [] || $time !== [] || $price !== null) )
+  if ( $days !== [] || $time !== [] || $price !== null )
   {
     $clubs = wh_db_fetch_all_custom ( getClubsBySportsDaysTimePrice ( 'sports',
       $sports, $days, $time, $price ), MYSQLI_ASSOC );
