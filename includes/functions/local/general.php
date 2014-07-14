@@ -9,7 +9,6 @@
           '<h1>' . nl2br ( $notice ) . '</h1>',
           '[WHALE STOP]', PHP_EOL,
           '</div>';
-    die;
   }
 
   /**
