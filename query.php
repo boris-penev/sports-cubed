@@ -114,33 +114,6 @@
     echo json_encode ( $clubs );
   }
 
-  // The following code serves as an automatic test
-//   foreach ( $clubs as $key => $value ) {
-// #   var_dump ($clubs [$key] ['sports']);
-//     $s1 [] = $clubs[$key]['sports'];
-//   }
-//   foreach ( $clubs as $club2 )
-//   {
-//     $found = false;
-//     foreach ( $club2['sports'] as $club )
-//     {
-//       foreach ( $sports as $sport )
-//       {
-// #       var_dump ( $sport );
-// #       var_dump ( $club [0] );
-//         if ( $sport === $club [0] )
-//         {
-//           wh_notice ( 'ok' );
-//           $found = true;
-//         }
-//       }
-//     }
-//     if ( $found === false ) {
-//       var_dump ( $club [0] );
-//       wh_notice ( 'bad' );
-//     }
-//   }
-
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 
 ?>
