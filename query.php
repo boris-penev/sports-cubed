@@ -54,6 +54,15 @@
     $time = [];
   }
 
+  foreach ( $sports as &$value ) {
+    $value = strtolower ( $value );
+  }
+  unset ( $value );
+  foreach ( $days as &$value ) {
+    $value = strtolower ( $value );
+  }
+  unset ( $value );
+
 # var_dump ( $sports );
 # var_dump ( $days );
 # var_dump ( $time );
@@ -88,7 +97,8 @@
       $clubs = array ();
     }
     foreach ( $clubs as $key => $value ) {
-      $clubs[$key]['sports'] = wh_db_fetch_all_custom ( getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
+      $clubs[$key]['sports'] = wh_db_fetch_all_custom (
+            getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
     }
     echo json_encode ( $clubs );
   }
@@ -103,6 +113,33 @@
     }
     echo json_encode ( $clubs );
   }
+
+  // The following code serves as an automatic test
+//   foreach ( $clubs as $key => $value ) {
+// #   var_dump ($clubs [$key] ['sports']);
+//     $s1 [] = $clubs[$key]['sports'];
+//   }
+//   foreach ( $clubs as $club2 )
+//   {
+//     $found = false;
+//     foreach ( $club2['sports'] as $club )
+//     {
+//       foreach ( $sports as $sport )
+//       {
+// #       var_dump ( $sport );
+// #       var_dump ( $club [0] );
+//         if ( $sport === $club [0] )
+//         {
+//           wh_notice ( 'ok' );
+//           $found = true;
+//         }
+//       }
+//     }
+//     if ( $found === false ) {
+//       var_dump ( $club [0] );
+//       wh_notice ( 'bad' );
+//     }
+//   }
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 
