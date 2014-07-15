@@ -189,20 +189,21 @@
     array_replace_value ( $days, 'saturday', 6 );
     array_replace_value ( $days, 'sunday', 7 );
     array_replace_value ( $days, 'everyday', 8 );
-    array_replace_value ( $days, 'whole week', 8 );
+#   array_replace_value ( $days, 'whole week', 8 );
 #   array_replace_value ( $days, 'workweek', 9 );
 #   array_replace_value ( $days, 'weekend', 10 );
 #   var_dump ( $days );
     $days = array_intersect ( $days, range(1, 8) );
-    if ( in_array ( 8, $days ) ) {
-      return false;
-    }
-    if ( in_array ( 1, $days ) || in_array ( 2, $days ) || in_array ( 3, $days ) ||
-         in_array ( 4, $days ) || in_array ( 5, $days ) )
+#   if ( in_array ( 8, $days ) ) {
+#     return false;
+#   }
+    if ( in_array (1, $days) || in_array (2, $days) ||
+          in_array (3, $days) || in_array (4, $days) ||
+          in_array (5, $days) || in_array (8, $days) )
     {
       array_push ( $days, 9 );
     }
-    if ( in_array ( 6, $days ) || in_array ( 7, $days ) )
+    if ( in_array (6, $days) || in_array (7, $days) || in_array (8, $days) )
     {
       array_push ( $days, 10 );
     }
@@ -212,10 +213,10 @@
 #   }
     // If all days are selected, simply return false
     // This means there is no need for days check in queries
-    $real_days = array_intersect ( $days, range(1, 7) );
-    if ( $real_days == range (1, 7) ) {
-      return false;
-    }
+#   $real_days = array_intersect ( $days, range(1, 7) );
+#   if ( $real_days == range (1, 7) ) {
+#     return false;
+#   }
 #   var_dump ( $days );
 #   array_push ( $days, 8 );
     $days = array_unique ( $days, SORT_NUMERIC );
@@ -258,53 +259,6 @@
    * @param $data array with entities - sports or facilities
    * @return query result
    */
-  function getClubsBySports ( $table, $data )
-  {
-    if ( $table == 'sports' )
-    {
-      $entity_table = 'sports';
-      $junction_table = 'clubosport';
-      $entity_id = 'sport_id';
-    }
-    else if ( $table == 'facilities' )
-    {
-      $entity_table = 'facilities';
-      $junction_table = 'club_facilities';
-      $entity_id = 'facility_id';
-    } else {
-      wh_error ('Check your SQL queries');
-    }
-    $query = 'select clubs.id as id, clubs.name as name';
-    $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
-    $query .= ', clubs.opening_time, clubs.closing_time';
-    $query .= ', clubs.price_member, clubs.price_nonmember';
-    $query .= ' from clubs';
-    $data = array_values ( $data );
-    $counter = count ( $data );
-    for ( $i = 0; $i < $counter; ++$i )
-    {
-      $query .= ", {$junction_table} as " . $junction_table . $i;
-      $query .= ", {$entity_table} as " . $entity_table . $i;
-    }
-    $query .= ' where 1';
-    for ( $i = 0; $i < $counter; ++$i )
-    {
-      $query .= " and clubs.id = {$junction_table}{$i}.club_id";
-      $query .= " and {$entity_table}{$i}.id = {$junction_table}{$i}.{$entity_id}";
-      $query .= " and {$entity_table}{$i}.name = '{$data[$i]}'";
-    }
-    $query .= ' group by id';
-#   $query .= ' order by id';
-#   echoQuery ($query);
-    return wh_db_query ( $query );
-  }
-
-  /**
-   * @param $table entity table - sports or facilities
-   * @param $data array with entities - sports or facilities
-   * @return query result
-   */
   function getClubsBySportsId ( $table, $data )
   {
     if ( $table == 'sports' )
@@ -327,18 +281,62 @@
     $query .= ', clubs.opening_time, clubs.closing_time';
     $query .= ', clubs.price_member, clubs.price_nonmember';
     $query .= ' from clubs';
+    $query .= ", {$junction_table} as " . $junction_table;
+    $query .= ' where';
     $data = array_values ( $data );
-    $counter = count ( $data );
-    for ( $i = 0; $i < $counter; ++$i )
+    foreach ( $data as $entity )
     {
-      $query .= ", {$junction_table} as " . $junction_table . $i;
+      $query .= " (clubs.id = {$junction_table}.club_id";
+      $query .= " and {$junction_table}.{$entity_id} = '{$entity}') or";
     }
-    $query .= ' where 1';
-    for ( $i = 0; $i < $counter; ++$i )
+    $query = substr ($query, 0, -3);
+    $query .= ' group by id';
+#   $query .= ' order by id';
+#   echoQuery ($query);
+    return wh_db_query ( $query );
+  }
+
+  /**
+   * @param $table entity table - sports or facilities
+   * @param $data array with entities - sports or facilities
+   * @return query result
+   */
+  function getClubsBySports ( $table, $data )
+  {
+    if ( $table == 'sports' )
     {
-      $query .= " and clubs.id = {$junction_table}{$i}.club_id";
-      $query .= " and {$junction_table}{$i}.{$entity_id} = '{$data[$i]}'";
+      $entity_table = 'sports';
+      $junction_table = 'clubosport';
+      $entity_id = 'sport_id';
     }
+    else if ( $table == 'facilities' )
+    {
+      $entity_table = 'facilities';
+      $junction_table = 'club_facilities';
+      $entity_id = 'facility_id';
+    } else {
+      wh_error ('Check your SQL queries');
+    }
+    $query = 'select clubs.id as id, clubs.name as name';
+    $query .= ', clubs.latitude, clubs.longtitude';
+    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
+    $query .= ', clubs.opening_time, clubs.closing_time';
+    $query .= ', clubs.price_member, clubs.price_nonmember';
+    $query .= ' from clubs';
+    $query .= ', ' . $junction_table;
+    $query .= ', ' . $entity_table;
+    $query .= ' where';
+    $query .= " clubs.id = {$junction_table}.club_id";
+    $query .= " and {$entity_table}.id = {$junction_table}.{$entity_id}";
+    $query .= ' and ';
+    $query .= $entity_table . '.name in (';
+    $data = array_values ( $data );
+    foreach ( $data as $entity )
+    {
+      $query .= "'{$entity}', ";
+    }
+    $query = substr ($query, 0, -2);
+    $query .= ')';
     $query .= ' group by id';
 #   $query .= ' order by id';
 #   echoQuery ($query);
@@ -367,6 +365,7 @@
          (! isset ($price ['nonmember']) || is_null ($price ['nonmember']))) ) {
       $price = [];
     }
+    $days = filterDays ( $days );
     if ( $table == 'sports' )
     {
       $entity_table = 'sports';
@@ -387,78 +386,83 @@
     $query .= ', clubs.opening_time, clubs.closing_time';
     $query .= ', clubs.price_member, clubs.price_nonmember';
     $query .= ' from clubs';
-    $data = array_values ( $data );
-    $counter = count ( $data );
-    for ( $i = 0; $i < $counter; ++$i )
-    {
-      $query .= ", {$junction_table} as " . $junction_table . $i;
-      $query .= ", {$entity_table} as " . $entity_table . $i;
-    }
-    $query .= ' where 1';
+    $query .= ', ' . $junction_table;
+    $query .= ', ' . $entity_table;
+    $query .= ' where';
     if ( ! is_null ($time) ) {
-      $query .= ' and not (clubs.opening_time is not null';
+      $query .= ' not (clubs.opening_time is not null';
       $query .= ' and clubs.closing_time is not null';
       $query .= " and '{$time['close']}' <= clubs.opening_time";
-      $query .= " or clubs.closing_time <= '{$time['open']}')";
+      $query .= " or clubs.closing_time <= '{$time['open']}') and";
     }
     if ( isset ($price ['member']) )
     {
-      $query .= " and (clubs.price_member is null";
-      $query .= " or clubs.price_member <= {$price ['member']})";
+      $query .= " (clubs.price_member is null";
+      $query .= " or clubs.price_member <= {$price ['member']}) and";
     }
     if ( isset ($price ['nonmember']) )
     {
-      $query .= " and (clubs.price_nonmember is null";
-      $query .= " or clubs.price_nonmember <= {$price ['nonmember']})";
+      $query .= " (clubs.price_nonmember is null";
+      $query .= " or clubs.price_nonmember <= {$price ['nonmember']}) and";
     }
-    for ( $i = 0; $i < $counter; ++$i )
+    $query .= " clubs.id = {$junction_table}.club_id";
+    $query .= " and {$entity_table}.id = {$junction_table}.{$entity_id} and";
+    if ( count ( $data > 0 ) )
     {
-      $query .= " and clubs.id = {$junction_table}{$i}.club_id";
-      $query .= " and {$entity_table}{$i}.id = {$junction_table}{$i}.{$entity_id}";
-      $query .= " and {$entity_table}{$i}.name = '{$data[$i]}'";
+      $query .= ' ';
+      $query .= $entity_table . '.name in (';
+      $data = array_values ( $data );
+      foreach ( $data as $entity )
+      {
+        $query .= "'{$entity}', ";
+      }
+      $query = substr ($query, 0, -2);
+      $query .= ') and';
     }
-    for ( $i = 0; $i < $counter; ++$i )
+    $query .= " (({$junction_table}.day_id = 8";
+    if ( isset ($price ['member']) )
     {
-      $query .= " and ({$junction_table}{$i}.day_id = 8";
-      if ( isset ($price ['member']) )
-      {
-        $query .= " and ({$junction_table}{$i}.price_member is null";
-        $query .= " or {$junction_table}{$i}.price_member <= {$price ['member']})";
-      }
-      if ( isset ($price ['nonmember']) )
-      {
-        $query .= " and ({$junction_table}{$i}.price_nonmember is null";
-        $query .= " or {$junction_table}{$i}.price_nonmember <= {$price ['nonmember']})";
-      }
-      if ( ! is_null ($time) ) {
-        $query .= ' and not (clubs.opening_time is not null';
-        $query .= ' and clubs.closing_time is not null';
-        $query .= " and '{$time['close']}' <= {$junction_table}{$i}.opening_time";
-        $query .= " or {$junction_table}{$i}.closing_time <= '{$time['open']}')";
-      }
-      $query .= ')';
+      $query .= " and ({$junction_table}.price_member is null";
+      $query .= " or {$junction_table}.price_member <= {$price ['member']})";
+    }
+    if ( isset ($price ['nonmember']) )
+    {
+      $query .= " and ({$junction_table}.price_nonmember is null";
+      $query .= " or {$junction_table}.price_nonmember <= {$price ['nonmember']})";
+    }
+    if ( ! is_null ($time) ) {
+      $query .= ' and not (clubs.opening_time is not null';
+      $query .= ' and clubs.closing_time is not null';
+      $query .= " and '{$time['close']}' <= {$junction_table}.opening_time";
+      $query .= " or {$junction_table}.closing_time <= '{$time['open']}')";
+    }
+    $query .= ') or ';
+    if ( count ( $days > 0 ) )
+    {
       foreach ( $days as $day )
       {
-        $query .= " or ({$junction_table}{$i}.day_id = {$day}";
+        $query .= "({$junction_table}.day_id = " . $day;
         if ( isset ($price ['member']) )
         {
-          $query .= " and ({$junction_table}{$i}.price_member is null";
-          $query .= " or {$junction_table}{$i}.price_member <= {$price ['member']})";
+          $query .= " and ({$junction_table}.price_member is null";
+          $query .= " or {$junction_table}.price_member <= {$price ['member']})";
         }
         if ( isset ($price ['nonmember']) )
         {
-          $query .= " and ({$junction_table}{$i}.price_nonmember is null";
-          $query .= " or {$junction_table}{$i}.price_nonmember <= {$price ['nonmember']})";
+          $query .= " and ({$junction_table}.price_nonmember is null";
+          $query .= " or {$junction_table}.price_nonmember <= {$price ['nonmember']})";
         }
         if ( ! is_null ($time) ) {
           $query .= ' and not (clubs.opening_time is not null';
           $query .= ' and clubs.closing_time is not null';
-          $query .= " and '{$time['close']}' <= {$junction_table}{$i}.opening_time";
-          $query .= " or {$junction_table}{$i}.closing_time <= '{$time['open']}')";
+          $query .= " and '{$time['close']}' <= {$junction_table}.opening_time";
+          $query .= " or {$junction_table}.closing_time <= '{$time['open']}')";
         }
-        $query .= ')';
+        $query .= ') or ';
       }
     }
+    $query = substr ($query, 0, -4);
+    $query .= ')';
     $query .= ' group by id';
 #   $query .= ' order by id';
 #   echoQuery ($query);
