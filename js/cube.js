@@ -225,53 +225,6 @@ $(document).ready(function() {
   // goes out of the viewport when it comes too close, unlike chrome and firefox
   
   browserRec(navigator.userAgent.toLowerCase());
-	  
-  // draw and populate the activities side
-  var sportsList = ['Football', 'Basketball', 'Golf', 'Swimming','Cricket','BMX',
-				  'Cycling','Badminton','Gym','Skateboard','Gymnastics',
-				  'Table tennis','Rugby','Hockey','Tennis','Athletics',
-				  'Volleyball','Bowling', '1','2','3','4','5','6','7','8','9',
-				  '10','11','12','13','14','15','16','17','18','Football',
-				  'Basketball', 'Golf', 'Swimming','Cricket','BMX','Cycling',
-				  'Badminton','Gym','Skateboard','Gymnastics','Table tennins',
-				  'Rugby','Hockey','Tennins','Athletics','Volleyball','Bowling',
-				  'test1', 'test2', 'test3']
-  numberOfSportsPages = Math.ceil(sportsList.length / 18);
-  drawActivities(sportsList);
-  
-  // we have the click handler for the sports togglers here because unlike the
-  // price and time togglers, the activities ones are generated dynamically by
-  // the function above - drawActivities
-  $('.yes-no-button-sports').click(function(){
-
-    var btn = $(this);
-    var state = btn.data('clicked');
-    if (state == "yes"){
-      btn.css('background-position','0px 0px');
-      btn.data('clicked', 'no');
-      var sport = btn.parent().text().toLowerCase();
-      var index = sportsToBeSubmitted.indexOf(sport);
-      sportsToBeSubmitted.splice(index, 1);
-    }
-    else {
-      btn.css('background-position','0px -35px');
-      btn.data('clicked', 'yes');
-      var sport = btn.parent().text().toLowerCase();
-	  if( sportsToBeSubmitted.indexOf( sport ) == -1 ){
-        sportsToBeSubmitted.push(sport);
-	  }
-    }
-
-    // if in tutorial mode - display the explanations
-    if(tutorialMode == true){
-         cubeNotLocked = 'left';
-    	 setTimeout(function(){$('#back-explanation').fadeIn(1000);
-    	 $('#swipe-back').fadeIn(1000, function(){
-    	 animateSwipe('back')
-     });
-    }, 500)}
-
-  })
 
 // check if we are coming from the map and "click" on the filters
 // that the user had already selected
@@ -330,7 +283,54 @@ $(document).ready(function() {
 
   adjust();
   
+  // draw and populate the activities side
+  var sportsList = ["aerobics","american football","aquafit","athletics","badminton","basketball","bmx","bowling","climbing","cricket","croquet","cycling","dancing","diving","fencing","fitness","football","golf","gymnastics","hiking","hockey","judo","kayaking","mountainbiking","orientation","rugby","skateboarding","skating","squash","swimming","table tennis","tennis","volleyball"]
+  for(var i = 0; i < sportsList.length; i++){
+	sportsList[i] = capitaliseFirstLetter(sportsList[i])
+  }
+  numberOfSportsPages = Math.ceil(sportsList.length / 18);
+  drawActivities(sportsList);
+  
+  // we have the click handler for the sports togglers here because unlike the
+  // price and time togglers, the activities ones are generated dynamically by
+  // the function above - drawActivities
+  $('.yes-no-button-sports').click(function(){
+
+    var btn = $(this);
+    var state = btn.data('clicked');
+    if (state == "yes"){
+      btn.css('background-position','0px 0px');
+      btn.data('clicked', 'no');
+      var sport = btn.parent().text().toLowerCase();
+      var index = sportsToBeSubmitted.indexOf(sport);
+      sportsToBeSubmitted.splice(index, 1);
+    }
+    else {
+      btn.css('background-position','0px -35px');
+      btn.data('clicked', 'yes');
+      var sport = btn.parent().text().toLowerCase();
+	  if( sportsToBeSubmitted.indexOf( sport ) == -1 ){
+        sportsToBeSubmitted.push(sport);
+	  }
+    }
+
+    // if in tutorial mode - display the explanations
+    if(tutorialMode == true){
+         cubeNotLocked = 'left';
+    	 setTimeout(function(){$('#back-explanation').fadeIn(1000);
+    	 $('#swipe-back').fadeIn(1000, function(){
+    	 animateSwipe('back')
+     });
+    }, 500)}
+
+  })
+  
 })
+
+function capitaliseFirstLetter(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 // using the HTML5 web storage instead of cookies to remember the user's
 // preferences when going from the cube to the map and backwards
