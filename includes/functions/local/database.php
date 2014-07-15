@@ -283,13 +283,16 @@
     $query .= ' from clubs';
     $query .= ", {$junction_table} as " . $junction_table;
     $query .= ' where';
+    $query .= " clubs.id = {$junction_table}.club_id";
+    $query .= ' and ';
+    $query .= $junction_table . $entity_id . ' in (';
     $data = array_values ( $data );
     foreach ( $data as $entity )
     {
-      $query .= " (clubs.id = {$junction_table}.club_id";
-      $query .= " and {$junction_table}.{$entity_id} = '{$entity}') or";
+      $query .= "'{$entity}', ";
     }
-    $query = substr ($query, 0, -3);
+    $query = substr ($query, 0, -2);
+    $query .= ')';
     $query .= ' group by id';
 #   $query .= ' order by id';
 #   echoQuery ($query);
