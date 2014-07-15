@@ -390,7 +390,9 @@
     $query .= ', clubs.price_member, clubs.price_nonmember';
     $query .= ' from clubs';
     $query .= ', ' . $junction_table;
-    $query .= ', ' . $entity_table;
+    if ( $data !== [] ) {
+      $query .= ', ' . $entity_table;
+    }
     $query .= ' where';
     if ( ! is_null ($time) ) {
       $query .= ' not (clubs.opening_time is not null';
@@ -408,12 +410,11 @@
       $query .= " (clubs.price_nonmember is null";
       $query .= " or clubs.price_nonmember <= {$price ['nonmember']}) and";
     }
-    $query .= " clubs.id = {$junction_table}.club_id";
-    $query .= " and {$entity_table}.id = {$junction_table}.{$entity_id} and";
-    if ( count ( $data > 0 ) )
+    $query .= " clubs.id = {$junction_table}.club_id and";
+    if ( $data !== [] )
     {
-      $query .= ' ';
-      $query .= $entity_table . '.name in (';
+      $query .= " {$entity_table}.id = {$junction_table}.{$entity_id} and";
+      $query .= ' ' . $entity_table . '.name in (';
       $data = array_values ( $data );
       foreach ( $data as $entity )
       {
