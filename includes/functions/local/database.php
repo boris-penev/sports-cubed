@@ -483,6 +483,28 @@
     return wh_db_query ( 'select * from facilities' );
   }
 
+  /**
+   * @return sports that are practised in at least one club
+   */
+  function getSportsNotLeaves ( )
+  {
+    $query = 'select sports.* from sports, clubosport ' .
+             'where sports.id = clubosport.sport_id ' .
+             'group by sports.id';
+    return wh_db_query ( $query );
+  }
+
+  /**
+   * @return facilities that are available in at least one club
+   */
+  function getFacilitiesNonOrpaned ( )
+  {
+    $query = 'select facilities.* from facilities, club_facilities ' .
+             'where sports.id = club_facilities.facility_id ' .
+             'group by facilities.id';
+    return wh_db_query ( $query );
+  }
+
   function getSportsOrderById ( )
   {
     return wh_db_query ( 'select * from sports order by id' );
