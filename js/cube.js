@@ -284,11 +284,11 @@ $(document).ready(function() {
   adjust();
   
   // draw and populate the activities side
-  var sportsList = ["aerobics","american football","aquafit","athletics","badminton","basketball","bmx","bowling","climbing","cricket","croquet","cycling","dancing","diving","fencing","fitness","football","golf","gymnastics","hiking","hockey","judo","kayaking","mountainbiking","orientation","rugby","skateboarding","skating","squash","swimming","table tennis","tennis","volleyball"]
+  var sportsList = ["aerobics", "american football", "aquafit","athletics","badminton","basketball","bmx","bowling","climbing","cricket","croquet","cycling","dancing","diving","fencing","fitness","football","golf","gymnastics","hiking","hockey","judo","kayaking","mountainbiking","orientation","rugby","skateboarding","skating","squash","swimming","table tennis","tennis","volleyball"]
   for(var i = 0; i < sportsList.length; i++){
 	sportsList[i] = capitaliseFirstLetter(sportsList[i])
   }
-  numberOfSportsPages = Math.ceil(sportsList.length / 18);
+  numberOfSportsPages = Math.ceil(sportsList.length / 12);
   drawActivities(sportsList);
   
   // we have the click handler for the sports togglers here because unlike the
@@ -398,7 +398,7 @@ $('#help').click(function(){
   		'<img id="close-help" src="img/help-close.jpg"><br/><br/><br/><br/>'+
   		'Sports Cubed <br/><br/><br/> Help' +
   	    '<img id="how-to" class="help-buttons" src="img/how-to.jpg">'+
-  		'<a href="about.html" target="blank">' +
+  		'<a href="about.html">' +
 		     '<img id="about-auth" class="help-buttons" src="img/about-auth.jpg">'+
 	    '</a>' +
         '</div>')
