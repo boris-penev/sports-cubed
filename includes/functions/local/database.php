@@ -500,7 +500,7 @@
   /**
    * @return facilities that are available in at least one club
    */
-  function getFacilitiesNonOrpaned ( )
+  function getFacilitiesNotLeaves ( )
   {
     $query = 'select facilities.* from facilities, club_facilities ' .
              'where sports.id = club_facilities.facility_id ' .
