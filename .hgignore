@@ -7,6 +7,9 @@ images
 *.png
 *.gif
 
+# auto generated documentation - like doxygen
+doc
+
 # os x folder info file
 .DS_Store
 

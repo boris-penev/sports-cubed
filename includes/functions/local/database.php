@@ -1,4 +1,6 @@
 <?php
+// doxygen fix
+// @cond DUMMY
   if ( ! function_exists ( 'mysqli_fetch_all' ) )
   {
     function mysqli_fetch_all ( $db_query, $resulttype = MYSQLI_ASSOC )
@@ -6,10 +8,11 @@
       $res = array();
       while ( $tmp = mysqli_fetch_array ($db_query, $resulttype) ) {
         $res[] = $tmp;
-      };
+      }
       return $res;
     }
   }
+// @endcond
 
   function wh_db_multi_query ($query, $link = 'db_link') {
     global $$link;
