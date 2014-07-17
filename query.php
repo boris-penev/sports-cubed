@@ -10,7 +10,7 @@
 
   $sports = wh_db_get_input_string ( 'sports' );
   if ( wh_not_null ($sports) && ($json = json_decode ( $sports )) !== false &&
-      is_array ($json) && count ($json) > 0 )
+      is_array ($json) && $json != [] )
   {
     $sports = $json;
     $json = [];
@@ -20,9 +20,12 @@
 
   $days = wh_db_get_input_string ( 'days' );
   if ( wh_not_null ($days) && ($json = json_decode ( $days )) !== false &&
-      is_array ($json) && count ($json) > 0 )
+      is_array ($json) && $json != [] )
   {
-    $days = $json;
+    $days = filterDays ($json);
+    if ( $days == range (1, 10) ) {
+      $days = [];
+    }
   } else {
     $days = [];
   }

@@ -196,39 +196,32 @@
 #   array_replace_value ( $days, 'workweek', 9 );
 #   array_replace_value ( $days, 'weekend', 10 );
 #   var_dump ( $days );
+    if ( in_array ( 8, $days ) ) {
+      return range (1, 10);
+    }
     $days = array_intersect ( $days, range(1, 8) );
-#   if ( in_array ( 8, $days ) ) {
-#     return false;
-#   }
     if ( in_array (1, $days) || in_array (2, $days) ||
-          in_array (3, $days) || in_array (4, $days) ||
-          in_array (5, $days) || in_array (8, $days) )
+         in_array (3, $days) || in_array (4, $days) ||
+         in_array (5, $days) )
     {
       array_push ( $days, 9 );
     }
-    if ( in_array (6, $days) || in_array (7, $days) || in_array (8, $days) )
+    if ( in_array (6, $days) || in_array (7, $days) )
     {
       array_push ( $days, 10 );
     }
+    array_push ( $days, 8 );
     // Not needed - the input doesn't currently contain 9 or 10
 #   if ( in_array ( 10, $days ) ) {
 #     array_push ( $days, 6, 7 );
 #   }
-    // If all days are selected, simply return false
+    // If all days are selected, simply return range (1, 10)
     // This means there is no need for days check in queries
 #   $real_days = array_intersect ( $days, range(1, 7) );
 #   if ( $real_days == range (1, 7) ) {
-#     return false;
+#     return range (1, 10);
 #   }
-#   var_dump ( $days );
-#   array_push ( $days, 8 );
     $days = array_unique ( $days, SORT_NUMERIC );
-#   foreach ( $days as $key=>$value )
-#   {
-#     $days[$key] = strtolower ($value);
-#   }
-#   var_dump ( $days );
-#   die ();
     return $days;
   }
 
@@ -359,8 +352,12 @@
    */
   function getClubsBySportsDaysTimePrice ( $table, $data, $days, $time, $price )
   {
-    if ( ! is_array ( $days ) || ! count ( $days ) ) {
-      $days = array ( );
+    if ( ! is_array ( $days ) || $days == [] ) {
+      $days = range (1, 10);
+      $days_selected = false;
+    }
+    else {
+      $days_selected = true;
     }
     if ( ! is_array ( $time ) || count ( $time ) !== 2 ||
           is_null ($time ['member']) || is_null ($time ['nonmember']) ) {
@@ -371,7 +368,6 @@
          (! isset ($price ['nonmember']) || is_null ($price ['nonmember']))) ) {
       $price = [];
     }
-    $days = filterDays ( $days );
     if ( $table == 'sports' )
     {
       $entity_table = 'sports';
@@ -426,46 +422,33 @@
       $query = substr ($query, 0, -2);
       $query .= ') and';
     }
-    $query .= " (({$junction_table}.day_id = 8";
-    if ( isset ($price ['member']) )
+    $query .= ' (';
+    foreach ( $days as $day )
     {
-      $query .= " and ({$junction_table}.price_member is null";
-      $query .= " or {$junction_table}.price_member <= {$price ['member']})";
-    }
-    if ( isset ($price ['nonmember']) )
-    {
-      $query .= " and ({$junction_table}.price_nonmember is null";
-      $query .= " or {$junction_table}.price_nonmember <= {$price ['nonmember']})";
-    }
-    if ( ! is_null ($time) ) {
-      $query .= ' and not (clubs.opening_time is not null';
-      $query .= ' and clubs.closing_time is not null';
-      $query .= " and '{$time['close']}' <= {$junction_table}.opening_time";
-      $query .= " or {$junction_table}.closing_time <= '{$time['open']}')";
-    }
-    $query .= ') or ';
-    if ( count ( $days > 0 ) )
-    {
-      foreach ( $days as $day )
+      $query .= '(';
+      if ( $days_selected ) {
+        $query .= "{$junction_table}.day_id = {$day} and";
+      }
+      if ( isset ($price ['member']) )
       {
-        $query .= "({$junction_table}.day_id = " . $day;
-        if ( isset ($price ['member']) )
-        {
-          $query .= " and ({$junction_table}.price_member is null";
-          $query .= " or {$junction_table}.price_member <= {$price ['member']})";
-        }
-        if ( isset ($price ['nonmember']) )
-        {
-          $query .= " and ({$junction_table}.price_nonmember is null";
-          $query .= " or {$junction_table}.price_nonmember <= {$price ['nonmember']})";
-        }
-        if ( ! is_null ($time) ) {
-          $query .= ' and not (clubs.opening_time is not null';
-          $query .= ' and clubs.closing_time is not null';
-          $query .= " and '{$time['close']}' <= {$junction_table}.opening_time";
-          $query .= " or {$junction_table}.closing_time <= '{$time['open']}')";
-        }
-        $query .= ') or ';
+        $query .= " ({$junction_table}.price_member is null";
+        $query .= " or {$junction_table}.price_member <= {$price ['member']}) and";
+      }
+      if ( isset ($price ['nonmember']) )
+      {
+        $query .= " ({$junction_table}.price_nonmember is null";
+        $query .= " or {$junction_table}.price_nonmember <= {$price ['nonmember']}) and";
+      }
+      if ( ! is_null ($time) ) {
+        $query .= ' not (clubs.opening_time is not null';
+        $query .= ' and clubs.closing_time is not null';
+        $query .= " and '{$time['close']}' <= {$junction_table}.opening_time";
+        $query .= " or {$junction_table}.closing_time <= '{$time['open']}') and";
+      }
+      $query = substr ($query, 0, -4);
+      $query .= ') or ';
+      if ( ! $days_selected ) {
+        break;
       }
     }
     $query = substr ($query, 0, -4);
