@@ -92,7 +92,6 @@ var interval = setInterval(function(){activityTimer();}, inactivity);
 // from the user) making it look smaller and fitting the screen. The result is
 // having a responsive website
 function adjust(){
-  alert("Adjusting");
   var height = $(window).height();
   var width = $(window).width();
 
@@ -207,10 +206,12 @@ function browserRec( userAgent ){
 
 
 $(document).ready(function() {
-  alert("Document loaded")
+
+	document.cookie="username=John Doe";
+	alert(document.cookie);
+
   // finishes the tutorial if in tutorial mode
   if( sessionStorage.tutorialModeOn == 'true'){
-	alert("In tutorial mode")
 	$('#help').attr('src','img/help-dis.png').css('cursor','default')
     helpPressed = true;
 	
@@ -226,14 +227,12 @@ $(document).ready(function() {
   // goes out of the viewport when it comes too close, unlike chrome and firefox
   
   browserRec(navigator.userAgent.toLowerCase());
-  alert("Browser is: " + version);
 // check if we are coming from the map and "click" on the filters
 // that the user had already selected
 // in this way we remember his/her preferences and they don't have to
 // input them again at each transition between the map and the cube
 
   if (sessionStorage.isComingFromMap == "yes"){
-	alert("Coming from map")
     sessionStorage.isComingFromMap = "no";
 	
 	sportsToBeSubmitted = sessionStorage.sports.split(',')
@@ -257,16 +256,16 @@ $(document).ready(function() {
 	
   }
   else {
-	alert("Not Coming from Map");
     sessionStorage.sports = null;
     sessionStorage.days = null;
-    sessionStorage.price = 'membership, free';
+    sessionStorage.setItem('price', 'membership, free');
+	alert( sessionStorage.price )
   }
 	
   // set some default properties and rotate the cube to the Bottom (Intro) side
   
   // debuging
-  //alert("Width: "+$(window).width()+", Height: "+ $(window).height())
+  // alert("Width: "+$(window).width()+", Height: "+ $(window).height())
 
   windowHeight = $(window).height();
 	
@@ -298,7 +297,6 @@ $(document).ready(function() {
   // price and time togglers, the activities ones are generated dynamically by
   // the function above - drawActivities
   $('.yes-no-button-sports').click(function(){
-	alert("Activities clicked")
     var btn = $(this);
     var state = btn.data('clicked');
     if (state == "yes"){
@@ -337,8 +335,7 @@ function capitaliseFirstLetter(string)
 
 // using the HTML5 web storage instead of cookies to remember the user's
 // preferences when going from the cube to the map and backwards
-$('#linkToMap').click(function(){ 
-  alert("Go to Map")
+$('#linkToMap').click(function(){
   sessionStorage.sports = sportsToBeSubmitted;
   sessionStorage.days = daysToBeSubmitted;
   sessionStorage.price = priceToBeSubmitted;
@@ -392,7 +389,6 @@ $(document).on( "click", "#how-to", function(){
 })
 
 $('#help').click(function(){
-  alert("Help pressed")
   if(helpPressed == false){
     $(this).attr('src','img/help-dis.png').css('cursor','default')
     helpPressed = true;
@@ -507,7 +503,6 @@ function animateSwipe(facingWall){
 // the map
 $('#one-time').click(function(){ 
 
-	alert("One time clicked")
 	var oneTimeCombo = $('#one-time').parent().find('select');
 	var membershipCombo = $('#membership').parent().find('select');
 	oneTimeCombo.removeAttr('disabled');
@@ -519,7 +514,6 @@ $('#one-time').click(function(){
 
 $('#membership').click(function(){ 
 
-	alert("Membership clicked")
 	var oneTimeCombo = $('#one-time').parent().find('select');
 	var membershipCombo = $('#membership').parent().find('select');
 	oneTimeCombo.prop('disabled','disabled');
@@ -565,7 +559,6 @@ $('#one-time').parent().find('select').change(function(){
 // the map
 $('.yes-no-button-time').click(function(){
 
-  alert("Time clicked")
   var btn = $(this);
   var btnLabel = btn.parent().text()
   var clicked = btn.data('clicked');
@@ -628,7 +621,6 @@ $('.yes-no-button-time').click(function(){
 // triggered if the screen dimensions change
 $(window).resize(function() {
 
-  alert("Window resized")
   // reseting the perpective and returning the center of the cube at (0,0,0)
   document.getElementById('cube').style[prop] +=
           "translate" + currentDeterminerAxis +
@@ -702,7 +694,6 @@ $('body').keydown( function (evt){
 //detecting touch gestures on the screen (body)
 Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragleft dragright",
   function(event) {
-    alert("Gesture performed")
 	var type
 	if (event.type == "swipedown" || event.type == "dragdown") {
 		type = "down";
@@ -945,21 +936,25 @@ function gesturePerformed(type)
 			$('#swipe-bottom').fadeOut(1500);
 			$('#bottom-explanation').fadeOut(1500);
 			cubeNotLocked = '';
+			setTimeout(function(){ alert("Choose a time for your practices") }, 1200);
 			break;
 			case 'back':
 			$('#swipe-right').fadeOut(1500);
 			$('#right-explanation').fadeOut(1500);
 			cubeNotLocked = '';
+			setTimeout(function(){ alert("Choose an activity") }, 1200);
 			break;
 			case 'left':
 			$('#swipe-back').fadeOut(1500);
 			$('#back-explanation').fadeOut(1500);
 			cubeNotLocked = '';
+			setTimeout(function(){ alert("Choose type and range of the price") }, 1200);
 			break;
 			case 'front':
 			$('#swipe-left').fadeOut(1500);
 			$('#left-explanation').fadeOut(1500);
 			cubeNotLocked = '';
+			setTimeout(function(){ alert("Click on the grey button to explore the map with results") }, 1200);
 			break;
 		}
 	}
