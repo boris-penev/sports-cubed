@@ -736,11 +736,8 @@
     if ( $sports_club === '' ) {
       return;
     }
-    echo '<p>';
-    foreach ( $sports as $sport ) {
-      echo $sport ['name'], ' ';
-    }
-    echo '</p>', PHP_EOL;
+    echo '<p>' . nl2br (wh_output_string_protected ($sports_club)) .
+         '</p>' . PHP_EOL;
 
     $subject = $sports_club;
     $subject = strtolower ( $subject );
