@@ -767,7 +767,11 @@
     global $hour_regex;
     global $price_regex;
 
-    $subject = $sports_club;
+    $subject = strtolower ($sports_club);
+    // TODO Comma separated days not working
+    // THIS IS FOR TESTING ONLY
+    $subject = 'badminton, monday,friday' .
+        ', 10:00 - 20:00, member - £13, nonmember - £15';
 
     $pattern = '/' . $sport .
         '(?:\s*(?::|-|,)?\s*' .
@@ -788,7 +792,7 @@
 #         ($pattern), 80, PHP_EOL, TRUE));
     if (preg_match_all ($pattern, $subject, $matches))
     {
-#     var_dump($matches[0]);
+      var_dump($matches[0]);
       $count = count ($matches [0]);
       echo '<p style="color:#E80000">';
       foreach ($matches[0] as $key => $match) {
