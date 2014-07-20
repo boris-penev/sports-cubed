@@ -774,7 +774,7 @@
     for ( $i = 2; $i < 8; ++$i ) {
       $pattern .= "(?:\s*.\s*(?P<day$i>(?:".$day_regex."|workweek|weekend|everyday)))?";
     }
-    $pattern .= '))' .
+    $pattern .= '))?' .
         '(?:\s*(?::|,)\s*(?P<open_time>'.$hour_regex.')\s*-\s*(?P<close_time>'.
         $hour_regex.'))?' .
         '(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>'.$price_regex.')'.
