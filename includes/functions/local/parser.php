@@ -779,6 +779,116 @@
 #         ($pattern), 80, PHP_EOL, TRUE));
     if (preg_match_all ($pattern, $subject, $matches))
     {
+#     var_dump($matches[0]);
+      $count = count ($matches [0]);
+      echo '<p style="color:#E80000">';
+      foreach ($matches[0] as $key => $match) {
+        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
+        echo wh_output_string ($match), '<br />', PHP_EOL;
+      }
+      foreach ($matches as $key => $match) {
+        if ( is_numeric ($key) ) {
+          continue;
+        }
+        foreach ( $match as $key2 => $value ) {
+          if ( $value === '' ) continue;
+          echo '<span style="color:initial">', $key,
+              ' [', $key2, ']', ' - ', '</span>';
+          echo wh_output_string ($value), '<br />' . PHP_EOL;
+        }
+      }
+      // Fills the times array
+      $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
+      $prices = array_fill_keys ( range(1 , 7), ['member' => '', 'nonmember' => ''] );
+      for ( $i = 0; $i < $count; ++$i )
+      {
+        // The current matched entry represents a day interval
+        if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
+        {
+          $begin = day_to_number ( $matches['start_day'][$i] );
+          $end   = day_to_number ( $matches['end_day']  [$i] );
+          for ( $j = $begin; $j <= $end; ++$j ) {
+            $times [$j] = set_time ( $matches, $times[$j], $i );
+          }
+          continue;
+        }
+        // The current matched entry represents a sequence of days
+        for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k ) {
+          switch ( $matches['day'.$k][$i] ) {
+          case 'workweek':
+            for ( $l = 1; $l < 6; ++$l ) {
+              $times [$l] = set_time ( $matches, $times[$l], $i );
+              $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            }
+            break;
+          case 'weekend':
+            for ( $l = 6; $l < 8; ++$l ) {
+              $times [$l] = set_time ( $matches, $times[$l], $i );
+              $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            }
+            break;
+          default:
+            $l = day_to_number ( $matches['day'.$k][$i] );
+            if ( ! isset ( $l ) ) {
+              break;
+            }
+            $times [$l] = set_time ( $matches, $times[$l], $i );
+            $prices [$l] = set_price ( $matches, $prices[$l], $i );
+          }
+        }
+      }
+      echo '</p>' . PHP_EOL;
+
+      $days_type_time = '';
+      $times_empty = ! time_check ( $times );
+      if ( $times_empty === false )
+      {
+        $days_type_time  = wh_determine_best_view_times ($times);
+        if ($days_type_time !== 'separately') {
+          $times = wh_times_prices_num_to_assoc ($times, $days_type_time);
+        }
+      }
+
+      echo '<p><strong>times:</strong></p>';
+      foreach ( $times as $time_key => $time_day )
+      {
+        echo '<span style="color:initial">',
+              '[', $time_key, '] ', '</span>';
+        foreach ( $time_day as $key => $time )
+        {
+          if ( $time !== '' && $time !== true ) {
+            echo $key, ' - ',
+                '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
+          }
+        }
+        echo '<br />';
+      }
+
+      $days_type_price = '';
+      $prices_empty = ! price_check ( $prices );
+      if ( $prices_empty === false )
+      {
+        $days_type_price  = wh_determine_best_view_prices ($prices);
+        if ($days_type_price !== 'separately') {
+          $prices = wh_times_prices_num_to_assoc ($prices, $days_type_price);
+        }
+      }
+
+      echo '<p><strong>prices:</strong></p>';
+      foreach ( $prices as $price_key => $price_day )
+      {
+        echo '<span style="color:initial">',
+              '[', $price_key, '] ', '</span>';
+        foreach ( $price_day as $key => $price )
+        {
+          if ( $price !== '' && $price !== true ) {
+            echo $key, ' - ',
+                '<span style="color:#E80000;margin:0.5%">', $price, ' </span>';
+          }
+        }
+        echo '<br />';
+      }
+
       // TODO Write code here
       return $sports;
     }
