@@ -733,8 +733,11 @@
     if ( $sports_club === '' ) {
       return;
     }
-    echo '<p>' . nl2br (wh_output_string_protected ($sports)) .
-         '</p>' . PHP_EOL;
+    echo '<p>';
+    foreach ( $sports as $sport ) {
+      echo $sport ['name'], ' ';
+    }
+    echo '</p>', PHP_EOL;
 
     $subject = $sports_club;
     $subject = strtolower ( $subject );
@@ -746,9 +749,9 @@
 
     $sports_club = [];
 
-    for ( $sport in $sports )
+    foreach ( $sports as $sport )
     {
-      $entry = $parse_sport ( $sport, $subject );
+      $entry = parse_sport ( $sport ['name'], $subject );
       if ( $entry != [] ) {
         $sports_club [] = $entry;
       }
@@ -759,8 +762,10 @@
   function parse_sport ( $sport, $sports_club )
   {
     global $day_regex;
-    global $time_regex;
+    global $hour_regex;
     global $price_regex;
+
+    $subject = $sports_club;
 
     $pattern = '/' . $sport .
         '(?:(?:(?P<start_day>'.$day_regex.')(?:\s*-\s*(?P<end_day>'.$day_regex.'))'.
