@@ -56,6 +56,8 @@ var cubeNotLocked = 'all';
 // determines whether the user is in tutorial mode
 var tutorialMode = false;
 
+//var isComingFromMap = "no"
+
 // does not allow for the help button to be pressed multiple times
 var helpPressed = false;
 
@@ -206,85 +208,20 @@ function browserRec( userAgent ){
 
 
 $(document).ready(function() {
-
-	document.cookie="username=John Doe";
-	alert(document.cookie);
-
-  // finishes the tutorial if in tutorial mode
-  if( sessionStorage.tutorialModeOn == 'true'){
-	$('#help').attr('src','img/help-dis.png').css('cursor','default')
-    helpPressed = true;
-	
-    $('#curtain').fadeIn(1000);
-	setTimeout(function(){$('#front-explanation').fadeIn(1000)}, 2000);
-    sessionStorage.tutorialModeOn = 'false';
-	cubeNotLocked = '';
+  
+  if( document.cookie ){
+  var cookieArray = document.cookie.split('; ');
+  cookieArray.splice(0,1);
+  
+  tutorialMode = cookieArray[3].split('=')[1];
+  isComingFromMap = cookieArray[4].split('=')[1];
   }
-
-  // tries to differentiate between chrome, firefox and default android/safari 
-  // browsers to determine how much closer to bring the cube inwards in case the 
-  // screen is too big. If it is the default android browser and safari the cube
-  // goes out of the viewport when it comes too close, unlike chrome and firefox
-  
-  browserRec(navigator.userAgent.toLowerCase());
-// check if we are coming from the map and "click" on the filters
-// that the user had already selected
-// in this way we remember his/her preferences and they don't have to
-// input them again at each transition between the map and the cube
-
-  if (sessionStorage.isComingFromMap == "yes"){
-    sessionStorage.isComingFromMap = "no";
-	
-	sportsToBeSubmitted = sessionStorage.sports.split(',')
-	daysToBeSubmitted = sessionStorage.days.split(',')
-	priceToBeSubmitted = sessionStorage.price
-	
-    var days = sessionStorage.days.split(",");
-    if (days.length === 7){
-      $("#whole_toggler > div").trigger("click");
-    }
-    else {
-      for (var x in days){
-        $("#" + days[x] + "_toggler > div").trigger("click");
-      }
-    }
-
-    var sports = sessionStorage.sports.split(",");
-    for (var x in sports){
-      $("#" + sports[x].replace(" ", "") + "_toggler > div").trigger("click");
-    }
-	
+  else{
+  document.cookie="isComingFromMap=no"
+  isComingFromMap = "no"
   }
-  else {
-    sessionStorage.sports = null;
-    sessionStorage.days = null;
-    sessionStorage.setItem('price', 'membership, free');
-	alert( sessionStorage.price )
-  }
-	
-  // set some default properties and rotate the cube to the Bottom (Intro) side
   
-  // debuging
-  // alert("Width: "+$(window).width()+", Height: "+ $(window).height())
-
-  windowHeight = $(window).height();
-	
-  $('#bigWrapper').css('width', "100%");
-  $('#bigWrapper').css('height', windowHeight);
-  $('#bigWrapper').css('position', "absolute");
-  $('#bigWrapper').css('left', "0");
-  
-  //alert("Width: "+$('#bigWrapper').css('width')+", Height: "+ $('#bigWrapper').css('height'))
-  
-  document.getElementById('cube').style[prop] =
-                          "rotateX(" + xAngle + "deg) rotateY("+yAngle+"deg)";
-  determinerAxis = "Y";
-  determinerDirection = "-";
-  currentDeterminerAxis = "Y";
-  currentDeterminerDirection = "+";
-
-  adjust();
-  
+    
   // draw and populate the activities side
   var sportsList = ["aerobics", "american football", "aquafit","athletics","badminton","basketball","bmx","bowling","climbing","cricket","croquet","cycling","dancing","diving","fencing","fitness","football","golf","gymnastics","hiking","hockey","judo","kayaking","mountainbiking","orientation","rugby","skateboarding","skating","squash","swimming","table tennis","tennis","volleyball"]
   for(var i = 0; i < sportsList.length; i++){
@@ -326,6 +263,85 @@ $(document).ready(function() {
 
   })
   
+  
+  // finishes the tutorial if in tutorial mode
+  if( tutorialMode == 'true'){
+	$('#help').attr('src','img/help-dis.png').css('cursor','default')
+    helpPressed = true;
+	
+    $('#curtain').fadeIn(1000);
+	setTimeout(function(){$('#front-explanation').fadeIn(1000)}, 2000);
+    tutorialMode = 'false';
+	cubeNotLocked = '';
+  }
+
+  // tries to differentiate between chrome, firefox and default android/safari 
+  // browsers to determine how much closer to bring the cube inwards in case the 
+  // screen is too big. If it is the default android browser and safari the cube
+  // goes out of the viewport when it comes too close, unlike chrome and firefox
+  
+  browserRec(navigator.userAgent.toLowerCase());
+// check if we are coming from the map and "click" on the filters
+// that the user had already selected
+// in this way we remember his/her preferences and they don't have to
+// input them again at each transition between the map and the cube
+
+  if (isComingFromMap == "yes"){
+  document.cookie="isComingFromMap=no";
+  isComingFromMap = "no";
+	
+	sportsToBeSubmitted = cookieArray[0].split('=')[1].split(',')
+	daysToBeSubmitted = cookieArray[1].split('=')[1].split(',')
+	priceToBeSubmitted = cookieArray[2].split('=')[1]
+	
+    //var days = sessionStorage.days.split(",");
+    if (daysToBeSubmitted.length === 7){
+      $("#whole_toggler > div").trigger("click");
+    }
+    else {
+      for (var x in daysToBeSubmitted){
+        $("#" + daysToBeSubmitted[x] + "_toggler > div").trigger("click");
+      }
+    }
+
+    //var sports = sessionStorage.sports.split(",");
+    for (var x in sportsToBeSubmitted){
+      $("#" + sportsToBeSubmitted[x].replace(" ", "") + "_toggler > div").trigger("click");
+    }
+	
+  }
+  else {
+    /*sessionStorage.sports = null;
+    sessionStorage.days = null;
+    sessionStorage.setItem('price', 'membership, free');*/
+	deleteCookies();
+	
+	}
+	
+  // set some default properties and rotate the cube to the Bottom (Intro) side
+  
+  // debuging
+  // alert("Width: "+$(window).width()+", Height: "+ $(window).height())
+
+  windowHeight = $(window).height();
+	
+  $('#bigWrapper').css('width', "100%");
+  $('#bigWrapper').css('height', windowHeight);
+  $('#bigWrapper').css('position', "absolute");
+  $('#bigWrapper').css('left', "0");
+  
+  //alert("Width: "+$('#bigWrapper').css('width')+", Height: "+ $('#bigWrapper').css('height'))
+  
+  document.getElementById('cube').style[prop] =
+                          "rotateX(" + xAngle + "deg) rotateY("+yAngle+"deg)";
+  determinerAxis = "Y";
+  determinerDirection = "-";
+  currentDeterminerAxis = "Y";
+  currentDeterminerDirection = "+";
+
+  adjust();
+  console.log( cookieArray )
+  
 })
 
 function capitaliseFirstLetter(string)
@@ -336,16 +352,29 @@ function capitaliseFirstLetter(string)
 // using the HTML5 web storage instead of cookies to remember the user's
 // preferences when going from the cube to the map and backwards
 $('#linkToMap').click(function(){
-  sessionStorage.sports = sportsToBeSubmitted;
+  /*sessionStorage.sports = sportsToBeSubmitted;
   sessionStorage.days = daysToBeSubmitted;
   sessionStorage.price = priceToBeSubmitted;
   sessionStorage.tutorialModeOn = tutorialMode;
-  sessionStorage.isComingFromMap = "yes";
+  sessionStorage.isComingFromMap = "yes";*/
+  document.cookie="sports="+sportsToBeSubmitted;
+  document.cookie="days="+daysToBeSubmitted;
+  document.cookie="price="+priceToBeSubmitted;
+  document.cookie="tutorialModeOn="+tutorialMode;
+  document.cookie="isComingFromMap=yes";
   
   alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
  
   window.location = "http://testpilot.x10.mx/sportscubed/map.html";
 })
+
+function deleteCookies(){
+  document.cookie = "sports=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie = "days=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie = "price=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie = "tutorialModeOn=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie = "isComingFromMap=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+}
 
 $(document).on( "click", "#how-to", function(){
 
@@ -395,8 +424,8 @@ $('#help').click(function(){
     cubeNotLocked = '';
     $('#'+currentWall+' > div').hide();
     $('#'+currentWall).append('<div id="help-window">' +
-  		'<img id="close-help" src="img/help-close.jpg"><br/><br/><br/><br/>'+
-  		'Sports Cubed <br/><br/><br/> Help' +
+  		'<img id="close-help" src="img/help-close.jpg"><br/><br/><br/>'+
+  		'<img id="help-label" src="img/help_label.jpg" />' +
   	    '<img id="how-to" class="help-buttons" src="img/how-to.jpg">'+
   		'<a href="about.html">' +
 		     '<img id="about-auth" class="help-buttons" src="img/about-auth.jpg">'+

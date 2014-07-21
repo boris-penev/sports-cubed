@@ -25,6 +25,9 @@ $(window).resize(function(){
 
 $(document).ready(function(){
 
+		var cookieArray = document.cookie.split("; ")
+		console.log(cookieArray)
+
 		var windowHeight = $(window).height();
 		$('#backToMap').css('margin-top',(windowHeight/2 - 35).toString()+"px")
 		// creating the map and the infowindow
@@ -107,7 +110,7 @@ else{
 	
 	// making the request to the server
 	request = new XMLHttpRequest();
-	request.open("GET","http://testpilot.x10.mx/sports/query.php?sports=" +
+	request.open("GET","http://testpilot.x10.mx/sportscubed/query.php?sports=" +
 				sports + "&days=" + days + "&price=" + price,true);
 	request.send (null);
 	
