@@ -794,19 +794,19 @@
     $subject = strtolower ($sports_club);
     // TODO Comma separated days not working
     // THIS IS FOR TESTING ONLY
-    $subject = 'badminton, monday,friday' .
+    $subject = 'badminton, monday, friday' .
         ', 10:00 - 20:00, member - £13, nonmember - £15';
 
     $pattern = '/' . $sport .
         '(?:\s*(?::|-|,)?\s*' .
-        "(?:(?P<start_day>{$day_regex})".
+        "(?:(?:(?P<start_day>{$day_regex})".
         "(?:\s*-\s*(?P<end_day>{$day_regex})))|" .
         "(?:(?P<day1>(?:{$day_regex}|workweek|weekend|everyday))";
     for ( $i = 2; $i < 8; ++$i ) {
       $pattern .= "(?:\s*.\s*" .
           "(?P<day$i>(?:{$day_regex}|workweek|weekend|everyday)))?";
     }
-    $pattern .= '))?' .
+    $pattern .= ')))?' .
         "(?:\s*(?::|-|,)?\s*(?P<open_time>{$hour_regex})\s*-\s*" .
         "(?P<close_time>{$hour_regex}))?" .
         "(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>{$price_regex})".
