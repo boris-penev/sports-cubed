@@ -130,7 +130,6 @@
     $prices = $club->xpath('fields/field[@name=\'Prices\']/text()');
     $website = $club->xpath('fields/field[@name=\'Timetables\']/text()');
     $comment = $club->xpath('fields/field[@name=\'More information\']/text()');
-    $current['name'] = (string) $club->title;
 
     if ( count ( $location ) > 0 && strlen ( $location[0] ) > 1 )
     {
@@ -143,17 +142,17 @@
         $current['longtitude'] = (double) $longtitude;
       }
     }
-#   echo $club->title, '  at  address ', $address [0];
-    $current['address'] = get_first_element ($address);
-    $current['postcode'] = get_first_element ($postcode);
-    $current['email'] = get_first_element ($email);
-    $current['phone'] = get_first_element ($phone);
-    $current['website'] = get_first_element ($website);
-    $sports = get_first_element ($sports);
-    $facilities = get_first_element ($facilities);
-    $times = get_first_element ($times);
-    $prices = get_first_element ($prices);
-    $comment = get_first_element ($comment);
+    $name = trim ((string) $club->title);
+    $address = trim (get_first_element ($address));
+    $postcode = trim (get_first_element ($postcode));
+    $email= trim (get_first_element ($email));
+    $phone = trim (get_first_element ($phone));
+    $website = trim (get_first_element ($website));
+    $sports = trim (get_first_element ($sports));
+    $facilities = trim (get_first_element ($facilities));
+    $times = trim (get_first_element ($times));
+    $prices = trim (get_first_element ($prices));
+    $comment = trim (get_first_element ($comment));
     $sports = str_replace ( "\r", '', $sports );
     $sports = str_replace ( "\n", ', ', $sports );
     $facilities = str_replace ( "\r", '', $facilities );
@@ -164,11 +163,17 @@
 #   $prices = str_replace ( "\n", ', ', $prices );
 #   $comment = str_replace ( "\r", '', $comment );
 #   $comment = str_replace ( "\n", ', ', $comment );
-    $current['sports'] = $sports;
-    $current['facilities'] = $facilities;
+    $current['name'] = $name;
+    $current['address'] = $address;
+    $current['postcode'] = $postcode;
+    $current['email'] = $email;
+    $current['phone'] = $phone;
+    $current['website'] = $website;
     $current['time'] = $times;
     $current['price'] = $prices;
     $current['comment'] = $comment;
+    $current['sports'] = $sports;
+    $current['facilities'] = $facilities;
     /*if ( isset ( $time_var ) )
       {
       //echo 'at times ',  implode ( ' ', $times ),
