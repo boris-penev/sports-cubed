@@ -136,10 +136,10 @@
       $location = explode ( ',', $location[0] );
       if ( count ( $location ) == 2 )
       {
-        $latitude = $location [ 0 ];
-        $longtitude = $location [ 1 ];
-        $current['latitude'] = (double) $latitude;
-        $current['longtitude'] = (double) $longtitude;
+        $latitude = trim ($location [0]);
+        $longtitude = trim ($location [1]);
+        $current ['latitude'] = (double) $latitude;
+        $current ['longtitude'] = (double) $longtitude;
       }
     }
     $name = trim ((string) $club->title);
@@ -148,11 +148,11 @@
     $email= trim (get_first_element ($email));
     $phone = trim (get_first_element ($phone));
     $website = trim (get_first_element ($website));
+    $comment = trim (get_first_element ($comment));
     $times = trim (get_first_element ($times));
     $prices = trim (get_first_element ($prices));
     $sports = trim (get_first_element ($sports));
     $facilities = trim (get_first_element ($facilities));
-    $comment = trim (get_first_element ($comment));
     $name = str_replace ( ["\r", "\n", "\t"], ' ', $name );
     $name = preg_replace ( '/\s+/', ' ', $name );
     $address = str_replace ( ["\r", "\n", "\t"], ' ', $address );
@@ -163,18 +163,18 @@
     $phone = preg_replace ( '/\s+/', ' ', $phone );
     $website = str_replace ( ["\r", "\n", "\t"], ' ', $website );
     $website = preg_replace ( '/\s+/', ' ', $website );
-    $times = str_replace ( ["\r", "\t"], '', $times );
-#   $times = str_replace ( "\n", ', ', $times );
-    $times = preg_replace ( '/\s+/', ' ', $times );
-    $prices = str_replace ( ["\r", "\t"], '', $prices );
-#   $prices = str_replace ( "\n", ', ', $prices );
-    $prices = preg_replace ( '/\s+/', ' ', $prices );
     $comment = str_replace ( ["\r", "\t"], '', $comment );
     $comment = preg_replace ( '/ +\n/', "\n", $comment );
     $comment = preg_replace ( '/\n +/', "\n", $comment );
     $comment = preg_replace ( '/ +/', ' ', $comment );
     $comment = preg_replace ( '/\n+/', "\n", $comment );
 #   $comment = str_replace ( "\n", ', ', $comment );
+    $times = str_replace ( ["\r", "\t"], '', $times );
+#   $times = str_replace ( "\n", ', ', $times );
+    $times = preg_replace ( '/\s+/', ' ', $times );
+    $prices = str_replace ( ["\r", "\t"], '', $prices );
+#   $prices = str_replace ( "\n", ', ', $prices );
+    $prices = preg_replace ( '/\s+/', ' ', $prices );
     $sports = str_replace ( ["\r", "\t"], '', $sports );
     $sports = preg_replace ( '/ +\n/', "\n", $sports );
     $sports = preg_replace ( '/\n +/', "\n", $sports );
@@ -187,28 +187,23 @@
     $facilities = preg_replace ( '/ +/', ' ', $facilities );
     $facilities = preg_replace ( '/\n+/', "\n", $facilities );
     $facilities = str_replace ( "\n", ', ', $facilities );
+    if ($website == '' && preg_match ('/$(?:http\:\/\/|www.).*\./', $comment) &&
+        ! preg_match ('\s', $comment) )
+    {
+      $website = $comment;
+      $comment = '';
+    }
     $current['name'] = $name;
     $current['address'] = $address;
     $current['postcode'] = $postcode;
     $current['email'] = $email;
     $current['phone'] = $phone;
     $current['website'] = $website;
+    $current['comment'] = $comment;
     $current['time'] = $times;
     $current['price'] = $prices;
-    $current['comment'] = $comment;
     $current['sports'] = $sports;
     $current['facilities'] = $facilities;
-    /*if ( isset ( $time_var ) )
-      {
-      //echo 'at times ',  implode ( ' ', $times ),
-      //'<br />', PHP_EOL;
-      $current['time'] = implode ( ' ', $times );
-    }
-    else
-    {
-      $current['time'] = '';
-    }*/
-    //$arr[$count++] = $current;
     return $current;
   }
 
