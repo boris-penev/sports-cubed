@@ -80,6 +80,7 @@
             $query .= $columns . ' = now(), ';
             break;
           case 'null':
+          case '':
             $query .= $columns .= ' = null, ';
             break;
           default:
