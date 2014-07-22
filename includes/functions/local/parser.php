@@ -797,7 +797,7 @@
     $subject = 'badminton, monday, friday' .
         ', 10:00 - 20:00, member - £13, nonmember - £15';
 
-    $pattern = '/' . $sport .
+    $pattern = "/(?P<sport>{$sport})" .
         '(?:\s*(?::|-|,)?\s*' .
         "(?:(?:(?P<start_day>{$day_regex})".
         "(?:\s*-\s*(?P<end_day>{$day_regex})))|" .
