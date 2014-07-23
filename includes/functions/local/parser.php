@@ -794,31 +794,44 @@
     $subject = strtolower ($sports_club);
     // TODO Comma separated days not working
     // THIS IS FOR TESTING ONLY
-    $subject = 'badminton, monday, friday' .
+    $subject = 'badminton, monday - friday' .
         ', 10:00 - 20:00, member - £13, nonmember - £15';
 
-    $pattern = "/(?P<sport>{$sport})" .
-      '(?:' .
-      '(?:' .
-      "(?:\s*(?::|-|,)?\s*(?P<open_time_global>{$hour_regex})\s*-\s*" .
+    $interval = '\s*(?::|-|,)?\s*';
+
+    $sport_query = "(?P<sport>{$sport})";
+
+    $global_query = '(?:' .
+      "(?:{$interval}(?P<open_time_global>{$hour_regex})\s*-\s*" .
       "(?P<close_time_global>{$hour_regex}))?" .
-      "(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member_global>{$price_regex})".
+      "(?:{$interval}member\s*(?::|-)?\s*£?(?P<price_member_global>{$price_regex})".
       "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember_global>{$price_regex}))?".
-      ')|' .
-      '(?:\s*(?::|-|,)?\s*' .
-      "(?:(?P<start_day>{$day_regex})(?:\s*-\s*(?P<end_day>{$day_regex})))|" .
-      '(?:' .
+      ')';
+
+    $days_period = "(?:{$interval}" .
+      "(?P<start_day>{$day_regex})\s*-\s*(?P<end_day>{$day_regex}))";
+
+    $days_list = "(?:{$interval}" .
       "(?P<day1>(?:{$day_regex}|workweek|weekend|everyday))";
     for ( $i = 2; $i < 8; ++$i ) {
-      $pattern .= "(?:\s*.\s*" .
+      $days_list .= "(?:{$interval}" .
         "(?P<day$i>(?:{$day_regex}|workweek|weekend|everyday)))?";
     }
-    $pattern .= ')' .
-      "(?:\s*(?::|-|,)?\s*(?P<open_time>{$hour_regex})\s*-\s*" .
-      "(?P<close_time>{$hour_regex}))?" .
-      "(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>{$price_regex})".
-      "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex}))?" .
-      "))?/";
+    $days_list .= ')';
+
+    $days_time =
+      "(?:{$interval}(?P<open_time>{$hour_regex})\s*-\s*" .
+      "(?P<close_time>{$hour_regex}))?";
+    $days_prices =
+      "(?:{$interval}member\s*(?::|-)?\s*£?(?P<price_member>{$price_regex})" .
+      "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex}))?";
+
+    $days_query = '(?:(?:' . $days_period . '|' . $days_list . ')' .
+                  $days_time . $days_prices . ')';
+
+    $pattern = '/' . $sport_query .
+      '(?:' . $global_query . '|' . $days_query .
+      ')?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
