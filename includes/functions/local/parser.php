@@ -798,19 +798,27 @@
         ', 10:00 - 20:00, member - £13, nonmember - £15';
 
     $pattern = "/(?P<sport>{$sport})" .
-        '(?:\s*(?::|-|,)?\s*' .
-        "(?:(?:(?P<start_day>{$day_regex})".
-        "(?:\s*-\s*(?P<end_day>{$day_regex})))|" .
-        "(?:(?P<day1>(?:{$day_regex}|workweek|weekend|everyday))";
+      '(?:' .
+      '(?:' .
+      "(?:\s*(?::|-|,)?\s*(?P<open_time_global>{$hour_regex})\s*-\s*" .
+      "(?P<close_time_global>{$hour_regex}))?" .
+      "(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member_global>{$price_regex})".
+      "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember_global>{$price_regex}))?".
+      ')|' .
+      '(?:\s*(?::|-|,)?\s*' .
+      "(?:(?P<start_day>{$day_regex})(?:\s*-\s*(?P<end_day>{$day_regex})))|" .
+      '(?:' .
+      "(?P<day1>(?:{$day_regex}|workweek|weekend|everyday))";
     for ( $i = 2; $i < 8; ++$i ) {
       $pattern .= "(?:\s*.\s*" .
-          "(?P<day$i>(?:{$day_regex}|workweek|weekend|everyday)))?";
+        "(?P<day$i>(?:{$day_regex}|workweek|weekend|everyday)))?";
     }
-    $pattern .= ')))?' .
-        "(?:\s*(?::|-|,)?\s*(?P<open_time>{$hour_regex})\s*-\s*" .
-        "(?P<close_time>{$hour_regex}))?" .
-        "(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>{$price_regex})".
-        "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex}))?/";
+    $pattern .= ')' .
+      "(?:\s*(?::|-|,)?\s*(?P<open_time>{$hour_regex})\s*-\s*" .
+      "(?P<close_time>{$hour_regex}))?" .
+      "(?:\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>{$price_regex})".
+      "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex}))?" .
+      "))?/";
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
