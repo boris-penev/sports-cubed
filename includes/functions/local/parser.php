@@ -793,8 +793,10 @@
 
     $subject = strtolower ($sports_club);
     // THIS IS FOR TESTING ONLY
-    $subject = 'badminton, monday - friday' .
-        ', 10:00 - 20:00, member - £13, nonmember - £15';
+    $subject = 'badminton' . "\n" .
+        'monday - friday, ' .
+        '10:00 - 20:00, member - £13, nonmember - £15' . "\n" .
+        'saturday - sunday, 2pm - 3pm, member - £24, nonmember - £26';
 
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
@@ -829,7 +831,7 @@
       "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex}))?";
 
     $days_query = '(?:(?:' . $days_period . '|' . $days_list . ')' .
-                  $days_time . $days_prices . ')';
+                  $days_time . $days_prices . ')+';
 
     $pattern = '/' . $sport_query .
       '(?:' . $days_query . '|' . $global_query .
