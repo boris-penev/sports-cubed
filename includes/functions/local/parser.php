@@ -830,7 +830,7 @@
                   $days_time . $days_prices . ')';
 
     $pattern = '/' . $sport_query .
-      '(?:' . $global_query . '|' . $days_query .
+      '(?:' . $days_query . '|' . $global_query .
       ')?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
