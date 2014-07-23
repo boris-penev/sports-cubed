@@ -797,6 +797,7 @@
         ', 10:00 - 20:00, member - £13, nonmember - £15';
 
     $interval = '\s*(?::|-|,)?\s*';
+    $interval_list = '\s*(?::|,)?\s*';
 
     $sport_query = "(?P<sport>{$sport})";
 
@@ -812,7 +813,7 @@
 
     $days_list = '(?:';
     for ( $i = 1; $i < 8; ++$i ) {
-      $days_list .= "(?:{$interval}" .
+      $days_list .= '(?:' . $interval_list .
         "(?P<day$i>(?:{$day_regex}|workweek|weekend|everyday)))";
       if ( $i !== 1 ) {
         $days_list .= '?';
