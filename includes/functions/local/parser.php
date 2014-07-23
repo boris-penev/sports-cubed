@@ -785,6 +785,45 @@
     return $sports_club;
   }
 
+  function days_period ( $line )
+  {
+    global $interval, $day_regex;
+    return "(?:{$interval}" .
+      "(?P<start_day_{$line}>{$day_regex})\s*-\s*(?P<end_day_{$line}>{$day_regex}))";
+  }
+
+  function days_list ( $line )
+  {
+    global $interval_list, $day_regex;
+    $days_list = '(?:';
+    for ( $i = 1; $i < 8; ++$i ) {
+      $days_list .= '(?:' . $interval_list .
+        "(?P<day{$i}_{$line}>(?:{$day_regex}|workweek|weekend|everyday)))";
+      if ( $i !== 1 ) {
+        $days_list .= '?';
+      }
+    }
+    $days_list .= ')';
+    return $days_list;
+  }
+
+  function days_time ( $line )
+  {
+    global $interval, $hour_regex;
+    return
+      "(?:{$interval}(?P<open_time_{$line}>{$hour_regex})\s*-\s*" .
+      "(?P<close_time_{$line}>{$hour_regex}))?";
+  }
+
+  function days_prices ( $line )
+  {
+    global $interval, $price_regex;
+    return
+      "(?:{$interval}member\s*(?::|-)?\s*£?(?P<price_member_{$line}>{$price_regex})" .
+      "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember_{$line}>{$price_regex}))?";
+    }
+
+
   function parse_sport ( $sport, $sports_club )
   {
     global $day_regex;
@@ -810,28 +849,15 @@
       "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember_global>{$price_regex}))?".
       ')';
 
-    $days_period = "(?:{$interval}" .
-      "(?P<start_day>{$day_regex})\s*-\s*(?P<end_day>{$day_regex}))";
-
-    $days_list = '(?:';
-    for ( $i = 1; $i < 8; ++$i ) {
-      $days_list .= '(?:' . $interval_list .
-        "(?P<day$i>(?:{$day_regex}|workweek|weekend|everyday)))";
-      if ( $i !== 1 ) {
-        $days_list .= '?';
-      }
+    $days_query = '';
+    for ( $line = 1; $line < 8; ++$line )
+    {
+      $days_query .= '(?:(?:' . days_period ($line) . '|' . days_list ($line). ')' .
+                    days_time ($line) . days_prices ($line) . ')';
+      if ( $line !== 1 ) {
+         $days_query .= '?';
+       }
     }
-    $days_list .= ')';
-
-    $days_time =
-      "(?:{$interval}(?P<open_time>{$hour_regex})\s*-\s*" .
-      "(?P<close_time>{$hour_regex}))?";
-    $days_prices =
-      "(?:{$interval}member\s*(?::|-)?\s*£?(?P<price_member>{$price_regex})" .
-      "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex}))?";
-
-    $days_query = '(?:(?:' . $days_period . '|' . $days_list . ')' .
-                  $days_time . $days_prices . ')+';
 
     $pattern = '/' . $sport_query .
       '(?:' . $days_query . '|' . $global_query .
