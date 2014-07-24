@@ -793,9 +793,9 @@
 
     $subject = strtolower ($sports_club);
     // THIS IS FOR TESTING ONLY
-    $subject = 'badminton' . "\n" .
+    $subject = 'badminton, ' .
         'monday - friday, ' .
-        '10:00 - 20:00, member - £13, nonmember - £15' . "\n" .
+        '10:00 - 20:00, member - £13, nonmember - £15, ' .
         'saturday - sunday, 2pm - 3pm, member - £24, nonmember - £26';
 
     $interval = '\s*(?::|-|,)?\s*';
@@ -835,10 +835,10 @@
       "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex}))?";
 
     $days_pattern = '(?:(?:' . $days_period . '|' . $days_list . ')' .
-                  $days_time . $days_prices . ')+';
+                  $days_time . $days_prices . ')';
 
     $pattern = '/' . $sport_pattern .
-      '(?:' . $days_pattern . '|' . $global_pattern .
+      '(?:' . $days_pattern . '+|' . $global_pattern .
       ')/';
 
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
@@ -852,8 +852,8 @@
 
     if ( preg_match_all ("/{$days_pattern}/", $subject, $matches) )
     {
-      //print_r($matches);
-      //die;
+//      var_dump ($matches);
+//      die;
       $count = count ($matches [0]);
       echo '<p style="color:#E80000">';
       foreach ($matches[0] as $key => $match) {
@@ -873,47 +873,43 @@
       }
       $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
       $prices = array_fill_keys ( range(1 , 7), ['member' => '', 'nonmember' => ''] );
-      // Loop through the lines
-      for ( $line = 0; $line < $count; ++$line )
+      // Loop through the days
+      for ( $i = 0; $i < $count; ++$i )
       {
-        // Loop through the days
-        for ( $i = 0; $i < $count; ++$i )
+        // The current matched entry represents a day interval
+        if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
         {
-          // The current matched entry represents a day interval
-          if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
-          {
-            $begin = day_to_number ( $matches['start_day'][$i] );
-            $end   = day_to_number ( $matches['end_day']  [$i] );
-            for ( $j = $begin; $j <= $end; ++$j ) {
-              $times [$j] = set_time ( $matches, $times[$j], $i );
-            }
-            continue;
+          $begin = day_to_number ( $matches['start_day'][$i] );
+          $end   = day_to_number ( $matches['end_day']  [$i] );
+          for ( $j = $begin; $j <= $end; ++$j ) {
+            $times [$j] = set_time ( $matches, $times[$j], $i );
           }
-          // The current matched entry represents a sequence of days
-          for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k )
+          continue;
+        }
+        // The current matched entry represents a sequence of days
+        for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k )
+        {
+          switch ( $matches['day'.$k][$i] )
           {
-            switch ( $matches['day'.$k][$i] )
-            {
-            case 'workweek':
-              for ( $l = 1; $l < 6; ++$l ) {
-                $times [$l] = set_time ( $matches, $times[$l], $i );
-                $prices [$l] = set_price ( $matches, $prices[$l], $i );
-              }
-              break;
-            case 'weekend':
-              for ( $l = 6; $l < 8; ++$l ) {
-                $times [$l] = set_time ( $matches, $times[$l], $i );
-                $prices [$l] = set_price ( $matches, $prices[$l], $i );
-              }
-              break;
-            default:
-              $l = day_to_number ( $matches['day'.$k][$i] );
-              if ( ! isset ( $l ) ) {
-                break;
-              }
+          case 'workweek':
+            for ( $l = 1; $l < 6; ++$l ) {
               $times [$l] = set_time ( $matches, $times[$l], $i );
               $prices [$l] = set_price ( $matches, $prices[$l], $i );
             }
+            break;
+          case 'weekend':
+            for ( $l = 6; $l < 8; ++$l ) {
+              $times [$l] = set_time ( $matches, $times[$l], $i );
+              $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            }
+            break;
+          default:
+            $l = day_to_number ( $matches['day'.$k][$i] );
+            if ( ! isset ( $l ) ) {
+              break;
+            }
+            $times [$l] = set_time ( $matches, $times[$l], $i );
+            $prices [$l] = set_price ( $matches, $prices[$l], $i );
           }
         }
       }
