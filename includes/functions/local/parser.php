@@ -929,6 +929,8 @@
         if ($days_type_time !== 'separately') {
           $times = wh_times_prices_num_to_assoc ($times, $days_type_time);
         }
+      } else {
+        $times = [ 8 => ['open' => true, 'close' => true] ];
       }
 
       // Print times
@@ -1000,14 +1002,13 @@
       if ( $matches['open_time_global'] !== '' &&
             $matches['close_time_global'] !== '')
       {
-          $times =  array_fill_keys ( range(1 , 7),
+          $times =  [ 8 =>
               [ 'open'  => $matches['open_time_global'],
-                'close' => $matches['close_time_global'] ] );
+                'close' => $matches['close_time_global'] ] ];
       }
       else
       {  // Select all days without specifying time
-        $times =  array_fill_keys ( range(1 , 7),
-              [ 'open'  => true, 'close' => true ] );
+        $times =  [ 8 => [ 'open'  => true, 'close' => true ] ];
       }
       // If the global entry in matches array contains a valid price
       $prices = ['member' => '', 'nonmember' => ''];
@@ -1023,7 +1024,7 @@
         }
       }
       unset ($price);
-      $prices = array_fill_keys ( range(1 , 7), $prices );
+      $prices = [ 8 => $prices ];
 
       // Print times
       echo '<p><strong>'.$sport.' times:</strong></p>';
@@ -1058,7 +1059,9 @@
       }
 
       // TODO Write code here
-      return [$sport, $times, $prices];
+      return [ 'sport' => $sport,
+                'times' => $times,
+                'prices' => $prices ];
     }
 
     return [];
