@@ -224,15 +224,15 @@
       unset ($data['sports']);
       unset ($data['facilities']);
 
-      echo '<p><strong>' . wh_output_string_protected ($current_club ['name']) .
-           '</strong></p>' . PHP_EOL;
+      echo '<p><strong>' , wh_output_string_protected ($current_club ['name']) ,
+           '</strong></p>' , PHP_EOL;
 
       foreach ( $arr as $club_t ) {
         if ( $club_t ['name'] == $current_club['name'] ) {
 #         wh_error ('There is another club with the same name');
           $error = 'There is another club with the same name';
           echo '<div style="color:red">',
-                '<h1>' . nl2br ( $error ) . '</h1>', PHP_EOL,
+                '<h1>' , nl2br ( $error ) , '</h1>', PHP_EOL,
                 '</div>';
           break;
         }
@@ -525,8 +525,8 @@
       return;
     }
 
-    echo '<p>' . nl2br (wh_output_string_protected ($time)) .
-         '</p>' . PHP_EOL;
+    echo '<p>' , nl2br (wh_output_string_protected ($time)) ,
+         '</p>' , PHP_EOL;
 
     $subject = $time;
     $subject = strtolower ( $subject );
@@ -565,7 +565,7 @@
           if ( $value === '' ) continue;
           echo '<span style="color:initial">', $key,
               ' [', $key2, ']', ' - ', '</span>';
-          echo wh_output_string ($value), '<br />' . PHP_EOL;
+          echo wh_output_string ($value), '<br />' , PHP_EOL;
         }
       }
       // Fills the times array
@@ -604,7 +604,7 @@
           }
         }
       }
-      echo '</p>' . PHP_EOL;
+      echo '</p>' , PHP_EOL;
 
       $days_type_time = '';
       $times_empty = ! time_check ( $times );
@@ -645,8 +645,8 @@
       return;
     }
 
-    echo '<p>' . nl2br (wh_output_string_protected ($price)) .
-         '</p>' . PHP_EOL;
+    echo '<p>' , nl2br (wh_output_string_protected ($price)) ,
+         '</p>' , PHP_EOL;
 
     $subject = $price;
     $subject = strtolower ( $subject );
@@ -686,7 +686,7 @@
           if ( $value === '' ) continue;
           echo '<span style="color:initial">', $key,
               ' [', $key2, ']', ' - ', '</span>';
-          echo wh_output_string ($value), '<br />' . PHP_EOL;
+          echo wh_output_string ($value), '<br />' , PHP_EOL;
         }
       }
       // Fills the prices array
@@ -725,7 +725,7 @@
           }
         }
       }
-      echo '</p>' . PHP_EOL;
+      echo '</p>' , PHP_EOL;
 
       $days_type_price = '';
       $prices_empty = ! price_check ( $prices );
@@ -762,8 +762,8 @@
     if ( $sports_club === '' ) {
       return;
     }
-    echo '<p>' . nl2br (wh_output_string_protected ($sports_club)) .
-         '</p>' . PHP_EOL;
+    echo '<p>' , nl2br (wh_output_string_protected ($sports_club)) ,
+         '</p>' , PHP_EOL;
 
     $subject = $sports_club;
     $subject = strtolower ( $subject );
@@ -887,7 +887,7 @@
           if ( $value === '' ) continue;
           echo '<span style="color:initial">', $key,
               ' [', $key2, ']', ' - ', '</span>';
-          echo wh_output_string ($value), '<br />' . PHP_EOL;
+          echo wh_output_string ($value), '<br />', PHP_EOL;
         }
       }
       // Fills the times array
@@ -930,7 +930,7 @@
           }
         }
       }
-      echo '</p>' . PHP_EOL;
+      echo '</p>' , PHP_EOL;
 
       $days_type_time = '';
       $times_empty = ! time_check ( $times );
