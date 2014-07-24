@@ -844,35 +844,45 @@
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
 
-    $sport_query = "(?P<sport>{$sport})";
+    $sport_pattern = "(?P<sport>{$sport})";
 
-    $global_query = '(?:' .
+    if ( ! preg_match ("/{$sport_pattern}/", $subject) ) {
+      return [];
+    }
+
+    $global_pattern = '(?:' .
       "(?:{$interval}(?P<open_time_global>{$hour_regex})\s*-\s*" .
       "(?P<close_time_global>{$hour_regex}))?" .
       "(?:{$interval}member\s*(?::|-)?\s*£?(?P<price_member_global>{$price_regex})".
       "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember_global>{$price_regex}))?".
       ')';
 
-    $days_query = '';
+    $days_pattern = '';
     for ( $line = 1; $line < 8; ++$line )
     {
-      $days_query .= '(?:(?:' . days_period ($line) . '|' . days_list ($line). ')' .
+      $days_pattern .= '(?:(?:' . days_period ($line) . '|' . days_list ($line). ')' .
                     days_time ($line) . days_prices ($line) . ')';
       if ( $line !== 1 ) {
-         $days_query .= '?';
+         $days_pattern .= '?';
        }
     }
 
-    $pattern = '/' . $sport_query .
-      '(?:' . $days_query . '|' . $global_query .
+    $pattern = '/' . $sport_pattern .
+      '(?:' . $days_pattern . '|' . $global_pattern .
       ')?/';
 #   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
 #   echo nl2br ( wordwrap ( wh_output_string_protected
 #         ($pattern), 80, PHP_EOL, TRUE));
-    if (preg_match_all ($pattern, $subject, $matches))
+    if ( ! preg_match ($pattern, $subject, $matches) ) {
+      return [];
+    }
+    $subject = $matches [0];
+    $matches = [];
+
+    if ( preg_match_all ("/{$days_pattern}/", $subject, $matches) )
     {
-      var_dump($matches[0]);
-      die;
+      //print_r($matches);
+      //die;
       $count = count ($matches [0]);
       echo '<p style="color:#E80000">';
       foreach ($matches[0] as $key => $match) {
@@ -890,43 +900,49 @@
           echo wh_output_string ($value), '<br />', PHP_EOL;
         }
       }
-      // Fills the times array
       $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
       $prices = array_fill_keys ( range(1 , 7), ['member' => '', 'nonmember' => ''] );
-      for ( $i = 0; $i < $count; ++$i )
+      // Loop through the lines
+      for ( $line = 0; $line < $count; ++$line )
       {
-        // The current matched entry represents a day interval
-        if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
+        // Loop through the days
+        for ( $i = 0; $i < $count; ++$i )
         {
-          $begin = day_to_number ( $matches['start_day'][$i] );
-          $end   = day_to_number ( $matches['end_day']  [$i] );
-          for ( $j = $begin; $j <= $end; ++$j ) {
-            $times [$j] = set_time ( $matches, $times[$j], $i );
+          // The current matched entry represents a day interval
+          if ( $matches['start_day'][$i] !== '' && $matches['end_day'][$i] !== '' )
+          {
+            $begin = day_to_number ( $matches['start_day'][$i] );
+            $end   = day_to_number ( $matches['end_day']  [$i] );
+            for ( $j = $begin; $j <= $end; ++$j ) {
+              $times [$j] = set_time ( $matches, $times[$j], $i );
+            }
+            continue;
           }
-          continue;
-        }
-        // The current matched entry represents a sequence of days
-        for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k ) {
-          switch ( $matches['day'.$k][$i] ) {
-          case 'workweek':
-            for ( $l = 1; $l < 6; ++$l ) {
-              $times [$l] = set_time ( $matches, $times[$l], $i );
-              $prices [$l] = set_price ( $matches, $prices[$l], $i );
-            }
-            break;
-          case 'weekend':
-            for ( $l = 6; $l < 8; ++$l ) {
-              $times [$l] = set_time ( $matches, $times[$l], $i );
-              $prices [$l] = set_price ( $matches, $prices[$l], $i );
-            }
-            break;
-          default:
-            $l = day_to_number ( $matches['day'.$k][$i] );
-            if ( ! isset ( $l ) ) {
+          // The current matched entry represents a sequence of days
+          for ( $k = 1; ($k < 8) && ($matches['day'.$k][$i] !== ''); ++$k )
+          {
+            switch ( $matches['day'.$k][$i] )
+            {
+            case 'workweek':
+              for ( $l = 1; $l < 6; ++$l ) {
+                $times [$l] = set_time ( $matches, $times[$l], $i );
+                $prices [$l] = set_price ( $matches, $prices[$l], $i );
+              }
               break;
+            case 'weekend':
+              for ( $l = 6; $l < 8; ++$l ) {
+                $times [$l] = set_time ( $matches, $times[$l], $i );
+                $prices [$l] = set_price ( $matches, $prices[$l], $i );
+              }
+              break;
+            default:
+              $l = day_to_number ( $matches['day'.$k][$i] );
+              if ( ! isset ( $l ) ) {
+                break;
+              }
+              $times [$l] = set_time ( $matches, $times[$l], $i );
+              $prices [$l] = set_price ( $matches, $prices[$l], $i );
             }
-            $times [$l] = set_time ( $matches, $times[$l], $i );
-            $prices [$l] = set_price ( $matches, $prices[$l], $i );
           }
         }
       }
@@ -983,8 +999,72 @@
       }
 
       // TODO Write code here
-      return $sports;
+      return [$sport, $times, $prices];
     }
+
+    if ( preg_match ("/${$sport}{$global_pattern}/", $subject, $matches) )
+    {
+      var_dump ($matches);
+      die;
+      $count = count ($matches [0]);
+      var_dump ($count); die;
+      echo '<p style="color:#E80000">';
+      foreach ($matches[0] as $key => $match) {
+        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
+        echo wh_output_string ($match), '<br />', PHP_EOL;
+      }
+      foreach ($matches as $key => $match) {
+        if ( is_numeric ($key) ) {
+          continue;
+        }
+        foreach ( $match as $key2 => $value ) {
+          if ( $value === '' ) continue;
+          echo '<span style="color:initial">', $key,
+              ' [', $key2, ']', ' - ', '</span>';
+          echo wh_output_string ($value), '<br />', PHP_EOL;
+        }
+      }
+      // Fills the times and prices arrays
+      // First, branch if individual days were not selected
+      if ( $matches['start_day_1'] !== '' && $matches['end_day_1'] !== '' &&
+            $matches['day1_1'] !== '' )
+      {
+        // If the global entry in matches array contains a valid time
+        if ( $matches['open_time_global'] !== '' &&
+              $matches['close_time_global'] !== '')
+        {
+            $times =  array_fill_keys ( range(1 , 7),
+                [ 'open'  => $matches['open_time_global'],
+                  'close' => $matches['close_time_global'] ] );
+        }
+        else
+        {  // Select all days without specifying time
+          $times =  array_fill_keys ( range(1 , 7),
+                [ 'open'  => true, 'close' => true ] );
+        }
+        // If the global entry in matches array contains a valid price
+        $prices = ['member' => '', 'nonmember' => ''];
+        if ( $matches['price_member_global'] !== '' ) {
+          $prices ['member'] = $matches['price_member_global'];
+        }
+        if ( $matches['price_nonmember_global'] !== '' ) {
+          $prices ['nonmember'] = $matches['price_nonmember_global'];
+        }
+        foreach ( $prices as &$price ) {
+          if ( $price === 'Free' ) {
+            $price = '0';
+          }
+        }
+        unset ($price);
+        $prices_tmp = $prices;
+        $prices = array_fill_keys ( range(1 , 7), $prices_tmp );
+        unset ($prices_tmp);
+      }
+
+      // TODO Write code here
+      return [$sport, $times, $prices];
+    }
+
     return [];
   }
 
