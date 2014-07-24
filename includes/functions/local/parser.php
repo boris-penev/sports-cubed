@@ -794,9 +794,9 @@
     $subject = strtolower ($sports_club);
     // THIS IS FOR TESTING ONLY
     $subject = 'badminton, ' .
-        'monday - friday, ' .
+#       'monday - friday, ' .
         '10:00 - 20:00, member - £13, nonmember - £15, ' .
-        'saturday - sunday, 2pm - 3pm, member - £24, nonmember - £26';
+#       'saturday - sunday, 2pm - 3pm, member - £24, nonmember - £26';
 
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
@@ -925,6 +925,7 @@
         }
       }
 
+      // Print times
       echo '<p><strong>times:</strong></p>';
       foreach ( $times as $time_key => $time_day )
       {
@@ -950,6 +951,7 @@
         }
       }
 
+      // Print prices
       echo '<p><strong>prices:</strong></p>';
       foreach ( $prices as $price_key => $price_day )
       {
@@ -969,14 +971,12 @@
       return [$sport, $times, $prices];
     }
 
-    if ( preg_match ("/${$sport}{$global_pattern}/", $subject, $matches) )
+    if ( preg_match ("/{$sport}{$global_pattern}/", $subject, $matches) )
     {
-      var_dump ($matches);
-      die;
-      $count = count ($matches [0]);
-      var_dump ($count); die;
+#     var_dump ($matches);
+#     die;
       echo '<p style="color:#E80000">';
-      foreach ($matches[0] as $key => $match) {
+      foreach ($matches as $key => $match) {
         echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
         echo wh_output_string ($match), '<br />', PHP_EOL;
       }
@@ -984,48 +984,71 @@
         if ( is_numeric ($key) ) {
           continue;
         }
-        foreach ( $match as $key2 => $value ) {
-          if ( $value === '' ) continue;
-          echo '<span style="color:initial">', $key,
-              ' [', $key2, ']', ' - ', '</span>';
-          echo wh_output_string ($value), '<br />', PHP_EOL;
-        }
+        if ( $match === '' ) continue;
+        echo '<span style="color:initial">', $key,
+            ' - ', '</span>';
+        echo wh_output_string ($match), '<br />', PHP_EOL;
       }
       // Fills the times and prices arrays
-      // First, branch if individual days were not selected
-      if ( $matches['start_day_1'] !== '' && $matches['end_day_1'] !== '' &&
-            $matches['day1_1'] !== '' )
+      // If the global entry in matches array contains a valid time
+      if ( $matches['open_time_global'] !== '' &&
+            $matches['close_time_global'] !== '')
       {
-        // If the global entry in matches array contains a valid time
-        if ( $matches['open_time_global'] !== '' &&
-              $matches['close_time_global'] !== '')
-        {
-            $times =  array_fill_keys ( range(1 , 7),
-                [ 'open'  => $matches['open_time_global'],
-                  'close' => $matches['close_time_global'] ] );
-        }
-        else
-        {  // Select all days without specifying time
           $times =  array_fill_keys ( range(1 , 7),
-                [ 'open'  => true, 'close' => true ] );
+              [ 'open'  => $matches['open_time_global'],
+                'close' => $matches['close_time_global'] ] );
+      }
+      else
+      {  // Select all days without specifying time
+        $times =  array_fill_keys ( range(1 , 7),
+              [ 'open'  => true, 'close' => true ] );
+      }
+      // If the global entry in matches array contains a valid price
+      $prices = ['member' => '', 'nonmember' => ''];
+      if ( $matches['price_member_global'] !== '' ) {
+        $prices ['member'] = $matches['price_member_global'];
+      }
+      if ( $matches['price_nonmember_global'] !== '' ) {
+        $prices ['nonmember'] = $matches['price_nonmember_global'];
+      }
+      foreach ( $prices as &$price ) {
+        if ( $price === 'Free' ) {
+          $price = '0';
         }
-        // If the global entry in matches array contains a valid price
-        $prices = ['member' => '', 'nonmember' => ''];
-        if ( $matches['price_member_global'] !== '' ) {
-          $prices ['member'] = $matches['price_member_global'];
-        }
-        if ( $matches['price_nonmember_global'] !== '' ) {
-          $prices ['nonmember'] = $matches['price_nonmember_global'];
-        }
-        foreach ( $prices as &$price ) {
-          if ( $price === 'Free' ) {
-            $price = '0';
+      }
+      unset ($price);
+      $prices = array_fill_keys ( range(1 , 7), $prices );
+
+      // Print times
+      echo '<p><strong>'.$sport.' times:</strong></p>';
+      foreach ( $times as $time_key => $time_day )
+      {
+        echo '<span style="color:initial">',
+              '[', $time_key, '] ', '</span>';
+        foreach ( $time_day as $key => $time )
+        {
+          if ( $time !== '' && $time !== true ) {
+            echo $key, ' - ',
+                '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
           }
         }
-        unset ($price);
-        $prices_tmp = $prices;
-        $prices = array_fill_keys ( range(1 , 7), $prices_tmp );
-        unset ($prices_tmp);
+        echo '<br />';
+      }
+
+      // Print prices
+      echo '<p><strong>'.$sport.' prices:</strong></p>';
+      foreach ( $prices as $price_key => $price_day )
+      {
+        echo '<span style="color:initial">',
+              '[', $price_key, '] ', '</span>';
+        foreach ( $price_day as $key => $price )
+        {
+          if ( $price !== '' && $price !== true ) {
+            echo $key, ' - ',
+                '<span style="color:#E80000;margin:0.5%">', $price, ' </span>';
+          }
+        }
+        echo '<br />';
       }
 
       // TODO Write code here
