@@ -787,14 +787,16 @@
 
   function days_period ( $line )
   {
-    global $interval, $day_regex;
+    global $day_regex;
+    $interval = '\s*(?::|-|,)?\s*';
     return "(?:{$interval}" .
       "(?P<start_day_{$line}>{$day_regex})\s*-\s*(?P<end_day_{$line}>{$day_regex}))";
   }
 
   function days_list ( $line )
   {
-    global $interval_list, $day_regex;
+    global $day_regex;
+    $interval_list = '\s*(?::|,)?\s*';
     $days_list = '(?:';
     for ( $i = 1; $i < 8; ++$i ) {
       $days_list .= '(?:' . $interval_list .
@@ -809,7 +811,8 @@
 
   function days_time ( $line )
   {
-    global $interval, $hour_regex;
+    global $hour_regex;
+    $interval = '\s*(?::|-|,)?\s*';
     return
       "(?:{$interval}(?P<open_time_{$line}>{$hour_regex})\s*-\s*" .
       "(?P<close_time_{$line}>{$hour_regex}))?";
@@ -817,7 +820,8 @@
 
   function days_prices ( $line )
   {
-    global $interval, $price_regex;
+    global $price_regex;
+    $interval = '\s*(?::|-|,)?\s*';
     return
       "(?:{$interval}member\s*(?::|-)?\s*£?(?P<price_member_{$line}>{$price_regex})" .
       "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember_{$line}>{$price_regex}))?";
