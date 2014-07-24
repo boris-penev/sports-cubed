@@ -606,6 +606,10 @@
       }
       echo '</p>' , PHP_EOL;
 
+      // TODO For example, if times are best viewed as 8 and prices as 9 and 10,
+      // times should fallback to 9 and 10 using current rows instead of
+      // inserting a new row in the table.
+
       $days_type_time = '';
       $times_empty = ! time_check ( $times );
       if ( $times_empty === false )
@@ -614,6 +618,8 @@
         if ($days_type_time !== 'separately') {
           $times = wh_times_prices_num_to_assoc ($times, $days_type_time);
         }
+      } else {
+        $times = [ 8 => ['open' => true, 'close' => true] ];
       }
 
       echo '<p><strong>times:</strong></p>';
