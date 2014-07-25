@@ -838,9 +838,9 @@
     $subject = strtolower ($sports_club);
     // THIS IS FOR TESTING ONLY
     $subject = 'badminton, ' .
-#       'monday - friday, ' .
+        'monday - friday, ' .
         '10:00 - 20:00, member - £13, nonmember - £15, ' .
-#       'saturday - sunday, 2pm - 3pm, member - £24, nonmember - £26';
+        'saturday - sunday, 2pm - 3pm, member - £24, nonmember - £26';
 
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
@@ -917,7 +917,7 @@
       }
       $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
       $prices = array_fill_keys ( range(1 , 7), ['member' => '', 'nonmember' => ''] );
-      // Loop through the days
+      // Loop through the lines
       for ( $i = 0; $i < $count; ++$i )
       {
         // The current matched entry represents a day interval
@@ -927,6 +927,7 @@
           $end   = day_to_number ( $matches['end_day']  [$i] );
           for ( $j = $begin; $j <= $end; ++$j ) {
             $times [$j] = set_time ( $matches, $times[$j], $i );
+            $prices [$j] = set_price ( $matches, $prices[$j], $i );
           }
           continue;
         }
@@ -936,24 +937,24 @@
           switch ( $matches['day'.$k][$i] )
           {
           case 'workweek':
-            for ( $l = 1; $l < 6; ++$l ) {
-              $times [$l] = set_time ( $matches, $times[$l], $i );
-              $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            for ( $j = 1; $j < 6; ++$j ) {
+              $times [$j] = set_time ( $matches, $times[$j], $i );
+              $prices [$j] = set_price ( $matches, $prices[$j], $i );
             }
             break;
           case 'weekend':
-            for ( $l = 6; $l < 8; ++$l ) {
-              $times [$l] = set_time ( $matches, $times[$l], $i );
-              $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            for ( $j = 6; $j < 8; ++$j ) {
+              $times [$j] = set_time ( $matches, $times[$j], $i );
+              $prices [$j] = set_price ( $matches, $prices[$j], $i );
             }
             break;
           default:
-            $l = day_to_number ( $matches['day'.$k][$i] );
-            if ( ! isset ( $l ) ) {
+            $j = day_to_number ( $matches['day'.$k][$i] );
+            if ( ! isset ( $j ) ) {
               break;
             }
-            $times [$l] = set_time ( $matches, $times[$l], $i );
-            $prices [$l] = set_price ( $matches, $prices[$l], $i );
+            $times [$j] = set_time ( $matches, $times[$j], $i );
+            $prices [$j] = set_price ( $matches, $prices[$j], $i );
           }
         }
       }
@@ -972,7 +973,7 @@
       }
 
       // Print times
-      echo '<p><strong>times:</strong></p>';
+      echo '<p><strong>'.$sport ['name'].' times:</strong></p>';
       foreach ( $times as $time_key => $time_day )
       {
         echo '<span style="color:initial">',
@@ -998,7 +999,7 @@
       }
 
       // Print prices
-      echo '<p><strong>prices:</strong></p>';
+      echo '<p><strong>'.$sport ['name'].' prices:</strong></p>';
       foreach ( $prices as $price_key => $price_day )
       {
         echo '<span style="color:initial">',
@@ -1013,7 +1014,9 @@
         echo '<br />';
       }
 
-      return [$sport['id'], $times, $prices];
+      return [ 'sport' => $sport ['id'],
+                'times' => $times,
+                'prices' => $prices ];
     }
 
     if ( preg_match ("/{$sport_pattern}{$global_pattern}/", $subject, $matches) )
