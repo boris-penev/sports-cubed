@@ -1039,8 +1039,10 @@
       }
       // Fills the times and prices arrays
       // If the global entry in matches array contains a valid time
-      if ( $matches['open_time_global'] !== '' &&
-            $matches['close_time_global'] !== '')
+      if ( isset ($matches['open_time_global']) &&
+            isset ($matches['close_time_global']) &&
+            $matches['open_time_global'] !== '' &&
+            $matches['close_time_global'] !== '' )
       {
           $times =  [ 8 =>
               [ 'open'  => $matches['open_time_global'],
@@ -1052,10 +1054,12 @@
       }
       // If the global entry in matches array contains a valid price
       $prices = ['member' => '', 'nonmember' => ''];
-      if ( $matches['price_member_global'] !== '' ) {
+      if ( isset ($matches['price_member_global']) &&
+            $matches['price_member_global'] !== '' ) {
         $prices ['member'] = $matches['price_member_global'];
       }
-      if ( $matches['price_nonmember_global'] !== '' ) {
+      if ( isset ($matches['price_nonmember_global']) &&
+            $matches['price_nonmember_global'] !== '' ) {
         $prices ['nonmember'] = $matches['price_nonmember_global'];
       }
       foreach ( $prices as &$price ) {
