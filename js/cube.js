@@ -70,6 +70,8 @@ var currentSportsPage = 1;
 // used to determine whether the recursive swipe animation to be executed
 var swipeAllowed = true
 
+var cookieArray
+
 // Determine browser
 var props = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
 var prop;
@@ -210,11 +212,12 @@ function browserRec( userAgent ){
 $(document).ready(function() {
   
   if( document.cookie ){
-  var cookieArray = document.cookie.split('; ');
-  cookieArray.splice(0,1);
+  cookieArray = document.cookie.split('; ').sort();
+  //cookieArray.splice(0,1);
+  alert(cookieArray);
   
-  tutorialMode = cookieArray[3].split('=')[1];
-  isComingFromMap = cookieArray[4].split('=')[1];
+  tutorialMode = cookieArray[4].split('=')[1];
+  isComingFromMap = cookieArray[1].split('=')[1];
   }
   else{
   document.cookie="isComingFromMap=no"
@@ -272,7 +275,7 @@ $(document).ready(function() {
     $('#curtain').fadeIn(1000);
 	setTimeout(function(){$('#front-explanation').fadeIn(1000)}, 2000);
     tutorialMode = 'false';
-	cubeNotLocked = '';
+    cubeNotLocked = '';
   }
 
   // tries to differentiate between chrome, firefox and default android/safari 
@@ -290,9 +293,9 @@ $(document).ready(function() {
   document.cookie="isComingFromMap=no";
   isComingFromMap = "no";
 	
-	sportsToBeSubmitted = cookieArray[0].split('=')[1].split(',')
-	daysToBeSubmitted = cookieArray[1].split('=')[1].split(',')
-	priceToBeSubmitted = cookieArray[2].split('=')[1]
+	sportsToBeSubmitted = cookieArray[3].split('=')[1].split(',');
+	daysToBeSubmitted = cookieArray[0].split('=')[1].split(',');
+	priceToBeSubmitted = cookieArray[2].split('=')[1].split(',');
 	
     //var days = sessionStorage.days.split(",");
     if (daysToBeSubmitted.length === 7){
@@ -308,13 +311,17 @@ $(document).ready(function() {
     for (var x in sportsToBeSubmitted){
       $("#" + sportsToBeSubmitted[x].replace(" ", "") + "_toggler > div").trigger("click");
     }
+    
+    var button = priceToBeSubmitted[0]
+    var value = priceToBeSubmitted[1]
+    console.log(button)
+    $('#'+button).trigger( 'click' );
+    $('#'+button+'-select').val(value)
 	
   }
   else {
-    /*sessionStorage.sports = null;
-    sessionStorage.days = null;
-    sessionStorage.setItem('price', 'membership, free');*/
 	deleteCookies();
+  cookieArray = []
 	
 	}
 	
@@ -366,6 +373,12 @@ $('#linkToMap').click(function(){
   alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
  
   window.location = "http://testpilot.x10.mx/sportscubed/map.html";
+})
+
+$('#top').click(function(){
+  window.open(
+    'http://www.edinburgh.gov.uk/', '_blank'
+);
 })
 
 function deleteCookies(){
@@ -564,7 +577,7 @@ $('#membership').parent().find('select').change(function(){
 	}, 500)}
 	
 	var temp = priceToBeSubmitted.split(',')[0];
-	priceToBeSubmitted = temp + ',' + $(this).val().replace('Below ','').replace('£','');
+	priceToBeSubmitted = temp + ',' + $(this).val()
 
 })
 
@@ -580,7 +593,7 @@ $('#one-time').parent().find('select').change(function(){
 	}, 500)}
   
 	var temp = priceToBeSubmitted.split(',')[0];
-	priceToBeSubmitted = temp + ',' + $(this).val().replace('Below ','').replace('£','');
+	priceToBeSubmitted = temp + ',' + $(this).val()
 
 })
 
@@ -668,6 +681,7 @@ $(window).resize(function() {
 // the end point of the tutorial
 $('#front-explanation').click(function(){ tutorialMode = false;
 										  cubeNotLocked = 'all';
+                      document.cookie="tutorialModeOn=false";
 										  $(this).fadeOut(1000, function(){
 												$('#linkToMap').fadeIn(500) });
 										  

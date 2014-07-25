@@ -25,7 +25,11 @@ $(window).resize(function(){
 
 $(document).ready(function(){
 
-		var cookieArray = document.cookie.split("; ")
+		var cookieArray = document.cookie.split("; ").sort()
+   
+    tutorialMode = cookieArray[4].split('=')[1];
+    isComingFromMap = cookieArray[1].split('=')[1];
+    
 		console.log(cookieArray)
 
 		var windowHeight = $(window).height();
@@ -47,7 +51,7 @@ $(document).ready(function(){
 		}
 		var infowindow = new google.maps.InfoWindow(infoWindowOptions);
 		
-if( sessionStorage.tutorialModeOn == 'true' ){
+if( tutorialMode == 'true' ){
 
     windowWidth = $(window).width();
 	$('#helpCard1').fadeIn(1000);
@@ -62,7 +66,7 @@ if( sessionStorage.tutorialModeOn == 'true' ){
 	contentStrings = "<div style='color:#939393; font-size: 15px; font-family:Calibri'><span style='color:black;'>Venue name goes here</span>" +
 	"<br/><a href=mailto:venueemail@example.com>venueemail@example.com</a>" +
 	"<br/><a href=tel:0131 XXXX XXXX>0131 XXXX XXXX</a>" +
-	"<br/><span style='margin-top:10px;' >" + sessionStorage.sports + "</span></div>";
+	"<br/><span style='margin-top:10px;' >" + cookieArray[0].split('=')[1]; + "</span></div>";
 			
 	google.maps.event.addListener(marker, 'click',function() {
 		infowindow.setContent(contentStrings);
@@ -82,11 +86,11 @@ if( sessionStorage.tutorialModeOn == 'true' ){
 else{
 
 	// constructing the query to be sent to the server
-	var sportsArray = sessionStorage.sports.split(",");
-	var daysArray = sessionStorage.days.split(",");
-	var priceArray = sessionStorage.price.split(",");
-	
-	if(sessionStorage.sports == ""){
+	var sportsArray = cookieArray[3].split('=')[1].split(",");
+	var daysArray = cookieArray[0].split('=')[1].split(",");
+	var priceArray = cookieArray[2].split('=')[1].split(",");
+  priceArray[1] = priceArray[1].replace('Below ','').replace('£','');
+	if(sportsArray == ""){
 	sports=null;
 	}
 	else{
@@ -94,7 +98,7 @@ else{
 	sports = sports.replace(/"/g, '\\"');
 	}
 	
-	if(sessionStorage.days == ""){
+	if(daysArray == ""){
 	days = null;
 	}
 	else{
@@ -119,6 +123,7 @@ else{
 	if (request.readyState==4 && request.status==200)
 	{
 		data = JSON.parse(request.responseText);
+    console.log(data.length)
 		console.log(data);
 	
 		var i = 0;

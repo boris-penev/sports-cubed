@@ -100,6 +100,14 @@ select[disabled]{
   -moz-backface-visibility: hidden;
   
   overflow: true;
+  
+    /*** disables text marking ***/
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -moz-touch-callout: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /*** These are the cards and the button from the tutorial with explanations ***/
@@ -249,6 +257,8 @@ makes the application responsive ***/
   -webkit-transform:rotateX(90deg) translateZ(280px);
   -moz-transform:rotateX(90deg) translateZ(280px);
   -o-transform:rotateX(90deg) translateZ(280px);
+  
+  cursor: pointer;
 }
 
 #cube .back {

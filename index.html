@@ -70,7 +70,7 @@
 		<!-- Top side of the cube containing the prospective advertisements -->
         <section class="face top" id = "top">
 		<div>
-          <a href="http://edinburghleisure.co.uk/" target="blank"><img src="img/edinburgh-leisure.jpg" style="margin-top:5px;"></a>
+          <img src="img/edinburgh-leisure.jpg" style="margin-top:5px;">
 		</div>  
         </section>
 
@@ -85,7 +85,7 @@
 			<div class="price-wrapper">
 				<input type="radio" id="membership" name="radios" value="false" checked>
 					<label for="membership">Membership</label>
-				<select>
+				<select id="membership-select">
 					<option>Free</option>
 					<option>Below £15</option>
 					<option>Below £20</option>
@@ -99,7 +99,7 @@
 			<div class="price-wrapper">
 			<input type="radio" id="one-time" name="radios" value="all">
 				<label for="one-time">One-time Visit Cost</label>
-				<select disabled>
+				<select id="one-time-select" disabled>
 					<option>Free</option>
 					<option>Below £5</option>
 					<option>Below £8</option>
