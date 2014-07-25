@@ -256,13 +256,12 @@
 
       wh_db_perform ( 'clubs', $data, 'insert' );
       $id = wh_db_insert_id ();
-      $data = [];
+      $data = [ 'club_id' => $id ];
 
       // TODO The queries can be made in one query
 
       if ( (count ($times) > 0) && (! isset ($times [8])) )
       {
-        $data ['club_id'] = $id;
         foreach ( $times as $day => $time )
         {
           $data ['day_id'] = $day;
@@ -277,12 +276,10 @@
         }
       }
 
-      unset ($data ['opening_time']);
-      unset ($data ['closing_time']);
+      $data = [ 'club_id' => $id ];
 
       if ( (count ($prices) > 0) && (! isset ($prices [8])) )
       {
-        $data ['club_id'] = $id;
         foreach ( $prices as $day => $price )
         {
           if ( $price ['nonmember'] === '' && $price ['member'] === '' ) {
@@ -300,7 +297,48 @@
         }
       }
 
+      $data = [ 'club_id' => $id ];
       $sports_club = parse_sports ($sports, $current_club ['sports']);
+      foreach ( $sports_club  as $entry )
+      {
+        $data ['sport_id'] = $entry ['sport'];
+        foreach ( $entry ['times'] as $day => $time )
+        {
+          $data ['day_id'] = $day;
+          if ( $time ['open'] === true && $time ['close'] === true ) {
+            $data ['opening_time'] = 'null';
+            $data ['closing_time'] = 'null';
+          } else if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
+            $data ['opening_time'] = $time ['open'];
+            $data ['closing_time'] = $time ['close'];
+          } else {
+            $data ['opening_time'] = 'null';
+            $data ['closing_time'] = 'null';
+          }
+          wh_db_perform ( 'clubosport', $data, 'insert' );
+        }
+        unset ($data ['opening_time']);
+        unset ($data ['closing_time']);
+        foreach ( $entry ['prices'] as $day => $price )
+        {
+          $data ['day_id'] = $day;
+          if ( $price ['member'] !== '' ) {
+            $data ['price_member'] = $price ['member'];
+          } else {
+            $data ['price_member'] = 'null';
+          }
+          if ( $price ['nonmember'] !== '' ) {
+            $data ['price_nonmember'] = $price ['nonmember'];
+          } else {
+            $data ['price_nonmember'] = 'null';
+          }
+          wh_db_perform ( 'clubosport', $data,
+                          'insert on duplicate key update' );
+        }
+        unset ($data ['price_member']);
+        unset ($data ['price_nonmember']);
+      }
+      $data = [ 'club_id' => $id ];
 
       $arr[] = $current_club;
 #     var_dump ($current_club);
@@ -766,7 +804,7 @@
   function parse_sports ( $sports, $sports_club )
   {
     if ( $sports_club === '' ) {
-      return;
+      return [];
     }
     echo '<p>' , nl2br (wh_output_string_protected ($sports_club)) ,
          '</p>' , PHP_EOL;
@@ -783,7 +821,7 @@
 
     foreach ( $sports as $sport )
     {
-      $entry = parse_sport ( $sport ['name'], $subject );
+      $entry = parse_sport ( $sport, $subject );
       if ( $entry != [] ) {
         $sports_club [] = $entry;
       }
@@ -807,7 +845,7 @@
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
 
-    $sport_pattern = "(?P<sport>{$sport})";
+    $sport_pattern = "(?P<sport>{$sport['name']})";
 
     if ( ! preg_match ("/{$sport_pattern}/", $subject) ) {
       return [];
@@ -975,11 +1013,10 @@
         echo '<br />';
       }
 
-      // TODO Write code here
-      return [$sport, $times, $prices];
+      return [$sport['id'], $times, $prices];
     }
 
-    if ( preg_match ("/{$sport}{$global_pattern}/", $subject, $matches) )
+    if ( preg_match ("/{$sport_pattern}{$global_pattern}/", $subject, $matches) )
     {
 #     var_dump ($matches);
 #     die;
@@ -1027,7 +1064,7 @@
       $prices = [ 8 => $prices ];
 
       // Print times
-      echo '<p><strong>'.$sport.' times:</strong></p>';
+      echo '<p><strong>'.$sport ['name'].' times:</strong></p>';
       foreach ( $times as $time_key => $time_day )
       {
         echo '<span style="color:initial">',
@@ -1043,7 +1080,7 @@
       }
 
       // Print prices
-      echo '<p><strong>'.$sport.' prices:</strong></p>';
+      echo '<p><strong>'.$sport ['name'].' prices:</strong></p>';
       foreach ( $prices as $price_key => $price_day )
       {
         echo '<span style="color:initial">',
@@ -1058,8 +1095,7 @@
         echo '<br />';
       }
 
-      // TODO Write code here
-      return [ 'sport' => $sport,
+      return [ 'sport' => $sport ['id'],
                 'times' => $times,
                 'prices' => $prices ];
     }
