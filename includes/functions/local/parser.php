@@ -21,7 +21,7 @@
 
   $day_regex = '(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday'
        . '|mon|tue|wed|thu|fri|sat|sun)';
-  $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
+  $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?(?:\s*(?:am|pm))?)|(?:12(?:(?::|\.)\d\d)?(?:\s*(?:noon))?)';
   $price_regex = '(?:free|(?:\d+(?:\.\d\d)*))';
 
   function curl_get_file_contents_custom($URL)
@@ -493,16 +493,20 @@
         }
         if ( strpos ($time, 'am') !== false || strpos ($time, 'pm') !== false )
         {
-          if ( strpos ( $time, ':' ) === false ) {
-            $format = 'ga';
+          if ( strpos ( $time, ':' ) !== false ) {
+            $format = 'h:ia';
+          } else if ( strpos ( $time, '.' ) !== false ) {
+            $format = 'h.ia';
           } else {
-            $format = 'g:ia';
+            $format = 'ha';
           }
         } else {
-          if ( strpos ( $time, ':' ) === false ) {
-            $format = 'h';
+          if ( strpos ( $time, ':' ) !== false ) {
+            $format = 'H:i';
+          } else if ( strpos ( $time, '.' ) !== false ) {
+            $format = 'H.i';
           } else {
-            $format = 'h:i';
+            $format = 'H';
           }
         }
         $timezone = new DateTimeZone('UTC');
@@ -837,10 +841,11 @@
 
     $subject = strtolower ($sports_club);
     // THIS IS FOR TESTING ONLY
-    $subject = 'badminton, ' .
-        'monday - friday, ' .
-        '10:00 - 20:00, member - £13, nonmember - £15, ' .
-        'saturday - sunday, 2pm - 3pm, member - £24, nonmember - £26';
+    $subject = 'badminton' .
+        'monday, 10 - 20:30, member - £13, nonmember - £15' .
+        'tuesday, 2am - 3.30am, member - £24, nonmember - £26' .
+        'wednesday, 11 - 21.30, member - £13, nonmember - £15' .
+        'thursday, 4pm - 5.30pm, member - £24, nonmember - £26';
 
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
