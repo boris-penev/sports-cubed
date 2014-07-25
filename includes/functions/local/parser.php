@@ -22,7 +22,7 @@
   $day_regex = '(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday'
        . '|mon|tue|wed|thu|fri|sat|sun)';
   $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?\s*(?:am|pm)?)|(?:12(?:(?::|\.)\d\d)?\s*(?:noon)?)';
-  $price_regex = '(?:Free|(?:\d+(?:\.\d\d)*))';
+  $price_regex = '(?:free|(?:\d+(?:\.\d\d)*))';
 
   function curl_get_file_contents_custom($URL)
   {
@@ -461,7 +461,7 @@
       $prices ['nonmember'] = $matches['price_nonmember'][$i];
     }
     foreach ( $prices as &$price ) {
-      if ( $price === 'Free' ) {
+      if ( $price === 'free' ) {
         $price = '0';
       }
     }
@@ -1059,7 +1059,7 @@
         $prices ['nonmember'] = $matches['price_nonmember_global'];
       }
       foreach ( $prices as &$price ) {
-        if ( $price === 'Free' ) {
+        if ( $price === 'free' ) {
           $price = '0';
         }
       }
