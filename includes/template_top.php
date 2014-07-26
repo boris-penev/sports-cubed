@@ -16,7 +16,6 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
   <title><?php echo wh_output_string_protected($whTemplate->getTitle()); ?></title>
-  <!-- <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" /> -->
   <link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.8.22.css" />
   <!-- jQuery  -->
   <script type="text/javascript" src="ext/jquery/jquery-1.10.2.min.js"></script>

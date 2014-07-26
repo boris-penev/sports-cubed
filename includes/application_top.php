@@ -12,12 +12,6 @@
 // set php_self in the local scope
   $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($_SERVER['SCRIPT_NAME'])) ? basename($_SERVER['PHP_SELF']) : basename($_SERVER['SCRIPT_NAME']);
 
-  if ($request_type == 'NONSSL') {
-    define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
-  } else {
-    define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
-  }
-
 // include the list of project filenames
   require(DIR_WS_INCLUDES . 'filenames.php');
 
@@ -51,10 +45,6 @@
   require(DIR_WS_FUNCTIONS . 'local/general.php');
   require(DIR_WS_FUNCTIONS . 'html_output.php');
   require(DIR_WS_FUNCTIONS . 'local/html_output.php');
-
-// set the cookie domain
-  $cookie_domain = (($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN);
-  $cookie_path = (($request_type == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH);
 
 // include cache functions if enabled
   if (USE_CACHE == 'true') include(DIR_WS_FUNCTIONS . 'cache.php');

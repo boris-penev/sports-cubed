@@ -11,110 +11,6 @@
 */
 
 ////
-// The HTML href link wrapper function
-  function wh_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
-    global $request_type, $session_started, $SID;
-
-    $page = wh_output_string($page);
-
-    if (!wh_not_null($page)) {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />');
-    }
-
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL == true) {
-        $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
-      } else {
-        $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
-    }
-
-    if (wh_not_null($parameters)) {
-      $link .= $page . '?' . wh_output_string($parameters);
-      $separator = '&';
-    } else {
-      $link .= $page;
-      $separator = '?';
-    }
-
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
-
-// Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
-      if (wh_not_null($SID)) {
-        $_sid = $SID;
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
-        if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
-          $_sid = wh_session_name() . '=' . wh_session_id();
-        }
-      }
-    }
-
-    if (isset($_sid)) {
-      $link .= $separator . wh_output_string($_sid);
-    }
-
-    while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
-
-    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-      $link = str_replace('?', '/', $link);
-      $link = str_replace('&', '/', $link);
-      $link = str_replace('=', '/', $link);
-    } else {
-      $link = str_replace('&', '&amp;', $link);
-    }
-
-    return $link;
-  }
-
-////
-// The HTML image wrapper function
-  function wh_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
-    if ( (empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false') ) {
-      return false;
-    }
-
-// alt is added to the img tag even if it is null to prevent browsers from outputting
-// the image filename as default
-    $image = '<img src="' . wh_output_string($src) . '" alt="' . wh_output_string($alt) . '"';
-
-    if (wh_not_null($alt)) {
-      $image .= ' title="' . wh_output_string($alt) . '"';
-    }
-
-    if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
-      if ($image_size = @getimagesize($src)) {
-        if (empty($width) && wh_not_null($height)) {
-          $ratio = $height / $image_size[1];
-          $width = intval($image_size[0] * $ratio);
-        } elseif (wh_not_null($width) && empty($height)) {
-          $ratio = $width / $image_size[0];
-          $height = intval($image_size[1] * $ratio);
-        } elseif (empty($width) && empty($height)) {
-          $width = $image_size[0];
-          $height = $image_size[1];
-        }
-      } elseif (IMAGE_REQUIRED == 'false') {
-        return false;
-      }
-    }
-
-    if (wh_not_null($width) && wh_not_null($height)) {
-      $image .= ' width="' . wh_output_string($width) . '" height="' . wh_output_string($height) . '"';
-    }
-
-    if (wh_not_null($parameters)) $image .= ' ' . $parameters;
-
-    $image .= ' />';
-
-    return $image;
-  }
-
-////
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
   function wh_image_submit($image, $alt = '', $parameters = '') {
@@ -137,12 +33,6 @@
     global $language;
 
     return wh_image(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image, $alt, '', '', $parameters);
-  }
-
-////
-// Output a separator either through whitespace, or with an image
-  function wh_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    return wh_image(DIR_WS_IMAGES . $image, '', $width, $height);
   }
 
 ////
