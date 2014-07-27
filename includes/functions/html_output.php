@@ -203,19 +203,6 @@
   }
 
 ////
-// Creates a pull-down list of countries
-  function wh_get_country_list($name, $selected = '', $parameters = '') {
-    $countries_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT));
-    $countries = wh_get_countries();
-
-    for ($i=0, $n=sizeof($countries); $i<$n; $i++) {
-      $countries_array[] = array('id' => $countries[$i]['countries_id'], 'text' => $countries[$i]['countries_name']);
-    }
-
-    return wh_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
-  }
-
-////
 // Output a jQuery UI Button
   function wh_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
     static $button_counter = 1;
