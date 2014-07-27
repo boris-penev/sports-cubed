@@ -14,8 +14,6 @@
 </div> <!-- bodyContent //-->
 
 
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-
 </div> <!-- bodyWrapper //-->
 
   <!-- Custom Scripts -->
