@@ -841,11 +841,11 @@
 
     $subject = strtolower ($sports_club);
     // THIS IS FOR TESTING ONLY
-    $subject = 'badminton' .
-        'monday, 10 - 20:30, member - £13, nonmember - £15' .
-        'tuesday, 2am - 3.30am, member - £24, nonmember - £26' .
-        'wednesday, 11 - 21.30, member - £13, nonmember - £15' .
-        'thursday, 4pm - 5.30pm, member - £24, nonmember - £26';
+#   $subject = 'badminton' .
+#       'monday, 10 - 20:30, member - £13, nonmember - £15' .
+#       'tuesday, 2am - 3.30am, member - £24, nonmember - £26' .
+#       'wednesday, 11 - 21.30, member - £13, nonmember - £15' .
+#       'thursday, 4pm - 5.30pm, member - £24, nonmember - £26';
 
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
