@@ -65,6 +65,4 @@
 
 <div id="bodyWrapper" class="container_<?php echo $whTemplate->getGridContainerWidth(); ?>">
 
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-
 <div id="bodyContent" class="grid_<?php echo $whTemplate->getGridContentWidth(); ?> <?php echo ($whTemplate->hasBlocks('boxes_column_left') ? 'push_' . $whTemplate->getGridColumnWidth() : ''); ?>">
