@@ -406,11 +406,7 @@
 
     // Build the text version
     $text = strip_tags($email_text);
-    if (EMAIL_USE_HTML == 'true') {
-      $message->add_html($email_text, $text);
-    } else {
-      $message->add_text($text);
-    }
+    $message->add_text($text);
 
     // Send message
     $message->build_message();

@@ -66,36 +66,5 @@
         return implode("\n", $this->_blocks[$group]);
       }
     }
-
-    function buildBlocks() {
-      global $language;
-
-      if ( defined('TEMPLATE_BLOCK_GROUPS') && wh_not_null(TEMPLATE_BLOCK_GROUPS) ) {
-        $tbgroups_array = explode(';', TEMPLATE_BLOCK_GROUPS);
-
-        foreach ($tbgroups_array as $group) {
-          $module_key = 'MODULE_' . strtoupper($group) . '_INSTALLED';
-
-          if ( defined($module_key) && wh_not_null(constant($module_key)) ) {
-            $modules_array = explode(';', constant($module_key));
-
-            foreach ( $modules_array as $module ) {
-              $class = substr($module, 0, strrpos($module, '.'));
-
-              if ( !class_exists($class) ) {
-                include(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module);
-                include(DIR_WS_MODULES . $group . '/' . $class . '.php');
-              }
-
-              $mb = new $class();
-
-              if ( $mb->isEnabled() ) {
-                $mb->execute();
-              }
-            }
-          }
-        }
-      }
-    }
   }
 ?>

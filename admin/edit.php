@@ -154,12 +154,7 @@
 ?>
 
   <!--
-  <table>
-      <tr>
-        <td class="fieldKey"><?php #echo ENTRY_DATE_OF_BIRTH; ?></td>
-        <td class="fieldValue"><?php #echo wh_draw_input_field('dob', wh_date_short($account['customers_dob']), 'id="dob"') . '&nbsp;' . (wh_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">' . ENTRY_DATE_OF_BIRTH_TEXT . '</span>': ''); ?><script type="text/javascript">$('#dob').datepicker({dateFormat: '<?php #echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script></td>
-      </tr>
-  </table>
+        <?php #echo wh_draw_input_field('dob', wh_date_short($account['customers_dob']), 'id="dob"') . '&nbsp;' . (wh_not_null('Date of birth') ? '<span class="inputRequirement">' . 'Date of birth' . '</span>': ''); ?><script type="text/javascript">$('#dob').datepicker({dateFormat: '<?php #echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script>
   -->
 
     <table style="margin: 20px auto 0 auto" border="1">
