@@ -68,7 +68,7 @@
     echo wh_draw_pull_down_menu_label ( 'club_search', $clubs, '', 'Club Name',
         '', isset($club) ? $club->id : '', 'size="1"', false, true, 2, false );
     $sports_query = getSports ( );
-    $sports = array ( 0 => '' );
+    $sports = array ( 0 => PULL_DOWN_DEFAULT );
     while ($row_obj = wh_db_fetch_object_custom($sports_query)) {
       $sports [$row_obj->id] = $row_obj->name;
     }

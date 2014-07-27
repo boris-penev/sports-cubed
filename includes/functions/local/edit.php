@@ -586,7 +586,7 @@
     {
 #     var_dump ( $sport_search );
       global $clubs;
-      $clubs = array ( 0 => str_repeat ( '&nbsp', 45 ) );
+      $clubs = array ( 0 => PULL_DOWN_DEFAULT );
       $club_query = getClubsBySportsId ( 'sports', array ( $sport_search ) );
       while ( $row_obj = wh_db_fetch_object_custom ( $club_query ) ) {
         $clubs [ $row_obj->id ] = $row_obj->name;
@@ -597,7 +597,7 @@
     else
     {
       global $clubs;
-      $clubs = array ( 0 => str_repeat ( '&nbsp', 45 ) );
+      $clubs = array ( 0 => PULL_DOWN_DEFAULT );
       $club_query = getClubsOrderByName ( );
       while ( $row_obj = wh_db_fetch_object_custom ( $club_query ) ) {
         $clubs [ $row_obj->id ] = $row_obj->name;
