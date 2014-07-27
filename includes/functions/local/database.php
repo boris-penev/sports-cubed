@@ -281,7 +281,7 @@
     $query .= ' where';
     $query .= " clubs.id = {$junction_table}.club_id";
     $query .= ' and ';
-    $query .= $junction_table . $entity_id . ' in (';
+    $query .= $junction_table . '.' . $entity_id . ' in (';
     $data = array_values ( $data );
     foreach ( $data as $entity )
     {
