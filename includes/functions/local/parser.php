@@ -157,8 +157,10 @@
     $name = preg_replace ( '/\s+/', ' ', $name );
     $address = str_replace ( ["\r", "\n", "\t"], ' ', $address );
     $address = preg_replace ( '/\s+/', ' ', $address );
-    $email = str_replace ( ["\r", "\n", "\t"], ' ', $email );
+    $email = str_replace ( ["\r", "\t"], ' ', $email );
     $email = preg_replace ( '/\s+/', ' ', $email );
+    $email = str_replace ( "\n", ', ', $email );
+    $email = rtrim (str_replace ( '.uk', '.uk ', $email ));
     $phone = str_replace ( ["\r", "\n", "\t"], ' ', $phone );
     $phone = preg_replace ( '/\s+/', ' ', $phone );
     $website = str_replace ( ["\r", "\n", "\t"], ' ', $website );
