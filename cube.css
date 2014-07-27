@@ -1,10 +1,10 @@
 body {
   overflow:hidden;
   background: #066AFF;
-  /*background: linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); 
-  background: -webkit-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B); 
+  /*background: linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
+  background: -webkit-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
   background: -moz-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);*/
-  
+
   /*** disables text marking ***/
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -12,7 +12,7 @@ body {
   -moz-touch-callout: none;
   -ms-user-select: none;
   user-select: none;
-  
+
   font-family: Verdana;
 }
 
@@ -25,34 +25,34 @@ p {
 }
 
 input[type=radio]{
-		display:none;
-	}
+    display:none;
+  }
 
 input[type=radio] + label{
-		width: 220px;
-		display:inline-block;
-		padding: 5px;
-		text-align: center;
-		font-size: 22px;
-		color: #666666;
-		text-align: center;
-		vertical-align: middle;
-		cursor: pointer;
-		background-image: url(img/radio.png);
-		/*background-color: lightgrey;*/
-		
-		-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,1);
-		-moz-box-shadow: 1px 1px 1px rgba(0,0,0,1);
-		box-shadow: 1px 1px 1px rgba(0,0,0,1);
-		}
+    width: 220px;
+    display:inline-block;
+    padding: 5px;
+    text-align: center;
+    font-size: 22px;
+    color: #666666;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: url(img/radio.png);
+    /*background-color: lightgrey;*/
+
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,1);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,1);
+    box-shadow: 1px 1px 1px rgba(0,0,0,1);
+    }
 
 input[type=radio]:checked + label{
-		-webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
-		-moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
-		box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
-		
-		color: white;
-		background-image: url(img/radio-clicked.png);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
+    -moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
+    box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
+
+    color: white;
+    background-image: url(img/radio-clicked.png);
 }
 
 select {
@@ -60,8 +60,8 @@ select {
        padding: 5px;
        font-size: 22px;
        background-color: white;
-	   margin: 50px auto 0 auto;
-	   text-align: center;
+     margin: 50px auto 0 auto;
+     text-align: center;
 
        border: 0;
        /*border-radius: 5px;*/
@@ -69,7 +69,7 @@ select {
        }
 select[disabled]{
 
-	background-color: lightgrey;
+  background-color: lightgrey;
 
 }
 /*##################################################### */
@@ -98,9 +98,9 @@ select[disabled]{
   -webkit-backface-visibility: hidden;
   -moz-transform-style: flat;
   -moz-backface-visibility: hidden;
-  
+
   overflow: true;
-  
+
     /*** disables text marking ***/
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -114,7 +114,7 @@ select[disabled]{
 .tutorial-explanation{
   display:none;
   position:absolute;
-  top:0; 
+  top:0;
   left:0
 }
 
@@ -123,7 +123,7 @@ select[disabled]{
 }
 
 .tutorial-button{
-  position: absolute; 
+  position: absolute;
   margin: 420px 0 0 0;
 }
 
@@ -183,16 +183,16 @@ select[disabled]{
 }
 
 .price-wrapper{
-  width: 500px; 
-  height: 60px; 
-  float: left; 
+  width: 500px;
+  height: 60px;
+  float: left;
   margin: 25px auto 10px auto;
 }
 
 .help-buttons {
   cursor: pointer;
-  width:400px; 
-  height: 50px; 
+  width:400px;
+  height: 50px;
   /*border-radius: 10px; */
   margin: 50px 50px 0 50px;
   float: left;
@@ -210,7 +210,7 @@ select[disabled]{
 makes the application responsive ***/
 #bigWrapper {
   overflow: hidden;
-  top:0; 
+  top:0;
   left:0;
 }
 
@@ -239,15 +239,15 @@ makes the application responsive ***/
   transition:transform 1s;
   transform-style:preserve-3d;
   transform:rotateX(90deg);
-  
+
   -webkit-transition:-webkit-transform 1s;
   -webkit-transform-style:preserve-3d;
   -webkit-transform:rotateX(90deg);
-  
+
   -moz-transition:-moz-transform 1s;
   -moz-transform-style:preserve-3d;
   -moz-transform:rotateX(90deg);
-  
+
   z-index: 2;
 }
 
@@ -257,7 +257,7 @@ makes the application responsive ***/
   -webkit-transform:rotateX(90deg) translateZ(280px);
   -moz-transform:rotateX(90deg) translateZ(280px);
   -o-transform:rotateX(90deg) translateZ(280px);
-  
+
   cursor: pointer;
 }
 
@@ -301,14 +301,14 @@ makes the application responsive ***/
 }
 
 #start-intro{
-  display:none; 
-  position: absolute; 
+  display:none;
+  position: absolute;
   margin: 420px 0 0 0;
 }
 
 #map-explanation{
-  display:none; 
-  position:absolute; 
+  display:none;
+  position:absolute;
   z-index:5;
 }
 
@@ -384,19 +384,19 @@ makes the application responsive ***/
 }
 
 #disclaimer{
-	width: 400px;
-	height: 90px;
-	background-color: #606060;
-	/*border-radius: 10px;*/
-	margin: 100px auto 10px auto;
-	padding: 10px;
-	color: white;
-	text-shadow: 1px 1px black;
-	font-size: 20px;
+  width: 400px;
+  height: 90px;
+  background-color: #606060;
+  /*border-radius: 10px;*/
+  margin: 100px auto 10px auto;
+  padding: 10px;
+  color: white;
+  text-shadow: 1px 1px black;
+  font-size: 20px;
 }
 
 #help{
- width: 40px; 
+ width: 40px;
  height: 40px;
  cursor:pointer;
  position: absolute;
@@ -417,7 +417,7 @@ makes the application responsive ***/
 }
 
 #close-help{
-   width: 50px; 
+   width: 50px;
    height: 50px;
    cursor: pointer;
    position: absolute;
@@ -428,11 +428,11 @@ makes the application responsive ***/
 }
 
 #front-explanation{
-	width: 500px;
-	height: 500px;
+  width: 500px;
+  height: 500px;
 }
 
- 
+
 
 /*##################################################### */
 /*###################   ids   ######################### */
