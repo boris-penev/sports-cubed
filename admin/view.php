@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_DEFAULT);
+  require(DIR_WS_LANGUAGES . $language . '/' . 'view.php');
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 
