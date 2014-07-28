@@ -345,6 +345,8 @@
       $arr[] = $current_club;
 #     var_dump ($current_club);
     }
+    file_put_contents ( '/var/www/html/database/newest.txt', time () . PHP_EOL );
+    // write the Unix timestamp to newest.txt
   }
 
   function output_array ( $arr )
