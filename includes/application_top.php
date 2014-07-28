@@ -6,6 +6,8 @@
 // load server configuration parameters
   require('includes/configure.php');
 
+  date_default_timezone_set (CFG_TIME_ZONE);
+
 // set the type of request (secure or not)
   $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
 
