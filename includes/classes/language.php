@@ -58,7 +58,6 @@
       $this->catalog_languages = array();
       $this->catalog_languages['en'] = array ('id' => '1',
                                               'name' => 'English',
-                                              'image' => 'icon.gif',
                                               'directory' => 'english');
 
       $this->browser_languages = '';
@@ -71,7 +70,7 @@
       if ( (wh_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
         $this->language = $this->catalog_languages[$language];
       } else {
-        $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
+        $this->language = $this->catalog_languages['en'];
       }
     }
 
