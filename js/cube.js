@@ -2,7 +2,7 @@
 // to the browser's storage when going to the map
 var sportsToBeSubmitted = new Array();
 var daysToBeSubmitted = new Array();
-var priceToBeSubmitted = "membership,free";
+var priceToBeSubmitted;
 
 // the xAngle is set to 90 degrees because initially when the cube is spawned
 // it has to be rotated on 90 degrees. Therefore initially the user sees
@@ -107,7 +107,7 @@ function adjust(){
   else{
     $('#help').css('margin-top', "10px");
   }
-
+  
   // aligning the cube equally from the left and the righr of the screen;
   // 500 is the side of the cube
   $('#cube').css('margin-top', ((height - 500) / 2) + "px");
@@ -136,7 +136,7 @@ function adjust(){
       $('#cube').css('margin-top', "-" + (250 - determiningSide / 2) + "px");
     }
   }
-
+  
   //alert('Determinig Side: '+determiningSide);
 
   // Here is the GOLDEN FORMULA according to which happens the calculation of
@@ -144,18 +144,18 @@ function adjust(){
   // side of the cube is 500px but after we translate it 360px towards us on
   // the Y axis in order to get the 3D effect it seems as it is 610px. We add
   // 20 extra px for the up and bottom margins of 10px each
-
+  
   if( (determiningSide < 700 && inwards) || (determiningSide > 700 && inwards == false)  ){
-    if(determinerDirection == '+'){
-      determinerDirection = '-';
-    currentDeterminerDirection = '+';
+  	if(determinerDirection == '+'){
+	    determinerDirection = '-';
+		currentDeterminerDirection = '+';
+	}
+	else{
+	    determinerDirection = '+';
+		currentDeterminerDirection = '-';
+	}
   }
-  else{
-      determinerDirection = '+';
-    currentDeterminerDirection = '-';
-  }
-  }
-
+  
   // balances the the cube from coming too inwards the user
   var inwardsOffset = 0;
   inwards = false;
@@ -170,7 +170,7 @@ function adjust(){
     inwardsOffset = 100;
   }
   else if( version == 'ipad' ){
-  inwardsOffset = determiningSide - 630;
+	inwardsOffset = determiningSide - 630;
   }
   else{
       inwardsOffset = 250;
@@ -178,9 +178,9 @@ function adjust(){
   inwards = true;
   }
   depth = 1800 * (650 / (determiningSide-inwardsOffset) - 1);
-
+  
   //alert(depth);
-
+  
   if (depth < 0){
     depth = Math.abs(depth);
   }
@@ -196,11 +196,11 @@ function browserRec( userAgent ){
       version = "chrome"
   else if(userAgent.indexOf('firefox') > -1)
       version = "firefox"
-  else if(userAgent.indexOf('android') > -1 ||
+  else if(userAgent.indexOf('android') > -1 || 
           userAgent.indexOf('mobile safari') > -1)
-    version = "default android"
+	  version = "default android"
   else if(userAgent.indexOf('iphone') > -1)
-    version = "iphone";
+	  version = "iphone";
   else if(userAgent.indexOf('ipad') > -1)
       version = "ipad"
   else if(userAgent.indexOf('chrome') == -1 &&
@@ -211,11 +211,22 @@ function browserRec( userAgent ){
 
 $(document).ready(function() {
 
-  if( document.cookie ){
-  cookieArray = document.cookie.split('; ').sort();
-  //cookieArray.splice(0,1);
-  alert(cookieArray);
-
+  cookieArray = []
+  initialCookieArray = document.cookie.split('; ').sort();
+  for (var x in initialCookieArray){
+    if(initialCookieArray[x].indexOf("sports") != -1 || 
+       initialCookieArray[x].indexOf("days") != -1 ||
+       initialCookieArray[x].indexOf("price") != -1 || 
+       initialCookieArray[x].indexOf("isComingFromMap") !=-1 ||
+       initialCookieArray[x].indexOf("tutorialModeOn") != -1
+       ){
+      cookieArray.push(initialCookieArray[x])
+      }
+  }
+ cookieArray.sort();
+  
+  if( cookieArray.length == 5 ){
+  
   tutorialMode = cookieArray[4].split('=')[1];
   isComingFromMap = cookieArray[1].split('=')[1];
   }
@@ -223,16 +234,16 @@ $(document).ready(function() {
   document.cookie="isComingFromMap=no"
   isComingFromMap = "no"
   }
-
-
+  
+    
   // draw and populate the activities side
   var sportsList = ["aerobics", "american football", "aquafit","athletics","badminton","basketball","bmx","bowling","climbing","cricket","croquet","cycling","dancing","diving","fencing","fitness","football","golf","gymnastics","hiking","hockey","judo","kayaking","mountainbiking","orientation","rugby","skateboarding","skating","squash","swimming","table tennis","tennis","volleyball"]
   for(var i = 0; i < sportsList.length; i++){
-  sportsList[i] = capitaliseFirstLetter(sportsList[i])
+	sportsList[i] = capitaliseFirstLetter(sportsList[i])
   }
   numberOfSportsPages = Math.ceil(sportsList.length / 12);
   drawActivities(sportsList);
-
+  
   // we have the click handler for the sports togglers here because unlike the
   // price and time togglers, the activities ones are generated dynamically by
   // the function above - drawActivities
@@ -250,39 +261,39 @@ $(document).ready(function() {
       btn.css('background-position','0px -35px');
       btn.data('clicked', 'yes');
       var sport = btn.parent().text().toLowerCase();
-    if( sportsToBeSubmitted.indexOf( sport ) == -1 ){
+	  if( sportsToBeSubmitted.indexOf( sport ) == -1 ){
         sportsToBeSubmitted.push(sport);
-    }
+	  }
     }
 
     // if in tutorial mode - display the explanations
     if(tutorialMode == true){
          cubeNotLocked = 'left';
-       setTimeout(function(){$('#back-explanation').fadeIn(1000);
-       $('#swipe-back').fadeIn(1000, function(){
-       animateSwipe('back')
+    	 setTimeout(function(){$('#back-explanation').fadeIn(1000);
+    	 $('#swipe-back').fadeIn(1000, function(){
+    	 animateSwipe('back')
      });
     }, 500)}
 
   })
-
-
+  
+  
   // finishes the tutorial if in tutorial mode
   if( tutorialMode == 'true'){
-  $('#help').attr('src','img/help-dis.png').css('cursor','default')
+	$('#help').attr('src','img/help-dis.png').css('cursor','default')
     helpPressed = true;
-
+	
     $('#curtain').fadeIn(1000);
-  setTimeout(function(){$('#front-explanation').fadeIn(1000)}, 2000);
+	setTimeout(function(){$('#front-explanation').fadeIn(1000)}, 2000);
     tutorialMode = 'false';
     cubeNotLocked = '';
   }
 
-  // tries to differentiate between chrome, firefox and default android/safari
-  // browsers to determine how much closer to bring the cube inwards in case the
+  // tries to differentiate between chrome, firefox and default android/safari 
+  // browsers to determine how much closer to bring the cube inwards in case the 
   // screen is too big. If it is the default android browser and safari the cube
   // goes out of the viewport when it comes too close, unlike chrome and firefox
-
+  
   browserRec(navigator.userAgent.toLowerCase());
 // check if we are coming from the map and "click" on the filters
 // that the user had already selected
@@ -292,11 +303,11 @@ $(document).ready(function() {
   if (isComingFromMap == "yes"){
   document.cookie="isComingFromMap=no";
   isComingFromMap = "no";
-
-  sportsToBeSubmitted = cookieArray[3].split('=')[1].split(',');
-  daysToBeSubmitted = cookieArray[0].split('=')[1].split(',');
-  priceToBeSubmitted = cookieArray[2].split('=')[1].split(',');
-
+	
+	sportsToBeSubmitted = cookieArray[3].split('=')[1].split(',');
+	daysToBeSubmitted = cookieArray[0].split('=')[1].split(',');
+	priceArray = cookieArray[2].split('=')[1].split(',');
+	
     //var days = sessionStorage.days.split(",");
     if (daysToBeSubmitted.length === 7){
       $("#whole_toggler > div").trigger("click");
@@ -311,34 +322,34 @@ $(document).ready(function() {
     for (var x in sportsToBeSubmitted){
       $("#" + sportsToBeSubmitted[x].replace(" ", "") + "_toggler > div").trigger("click");
     }
-
-    var button = priceToBeSubmitted[0]
-    var value = priceToBeSubmitted[1]
-    console.log(button)
+    
+    var button = priceArray[0]
+    var value = priceArray[1]
+    priceToBeSubmitted = button + "," + value
+    value = value.replace(' ', ' £')
     $('#'+button).trigger( 'click' );
     $('#'+button+'-select').val(value)
-
+    $('#'+button+'-select').trigger('change')
+	
   }
   else {
-  deleteCookies();
+	deleteCookies();
   cookieArray = []
-
-  }
-
+  priceToBeSubmitted = "membership,Free"
+	
+	}
+	
   // set some default properties and rotate the cube to the Bottom (Intro) side
 
-  // debuging
-  // alert("Width: "+$(window).width()+", Height: "+ $(window).height())
-
   windowHeight = $(window).height();
-
+	
   $('#bigWrapper').css('width', "100%");
   $('#bigWrapper').css('height', windowHeight);
   $('#bigWrapper').css('position', "absolute");
   $('#bigWrapper').css('left', "0");
-
+  
   //alert("Width: "+$('#bigWrapper').css('width')+", Height: "+ $('#bigWrapper').css('height'))
-
+  
   document.getElementById('cube').style[prop] =
                           "rotateX(" + xAngle + "deg) rotateY("+yAngle+"deg)";
   determinerAxis = "Y";
@@ -347,8 +358,10 @@ $(document).ready(function() {
   currentDeterminerDirection = "+";
 
   adjust();
-  console.log( cookieArray )
-
+  //console.log("In the end of document ready cookieArray is : " +  cookieArray )
+  //console.log("In the end of document ready priceToBeSubmitted is : " +  priceToBeSubmitted )
+  
+  
 })
 
 function capitaliseFirstLetter(string)
@@ -359,19 +372,16 @@ function capitaliseFirstLetter(string)
 // using the HTML5 web storage instead of cookies to remember the user's
 // preferences when going from the cube to the map and backwards
 $('#linkToMap').click(function(){
-  /*sessionStorage.sports = sportsToBeSubmitted;
-  sessionStorage.days = daysToBeSubmitted;
-  sessionStorage.price = priceToBeSubmitted;
-  sessionStorage.tutorialModeOn = tutorialMode;
-  sessionStorage.isComingFromMap = "yes";*/
   document.cookie="sports="+sportsToBeSubmitted;
   document.cookie="days="+daysToBeSubmitted;
+  priceToBeSubmitted = priceToBeSubmitted.replace('£', '')
   document.cookie="price="+priceToBeSubmitted;
   document.cookie="tutorialModeOn="+tutorialMode;
   document.cookie="isComingFromMap=yes";
-
-  alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
-
+  
+  //alert(document.cookie)
+  //alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
+ 
   window.location = "http://testpilot.x10.mx/sportscubed/map.html";
 })
 
@@ -394,39 +404,39 @@ $(document).on( "click", "#how-to", function(){
   cubeNotLocked = "all";
   $('#help-window').remove();
   $('#'+currentWall+' > div').show();
-
+  
   switch(currentWall){
      case "front":
-   gesturePerformed("up")
-   break;
-
-   case "left":
-   gesturePerformed("left")
-   gesturePerformed("up")
-   break;
-
-   case "right":
-   gesturePerformed("right")
-   gesturePerformed("up")
-   break;
-
-   case "back":
-   gesturePerformed("left")
-   gesturePerformed("left")
-   gesturePerformed("up")
-   break;
-
-   case "top":
-   gesturePerformed("up")
-   gesturePerformed("up")
-   break;
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "left":
+	 gesturePerformed("left")
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "right":
+	 gesturePerformed("right")
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "back":
+	 gesturePerformed("left")
+	 gesturePerformed("left")
+	 gesturePerformed("up")
+	 break;
+	 
+	 case "top":
+	 gesturePerformed("up")
+	 gesturePerformed("up")
+	 break;
   }
-
+  
   tutorialMode = true;
   cubeNotLocked = 'left';
   setTimeout(function(){$('#bottom-explanation').fadeIn(1000);},500);
   setTimeout(function(){$('#swipe-bottom').fadeIn(1000, function(){
-  animateSwipe('bottom')
+	animateSwipe('bottom')
   });},500);
 })
 
@@ -437,17 +447,17 @@ $('#help').click(function(){
     cubeNotLocked = '';
     $('#'+currentWall+' > div').hide();
     $('#'+currentWall).append('<div id="help-window">' +
-      '<img id="close-help" src="img/help-close.jpg"><br/><br/><br/>'+
-      '<img id="help-label" src="img/help_label.jpg" />' +
-        '<img id="how-to" class="help-buttons" src="img/how-to.jpg">'+
-      '<a href="about.html">' +
-         '<img id="about-auth" class="help-buttons" src="img/about-auth.jpg">'+
-      '</a>' +
+  		'<img id="close-help" src="img/help-close.jpg"><br/><br/><br/>'+
+  		'<img id="help-label" src="img/help_label.jpg" />' +
+  	    '<img id="how-to" class="help-buttons" src="img/how-to.jpg">'+
+  		'<a href="about.html">' +
+		     '<img id="about-auth" class="help-buttons" src="img/about-auth.jpg">'+
+	    '</a>' +
         '</div>')
     $('#curtain').fadeIn();
   }
-
-
+  
+  
 })
 
 $( document ).on( "click", "#close-help", function() {
@@ -461,68 +471,68 @@ $( document ).on( "click", "#close-help", function() {
 });
 
 $('#sports-left-navigator').click(function(){
-  if(currentSportsPage > 1 && allowedToPress == true){
-    allowedToPress = false;
-    var currentMargin = parseInt($('#sports-slider').css('margin-left'))
-    if(currentMargin < 0){
-      currentMargin += 438;
-    $('#sports-slider').stop(true, false).animate({
-    'marginLeft': currentMargin + 'px'}, 300, function(){ allowedToPress = true })
-    }
-    currentSportsPage -= 1;
-  }
+	if(currentSportsPage > 1 && allowedToPress == true){
+		allowedToPress = false;
+		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
+		if(currentMargin < 0){
+			currentMargin += 438;
+		$('#sports-slider').stop(true, false).animate({
+		'marginLeft': currentMargin + 'px'}, 300, function(){ allowedToPress = true })
+		}
+		currentSportsPage -= 1;
+	}
 })
 
 $('#sports-right-navigator').click(function(){
     if(currentSportsPage < numberOfSportsPages && allowedToPress == true){
-    allowedToPress = false;
-    var currentMargin = parseInt($('#sports-slider').css('margin-left'))
-    if(currentMargin > -2190){
-    currentMargin -= 438;
-    $('#sports-slider').stop(true, false).animate({
-    'marginLeft': currentMargin + 'px'}, 300, function(){ allowedToPress = true })
-    }
-    currentSportsPage += 1;
-  }
+		allowedToPress = false;
+		var currentMargin = parseInt($('#sports-slider').css('margin-left'))
+		if(currentMargin > -2190){
+		currentMargin -= 438;
+		$('#sports-slider').stop(true, false).animate({
+		'marginLeft': currentMargin + 'px'}, 300, function(){ allowedToPress = true })
+		}
+		currentSportsPage += 1;
+	}
 })
 
 // draws all the choices on the activities side of the cube
 // takes an array of sports that is fetched from the DB
 // for now the array is static until Borkata works it out.
 function drawActivities(sportsList){
-  listLength = sportsList.length;
-  while(listLength != 0){
-    if(listLength > 6){
-      drawSportsWrapper(sportsList.slice(0,6))
-      sportsList.splice(0,6)
-      listLength = sportsList.length;
-    }
-    else{
-      drawSportsWrapper(sportsList.slice(0, listLength))
-      sportsList.splice(0,listLength)
-      listLength = sportsList.length;
-    }
-  }
+	listLength = sportsList.length;
+	while(listLength != 0){
+		if(listLength > 6){
+			drawSportsWrapper(sportsList.slice(0,6))
+			sportsList.splice(0,6)
+			listLength = sportsList.length;
+		}
+		else{
+			drawSportsWrapper(sportsList.slice(0, listLength))
+			sportsList.splice(0,listLength)
+			listLength = sportsList.length;
+		}
+	}
 }
 
 function drawSportsWrapper(wrapperList){
-  n = wrapperList.length
-  var sportsWrapperSource = '<section class="sports-wrapper">'
-  for(var i = 0; i < n; i++){
-    sportsWrapperSource += drawSportsLine(wrapperList[i]);
-  }
-  sportsWrapperSource += '</section>';
+	n = wrapperList.length
+	var sportsWrapperSource = '<section class="sports-wrapper">'
+	for(var i = 0; i < n; i++){
+		sportsWrapperSource += drawSportsLine(wrapperList[i]);
+	}
+	sportsWrapperSource += '</section>';
 
-  var sportsSliderSource = $('#sports-slider').html()
-  $('#sports-slider').html(sportsSliderSource + sportsWrapperSource)
+	var sportsSliderSource = $('#sports-slider').html()
+	$('#sports-slider').html(sportsSliderSource + sportsWrapperSource)
 }
 
 // draws a single line for a sport with the label and the button
 function drawSportsLine(element){
-  elementID = element.toLowerCase();
-  elementID = elementID.replace(' ', '');
-  return '<div class="sports-togglers" id="' + elementID + '_toggler">' + element +
-       '<br/><div class="yes-no-button-sports" data-clicked="no"></div></div>'
+	elementID = element.toLowerCase();
+	elementID = elementID.replace(' ', '');
+	return '<div class="sports-togglers" id="' + elementID + '_toggler">' + element +
+		   '<br/><div class="yes-no-button-sports" data-clicked="no"></div></div>'
 }
 
 
@@ -530,70 +540,70 @@ function drawSportsLine(element){
 function animateSwipe(facingWall){
 
     if(swipeAllowed){
-      var swipeimage = $('#swipe-'+facingWall);
+	    var swipeimage = $('#swipe-'+facingWall);
 
-      swipeimage.animate({
-        marginLeft: '10px'
-        }, 1500, function(){
-        setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(facingWall);}, 1000)
-        }
-      )
-  }
+	    swipeimage.animate({
+		    marginLeft: '10px'
+		    }, 1500, function(){
+		    setTimeout(function(){swipeimage.css('margin-left','400px');animateSwipe(facingWall);}, 1000)
+		    }
+	    )
+	}
 }
 
 // setting what will be saved in the browser storage as price once we go to
 // the map
-$('#one-time').click(function(){
+$('#one-time').click(function(){ 
 
-  var oneTimeCombo = $('#one-time').parent().find('select');
-  var membershipCombo = $('#membership').parent().find('select');
-  oneTimeCombo.removeAttr('disabled');
-  membershipCombo.prop('disabled','disabled');
-  priceToBeSubmitted = '';
-  priceToBeSubmitted = 'one-time,' + oneTimeCombo.val();
-
+	var oneTimeCombo = $('#one-time').parent().find('select');
+	var membershipCombo = $('#membership').parent().find('select');
+	oneTimeCombo.removeAttr('disabled');
+	membershipCombo.prop('disabled','disabled');
+	priceToBeSubmitted = '';
+	priceToBeSubmitted = 'one-time,' + oneTimeCombo.val();
+	
 })
 
-$('#membership').click(function(){
+$('#membership').click(function(){ 
 
-  var oneTimeCombo = $('#one-time').parent().find('select');
-  var membershipCombo = $('#membership').parent().find('select');
-  oneTimeCombo.prop('disabled','disabled');
-  membershipCombo.removeAttr('disabled');
-  priceToBeSubmitted = '';
-  priceToBeSubmitted = 'membership,' + membershipCombo.val()
+	var oneTimeCombo = $('#one-time').parent().find('select');
+	var membershipCombo = $('#membership').parent().find('select');
+	oneTimeCombo.prop('disabled','disabled');
+	membershipCombo.removeAttr('disabled');
+	priceToBeSubmitted = '';
+	priceToBeSubmitted = 'membership,' + membershipCombo.val()
 
 })
 
 $('#membership').parent().find('select').change(function(){
 
   // if in tutorial mode - display the explanations
-  if(tutorialMode == true){
+	if(tutorialMode == true){
         cubeNotLocked = 'left';
-    setTimeout(function(){$('#left-explanation').fadeIn(1000);
-    $('#swipe-left').fadeIn(1000, function(){
-    animateSwipe('left')
-    });
-  }, 500)}
-
-  var temp = priceToBeSubmitted.split(',')[0];
-  priceToBeSubmitted = temp + ',' + $(this).val()
+		setTimeout(function(){$('#left-explanation').fadeIn(1000);
+		$('#swipe-left').fadeIn(1000, function(){
+		animateSwipe('left')
+		});
+	}, 500)}
+	
+	var temp = priceToBeSubmitted.split(',')[0];
+	priceToBeSubmitted = temp + ',' + $(this).val()
 
 })
 
 $('#one-time').parent().find('select').change(function(){
 
   // if in tutorial mode - display the explanations
-  if(tutorialMode == true){
+	if(tutorialMode == true){
         cubeNotLocked = 'left';
-    setTimeout(function(){$('#left-explanation').fadeIn(1000);
-    $('#swipe-left').fadeIn(1000, function(){
-    animateSwipe('left')
-    });
-  }, 500)}
-
-  var temp = priceToBeSubmitted.split(',')[0];
-  priceToBeSubmitted = temp + ',' + $(this).val()
+		setTimeout(function(){$('#left-explanation').fadeIn(1000);
+		$('#swipe-left').fadeIn(1000, function(){
+		animateSwipe('left')
+		});
+	}, 500)}
+  
+	var temp = priceToBeSubmitted.split(',')[0];
+	priceToBeSubmitted = temp + ',' + $(this).val()
 
 })
 
@@ -610,12 +620,12 @@ $('.yes-no-button-time').click(function(){
       $('.yes-no-button-time').css('background-position','0px -35px');
       $('.yes-no-button-time').data('clicked','yes');
 
-    var length = daysToBeSubmitted.length;
+	  var length = daysToBeSubmitted.length;
       daysToBeSubmitted.splice(0, length);
-    if( daysToBeSubmitted.length != 7 ){
+	  if( daysToBeSubmitted.length != 7 ){
       daysToBeSubmitted.push("monday", "tuesday", "wednesday",
                              "thursday", "friday", "saturday", "sunday");
-    }
+	  }
       break;
     case "yes":
       $('.yes-no-button-time').css('background-position','0px 0px');
@@ -631,10 +641,10 @@ $('.yes-no-button-time').click(function(){
       btn.css('background-position','0px -35px');
       btn.data('clicked','yes');
 
-    var day = btn.parent().text().toLowerCase();
-    if( daysToBeSubmitted.indexOf( day ) == -1 ){
+	  var day = btn.parent().text().toLowerCase();
+	  if( daysToBeSubmitted.indexOf( day ) == -1 ){
         daysToBeSubmitted.push(day);;
-    }
+	  }
       break;
     case "yes":
       btn.css('background-position','0px 0px');
@@ -642,7 +652,7 @@ $('.yes-no-button-time').click(function(){
       $("#whole_toggler").find("div").css('background-position','0px 0px');
       $("#whole_toggler > div").data('clicked','no');
 
-    var day = btn.parent().text().toLowerCase();
+	  var day = btn.parent().text().toLowerCase();
       var index = daysToBeSubmitted.indexOf(day);
       daysToBeSubmitted.splice(index, 1);
       break;
@@ -652,9 +662,9 @@ $('.yes-no-button-time').click(function(){
   // if in tutorial mode - display the explanations
   if(tutorialMode == true){
       cubeNotLocked = 'left';
-    setTimeout(function(){$('#right-explanation').fadeIn(1000);
-    $('#swipe-right').fadeIn(1000, function(){
-    animateSwipe('right')
+	  setTimeout(function(){$('#right-explanation').fadeIn(1000);
+	  $('#swipe-right').fadeIn(1000, function(){
+	  animateSwipe('right')
     });
   }, 500)}
 })
@@ -667,9 +677,9 @@ $(window).resize(function() {
   document.getElementById('cube').style[prop] +=
           "translate" + currentDeterminerAxis +
           "(" + currentDeterminerDirection + "" + depth +"px)";
-
+		  
   adjust();
-
+  
   $('#bigWrapper').css('width', $(window).width());
   $('#bigWrapper').css('height', $(window).height());
 
@@ -680,12 +690,12 @@ $(window).resize(function() {
 
 // the end point of the tutorial
 $('#front-explanation').click(function(){ tutorialMode = false;
-                      cubeNotLocked = 'all';
+										  cubeNotLocked = 'all';
                       document.cookie="tutorialModeOn=false";
-                      $(this).fadeOut(1000, function(){
-                        $('#linkToMap').fadeIn(500) });
-
-  $('#curtain').fadeOut(1000)
+										  $(this).fadeOut(1000, function(){
+												$('#linkToMap').fadeIn(500) });
+										  
+  $('#curtain').fadeOut(1000)  
   $('#help').attr('src','img/help.png').css('cursor','pointer')
   helpPressed = false;})
 
@@ -737,23 +747,23 @@ $('body').keydown( function (evt){
 //detecting touch gestures on the screen (body)
 Hammer('body').on("swipeup swipedown swipeleft swiperight dragup dragdown dragleft dragright",
   function(event) {
-  var type
-  if (event.type == "swipedown" || event.type == "dragdown") {
-    type = "down";
-  }
-  else if (event.type == "swipeleft" || event.type == "dragleft") {
-    type = "left";
-  }
-  else if (event.type == "swiperight" || event.type == "dragright"){
-    type = "right";
-  }
-  else if (event.type == "swipeup" || event.type == "dragup"){
-    type = "up";
-  }
+	var type
+	if (event.type == "swipedown" || event.type == "dragdown") {
+		type = "down";
+	}
+	else if (event.type == "swipeleft" || event.type == "dragleft") {
+		type = "left";
+	}
+	else if (event.type == "swiperight" || event.type == "dragright"){
+		type = "right";
+	}
+	else if (event.type == "swipeup" || event.type == "dragup"){
+		type = "up";
+	}
     if (cubeNotLocked == 'all' || (cubeNotLocked == 'left' && type == 'left') ||
-                 (cubeNotLocked == 'right' && type == 'right') ||
-                 (cubeNotLocked == 'up' && type == 'up') ||
-                 (cubeNotLocked == 'down' && type == 'down')){
+							   (cubeNotLocked == 'right' && type == 'right') ||
+							   (cubeNotLocked == 'up' && type == 'up') ||
+							   (cubeNotLocked == 'down' && type == 'down')){
       event.gesture.stopDetect();
       gesturePerformed(type);
     }
@@ -972,60 +982,60 @@ function gesturePerformed(type)
         break;
     }
 
-  // if in tutorial mode hide the explanations that the user leaves behind
-  if(tutorialMode == true){
-    switch (currentWall){
-      case 'right':
-      $('#swipe-bottom').fadeOut(1500);
-      $('#bottom-explanation').fadeOut(1500);
-      cubeNotLocked = '';
-      setTimeout(function(){ alert("Choose a time for your practices") }, 1200);
-      break;
-      case 'back':
-      $('#swipe-right').fadeOut(1500);
-      $('#right-explanation').fadeOut(1500);
-      cubeNotLocked = '';
-      setTimeout(function(){ alert("Choose an activity") }, 1200);
-      break;
-      case 'left':
-      $('#swipe-back').fadeOut(1500);
-      $('#back-explanation').fadeOut(1500);
-      cubeNotLocked = '';
-      setTimeout(function(){ alert("Choose type and range of the price") }, 1200);
-      break;
-      case 'front':
-      $('#swipe-left').fadeOut(1500);
-      $('#left-explanation').fadeOut(1500);
-      cubeNotLocked = '';
-      setTimeout(function(){ alert("Click on the grey button to explore the map with results") }, 1200);
-      break;
-    }
-  }
-
-  //alert(inwards + '|' + determinerDirection + "|" + currentDeterminerDirection);
-  // if the cube is supposed to come inwards just swap the the direction
-  if(inwards){
+	// if in tutorial mode hide the explanations that the user leaves behind
+	if(tutorialMode == true){
+		switch (currentWall){
+			case 'right':
+			$('#swipe-bottom').fadeOut(1500);
+			$('#bottom-explanation').fadeOut(1500);
+			cubeNotLocked = '';
+			setTimeout(function(){ alert("Choose a time for your practices") }, 1200);
+			break;
+			case 'back':
+			$('#swipe-right').fadeOut(1500);
+			$('#right-explanation').fadeOut(1500);
+			cubeNotLocked = '';
+			setTimeout(function(){ alert("Choose an activity") }, 1200);
+			break;
+			case 'left':
+			$('#swipe-back').fadeOut(1500);
+			$('#back-explanation').fadeOut(1500);
+			cubeNotLocked = '';
+			setTimeout(function(){ alert("Choose type and range of the price") }, 1200);
+			break;
+			case 'front':
+			$('#swipe-left').fadeOut(1500);
+			$('#left-explanation').fadeOut(1500);
+			cubeNotLocked = '';
+			setTimeout(function(){ alert("Click on the grey button to explore the map with results") }, 1200);
+			break;
+		}
+	}
+	
+	//alert(inwards + '|' + determinerDirection + "|" + currentDeterminerDirection);
+	// if the cube is supposed to come inwards just swap the the direction
+	if(inwards){
         if(determinerDirection == '+'){
-        determinerDirection = '-';
-    }
-    else{
-        determinerDirection = '+';
-    }
-  }
-  //alert(determinerDirection + "|" + currentDeterminerDirection);
+		    determinerDirection = '-';
+		}
+		else{
+		    determinerDirection = '+';
+		}
+	}
+	//alert(determinerDirection + "|" + currentDeterminerDirection);
 
-  // check the beginning of the document for the variables that follow
-  // when we rotate the cube and it is moved inwards to make it fit the screen
-  // first we move it outwards
+	// check the beginning of the document for the variables that follow
+	// when we rotate the cube and it is moved inwards to make it fit the screen
+	// first we move it outwards
     document.getElementById('cube').style[prop] +=
             "translate" + currentDeterminerAxis  + "(" +
             currentDeterminerDirection + "" + depth + "px)";
 
-  // then we rotate it
+	// then we rotate it
     document.getElementById('cube').style[prop] =
             "rotateX(" + xAngle + "deg) rotateY(" + yAngle + "deg)";
 
-  // then move it inwards by the respective axis
+	// then move it inwards by the respective axis
     document.getElementById('cube').style[prop] +=
             "translate" + determinerAxis +
             "(" + determinerDirection + "" + depth + "px)";
@@ -1113,7 +1123,7 @@ function activityTimer( ) {
     getRightPanel().style.opacity = 0.0;
   if ( isFront() ) {
     document.getElementById('cube').style[prop] += "translateZ(80px)";
-  frontpanel();
+	frontpanel();
   }
   else
     getFrontPanel().style.opacity = 0.0;
