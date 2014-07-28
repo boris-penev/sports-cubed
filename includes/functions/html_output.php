@@ -11,31 +11,6 @@
 */
 
 ////
-// The HTML form submit button wrapper function
-// Outputs a button in the selected language
-  function wh_image_submit($image, $alt = '', $parameters = '') {
-    global $language;
-
-    $image_submit = '<input type="image" src="' . wh_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" alt="' . wh_output_string($alt) . '"';
-
-    if (wh_not_null($alt)) $image_submit .= ' title=" ' . wh_output_string($alt) . ' "';
-
-    if (wh_not_null($parameters)) $image_submit .= ' ' . $parameters;
-
-    $image_submit .= ' />';
-
-    return $image_submit;
-  }
-
-////
-// Output a function button in the selected language
-  function wh_image_button($image, $alt = '', $parameters = '') {
-    global $language;
-
-    return wh_image(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image, $alt, '', '', $parameters);
-  }
-
-////
 // Output a form
   function wh_draw_form($name, $action, $method = 'post', $parameters = '', $tokenize = false) {
     global $sessiontoken;
