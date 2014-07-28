@@ -38,14 +38,24 @@
     global $$link;
 
     if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
-      error_log('QUERY ' . $query . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+      if (defined('STORE_PAGE_PARSE_TIME_LOG') &&
+          (STORE_PAGE_PARSE_TIME_LOG != '')) {
+        error_log('QUERY ' . $query . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+      } else {
+        error_log('QUERY ' . $query . "\n", 0);
+      }
     }
 
     $result = mysqli_query($$link, $query) or wh_db_error($query, mysqli_errno($$link), mysqli_error($$link));
 
     if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
-       $result_error = mysqli_error();
-       error_log('RESULT ' . $result . ' ' . $result_error . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+      $result_error = mysqli_error();
+      if (defined('STORE_PAGE_PARSE_TIME_LOG') &&
+          (STORE_PAGE_PARSE_TIME_LOG != '')) {
+        error_log('RESULT ' . $result . ' ' . $result_error . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+      } else {
+        error_log('RESULT ' . $result . ' ' . $result_error . "\n", 0);
+      }
     }
 
     return $result;
