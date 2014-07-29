@@ -27,12 +27,6 @@
 // make a connection to the database... now
   wh_db_connect() or die('Unable to connect to database server!');
 
-// set the application parameters
-  $configuration_query = wh_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
-  while ($configuration = wh_db_fetch_array($configuration_query)) {
-    define($configuration['cfgKey'], $configuration['cfgValue']);
-  }
-
 // if gzip_compression is enabled, start to buffer the output
   if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && !headers_sent() ) {
     if (($ini_zlib_output_compression = (int)ini_get('zlib.output_compression')) < 1) {

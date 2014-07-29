@@ -11,6 +11,4 @@
 */
 
 // define the database table names used in the project
-  define('TABLE_CONFIGURATION', 'configuration');
-  define('TABLE_CONFIGURATION_GROUP', 'configuration_group');
 ?>
