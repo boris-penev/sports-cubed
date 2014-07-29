@@ -189,11 +189,17 @@
     $facilities = preg_replace ( '/ +/', ' ', $facilities );
     $facilities = preg_replace ( '/\n+/', "\n", $facilities );
     $facilities = str_replace ( "\n", ', ', $facilities );
-    if ($website == '' && preg_match ('/$(?:http\:\/\/|www.).*\./', $comment) &&
-        ! preg_match ('\s', $comment) )
+    $matches = null;
+    if ($website == '' &&
+        preg_match_all ('/(?:http\:\/\/|www\.)\S+\.\S+/', $comment, $matches) )
     {
-      $website = $comment;
+      $website = '';
+      foreach ( $matches [0] as $match ) {
+        $website .= $match . ', ';
+      }
+      $website = substr ( $website, 0, -2 );
       $comment = '';
+      $matches = null;
     }
     $current['name'] = $name;
     $current['address'] = $address;
