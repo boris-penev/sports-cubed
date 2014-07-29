@@ -48,9 +48,6 @@
   require(DIR_WS_FUNCTIONS . 'html_output.php');
   require(DIR_WS_FUNCTIONS . 'local/html_output.php');
 
-// include cache functions if enabled
-  if (USE_CACHE == 'true') include(DIR_WS_FUNCTIONS . 'cache.php');
-
 // set the language
   include(DIR_WS_CLASSES . 'language.php');
   $lng = new language();
