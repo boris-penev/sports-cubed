@@ -99,12 +99,9 @@
     return '';
   }
 
-  function loadXML ( )
+  function loadXML ( $url )
   {
-    $xml = curl_get_html_file_contents_custom (
-      'http://www.edinburgh.gov.uk/api/directories/25/entries.xml?api_key=' .
-      COUNCIL_API_KEY . '&per_page=100&page=1' );
-#     'http://localhost/database/entries.edit.xml' );
+    $xml = curl_get_html_file_contents_custom ( $url );
 
     try {
       return new SimpleXMLElement($xml);

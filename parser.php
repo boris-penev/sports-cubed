@@ -3,7 +3,7 @@
   require('includes/application_top.php');
   require(DIR_WS_FUNCTIONS . 'local/parser.php');
 
-  $xml = loadXML ();
+  $xml = loadXML ( URL_XML_COUNCIL );
   $query = buildQuery ( 'club' );
 //  $query = buildQuery ( 'sport' ) . buildQuery ( 'time' );
   process_clubs ($xml, $query);
