@@ -5,6 +5,7 @@
 
   $xml = loadXML ();
   $query = buildQuery ( 'club' );
+//  $query = buildQuery ( 'sport' ) . buildQuery ( 'time' );
   process_clubs ($xml, $query);
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
