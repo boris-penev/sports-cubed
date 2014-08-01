@@ -218,7 +218,7 @@
     $sports = wh_db_fetch_all_custom ( getSports ( ), MYSQLI_ASSOC );
     foreach ( $xml->xpath('/entries/entry' . $query) as $club )
     {
-      $current_club = process_current_club ($club);
+      $current_club = process_current_club_council_edinburgh ($club);
 
       $data = $current_club;
 
