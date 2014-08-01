@@ -58,7 +58,7 @@
               (string) $entity[0] : '';
   }
 
-  function buildQuery ( $entity )
+  function build_query_council_edinburgh ( $entity )
   {
     if ( $entity == 'club' )
     {
