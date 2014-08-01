@@ -212,6 +212,85 @@
     return $current;
   }
 
+  function process_current_club_club_sport_edinburgh ( $club )
+  {
+    global $club_init;
+    $current = $club_init;
+    $name = $club->xpath('fields/field[@name=\'title\']/text()');
+    $address = $club->xpath('fields/field[@name=\'address\']/text()');
+#   $postcode = $club->xpath('fields/field[@name=\'postcode\']/text()');
+    $latitude = $club->xpath('fields/field[@name=\'latitude\']/text()');
+    $longtitude = $club->xpath('fields/field[@name=\'longtitude\']/text()');
+    $email = $club->xpath('fields/field[@name=\'email\']/text()');
+    $phone = $club->xpath('fields/field[@name=\'Telephone\']/text()');
+    $website_local = $club->xpath('fields/field[@name=\'path\']/text()');
+    $website_remote = $club->xpath('fields/field[@name=\'website\']/text()');
+    $comment_short = $club->xpath('fields/field[@name=\'short\']/text()');
+    $comment_long  = $club->xpath('fields/field[@name=\'long\']/text()');
+    $sport = $club->xpath('fields/field[@name=\'sport\']/text()');
+    $time_mon = $club->xpath('fields/field[@name=\'montime\']/text()');
+    $time_tue = $club->xpath('fields/field[@name=\'tuetime\']/text()');
+    $time_wed = $club->xpath('fields/field[@name=\'wedtime\']/text()');
+    $time_thu = $club->xpath('fields/field[@name=\'thutime\']/text()');
+    $time_fri = $club->xpath('fields/field[@name=\'fritime\']/text()');
+    $time_sat = $club->xpath('fields/field[@name=\'sattime\']/text()');
+    $time_sun = $club->xpath('fields/field[@name=\'suntime\']/text()');
+    $times = [1 => $time_mon, 2 => $time_tue, 3 => $time_wed, 4 => $time_thu,
+              5 => $time_fri, 6 => $time_sat, 7 => $time_sun];
+    $latitude = trim (get_first_element ($latitude));
+    $longtitude = trim (get_first_element ($longtitude));
+    $name = trim (get_first_element ($name));
+    $address = trim (get_first_element ($address));
+    $email= trim (get_first_element ($email));
+    $phone = trim (get_first_element ($phone));
+    $website_local = trim (get_first_element ($website_local));
+    $website_remote = trim (get_first_element ($website_remote));
+#   $website = implode ( ', ', [$website_local, $website_remote] );
+    $website = $website_local . ', ' . $website_remote;
+    $website = trim ( $website, ', ' );
+    $comment_short = trim (get_first_element ($comment_short));
+    $comment_long  = trim (get_first_element ($comment_long));
+    $comment = '<p>' . $comment_short . '</p>' . $comment_long;
+    $sport = trim (get_first_element ($sport));
+    $name = str_replace ( ["\r", "\n", "\t"], ' ', $name );
+    $name = preg_replace ( '/\s+/', ' ', $name );
+    $address = str_replace ( ["\r", "\n", "\t"], ' ', $address );
+    $address = preg_replace ( '/\s+/', ' ', $address );
+    $email = str_replace ( ["\r", "\t"], ' ', $email );
+    $email = preg_replace ( '/\s+/', ' ', $email );
+    $email = str_replace ( "\n", ', ', $email );
+    $email = rtrim (str_replace ( '.uk', '.uk ', $email ));
+    $phone = str_replace ( ["\r", "\n", "\t"], ' ', $phone );
+    $phone = preg_replace ( '/\s+/', ' ', $phone );
+    $website = str_replace ( ["\r", "\n", "\t"], ' ', $website );
+    $website = preg_replace ( '/\s+/', ' ', $website );
+    $comment = str_replace ( ["\r", "\t"], '', $comment );
+    $comment = preg_replace ( '/ +\n/', "\n", $comment );
+    $comment = preg_replace ( '/\n +/', "\n", $comment );
+    $comment = preg_replace ( '/ +/', ' ', $comment );
+    $comment = preg_replace ( '/\n+/', "\n", $comment );
+#   $comment = str_replace ( "\n", ', ', $comment );
+    $sport = str_replace ( ["\r", "\n", "\t"], ' ', $sport );
+    $matches = null;
+    if ($address != '' &&
+        preg_match ('/EH\d\d? [A-Z0-9]{3}/', $address, $matches) )
+    {
+      $current ['postcode'] = $matches [0];
+      $matches = null;
+    }
+    $current ['name'] = $name;
+    $current ['address'] = $address;
+    $current ['email'] = $email;
+    $current ['phone'] = $phone;
+    $current ['website'] = $website;
+    $current ['comment'] = $comment;
+    $current ['latitude'] = (double) $latitude;
+    $current ['longtitude'] = (double) $longtitude;
+    $current ['time'] = $times;
+    $current ['sports'] = $sport;
+    return $current;
+  }
+
   function process_clubs_council_edinburgh ( $xml, $query )
   {
     $arr = [];
