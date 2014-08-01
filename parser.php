@@ -6,7 +6,8 @@
   $xml = loadXML ( URL_XML_COUNCIL );
   $query = buildQuery ( 'club' );
 //  $query = buildQuery ( 'sport' ) . buildQuery ( 'time' );
-  process_clubs ($xml, $query);
+  delete_clubs ();
+  process_clubs_council_edinburgh ($xml, $query);
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 

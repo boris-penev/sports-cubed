@@ -212,11 +212,10 @@
     return $current;
   }
 
-  function process_clubs ( $xml, $query )
+  function process_clubs_council_edinburgh ( $xml, $query )
   {
     $arr = [];
     $sports = wh_db_fetch_all_custom ( getSports ( ), MYSQLI_ASSOC );
-    delete_clubs ();
     foreach ( $xml->xpath('/entries/entry' . $query) as $club )
     {
       $current_club = process_current_club ($club);
