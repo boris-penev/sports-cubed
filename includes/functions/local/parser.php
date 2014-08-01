@@ -71,7 +71,7 @@
     else if ( $entity == 'sport' )
     {
       $sports = wh_db_get_input_string ( 'sport' );
-      if ( isset ( $sports ) ) {
+      if ( ! isset ( $sports ) ) {
         return '';
       }
       $sports = explode ( ' ', $sports );
@@ -85,7 +85,7 @@
     else if ( $entity == 'time' )
     {
       $times = wh_db_get_input_string ( 'time' );
-      if ( isset ( $times ) ) {
+      if ( ! isset ( $times ) ) {
         return '';
       }
       $times = explode ( ' ', $times );
