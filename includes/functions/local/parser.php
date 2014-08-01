@@ -112,7 +112,7 @@
     }
   }
 
-  function process_current_club ( $club )
+  function process_current_club_council_edinburgh ( $club )
   {
     global $club_init;
     $current = $club_init;
