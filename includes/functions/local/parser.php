@@ -121,24 +121,13 @@
     $location = $club->xpath('fields/field[@name=\'Location\']/text()');
     $email = $club->xpath('fields/field[@name=\'Email\']/text()');
     $phone = $club->xpath('fields/field[@name=\'Telephone\']/text()');
-    $sports = $club->xpath('fields/field[@name=\'Activities\']/text()');
-    $facilities = $club->xpath('fields/field[@name=\'Facilities\']/text()');
-    $times = $club->xpath('fields/field[@name=\'Opening hours\']/text()');
-    $prices = $club->xpath('fields/field[@name=\'Prices\']/text()');
     $website = $club->xpath('fields/field[@name=\'Timetables\']/text()');
     $comment = $club->xpath('fields/field[@name=\'More information\']/text()');
+    $times = $club->xpath('fields/field[@name=\'Opening hours\']/text()');
+    $prices = $club->xpath('fields/field[@name=\'Prices\']/text()');
+    $sports = $club->xpath('fields/field[@name=\'Activities\']/text()');
+    $facilities = $club->xpath('fields/field[@name=\'Facilities\']/text()');
 
-    if ( count ( $location ) > 0 && strlen ( $location[0] ) > 1 )
-    {
-      $location = explode ( ',', $location[0] );
-      if ( count ( $location ) == 2 )
-      {
-        $latitude = trim ($location [0]);
-        $longtitude = trim ($location [1]);
-        $current ['latitude'] = (double) $latitude;
-        $current ['longtitude'] = (double) $longtitude;
-      }
-    }
     $name = trim ((string) $club->title);
     $address = trim (get_first_element ($address));
     $postcode = trim (get_first_element ($postcode));
@@ -186,6 +175,12 @@
     $facilities = preg_replace ( '/ +/', ' ', $facilities );
     $facilities = preg_replace ( '/\n+/', "\n", $facilities );
     $facilities = str_replace ( "\n", ', ', $facilities );
+    if ( count ($location) > 0 && $location[0] != '' &&
+          count ($location = explode ( ',', $location[0])) == 2 )
+    {
+      $current ['latitude'] = (double) trim ($location [0]);
+      $current ['longtitude'] = (double) trim ($location [1]);
+    }
     $matches = null;
     if ($website == '' &&
         preg_match_all ('/(?:http\:\/\/|www\.)\S+\.\S+/', $comment, $matches) )
