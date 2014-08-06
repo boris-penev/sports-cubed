@@ -777,6 +777,11 @@
     return false;
   }
 
+  /**
+   * Parse the time field and extracts timetable information from it
+   * @param time the input field
+   * @return associative array with times or empty array
+   */
   function parse_time ( $time )
   {
     global $day_regex;
@@ -903,6 +908,11 @@
     return [];
   }
 
+  /**
+   * Parse the price field and extracts price information from it
+   * @param price the input field
+   * @return associative array with prices or empty array
+   */
   function parse_price ( $price )
   {
     global $day_regex;
@@ -1024,6 +1034,14 @@
     return [];
   }
 
+  /**
+   * Parse the sports field and extracts sports timetable information from it
+   * for all the sports
+   * @param sports array with all the sports possible
+   * @param sports_club the input field
+   * @return associative array with sports and their time and price schedule
+   *           or empty array
+   */
   function parse_sports ( $sports, $sports_club )
   {
     if ( $sports_club === '' ) {
@@ -1045,13 +1063,21 @@
     foreach ( $sports as $sport )
     {
       $entry = parse_sport ( $sport, $subject );
-      if ( $entry != [] ) {
+      if ( $entry !== [] ) {
         $sports_club [] = $entry;
       }
     }
     return $sports_club;
   }
 
+  /**
+   * Parse the sports field and extracts sports timetable information from it
+   * for a single sport
+   * @param sport the sport that we are searching for
+   * @param sports_club the input field
+   * @return associative array with the sport and its time and price schedule
+   *           or empty array
+   */
   function parse_sport ( $sport, $sports_club )
   {
     global $day_regex;
