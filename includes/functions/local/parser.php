@@ -437,9 +437,7 @@
 
       // These are raw unparsed fields and should not be submitted
       unset ($data['time']);
-      unset ($data['price']);
       unset ($data['sports']);
-      unset ($data['facilities']);
 
       echo '<p><strong>' , wh_output_string_protected ($current_club ['name']) ,
            '</strong></p>' , PHP_EOL;
@@ -459,16 +457,12 @@
         continue;
       }
 
-      $times = parse_time ($current_club ['time']);
+      $times = $current_club ['time'];
+      $times = wh_times_prices_num_to_assoc (
+          $times, wh_determine_best_view_times ($times));
       if ( isset ($times [8]) ) {
         $data ['opening_time'] = $times [8] ['open'];
         $data ['closing_time'] = $times [8] ['close'];
-      }
-
-      $prices = parse_price ($current_club ['price']);
-      if ( isset ($prices [8]) ) {
-        $data ['price_member']    = $prices [8] ['member'];
-        $data ['price_nonmember'] = $prices [8] ['nonmember'];
       }
 
       wh_db_perform ( 'clubs', $data, 'insert' );
@@ -495,26 +489,6 @@
 
       $data = [ 'club_id' => $id ];
 
-      if ( (count ($prices) > 0) && (! isset ($prices [8])) )
-      {
-        foreach ( $prices as $day => $price )
-        {
-          if ( $price ['nonmember'] === '' && $price ['member'] === '' ) {
-            continue;
-          }
-          $data ['day_id'] = $day;
-          if ( $price ['member'] !== '' ) {
-            $data ['price_member'] = $price ['member'];
-          }
-          if ( $price ['nonmember'] !== '' ) {
-            $data ['price_nonmember'] = $price ['nonmember'];
-          }
-          wh_db_perform ( 'club_schedule', $data,
-                          'insert on duplicate key update' );
-        }
-      }
-
-      $data = [ 'club_id' => $id ];
       $sports_club = parse_sports ($sports, $current_club ['sports']);
       foreach ( $sports_club  as $entry )
       {
@@ -534,26 +508,6 @@
           }
           wh_db_perform ( 'clubosport', $data, 'insert' );
         }
-        unset ($data ['opening_time']);
-        unset ($data ['closing_time']);
-        foreach ( $entry ['prices'] as $day => $price )
-        {
-          $data ['day_id'] = $day;
-          if ( $price ['member'] !== '' ) {
-            $data ['price_member'] = $price ['member'];
-          } else {
-            $data ['price_member'] = 'null';
-          }
-          if ( $price ['nonmember'] !== '' ) {
-            $data ['price_nonmember'] = $price ['nonmember'];
-          } else {
-            $data ['price_nonmember'] = 'null';
-          }
-          wh_db_perform ( 'clubosport', $data,
-                          'insert on duplicate key update' );
-        }
-        unset ($data ['price_member']);
-        unset ($data ['price_nonmember']);
       }
       $data = [ 'club_id' => $id ];
 
