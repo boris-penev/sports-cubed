@@ -211,31 +211,15 @@
   {
     global $club_init;
     $current = $club_init;
-    $name = $club->xpath('fields/field[@name=\'title\']/text()');
-    $address = $club->xpath('fields/field[@name=\'address\']/text()');
-#   $postcode = $club->xpath('fields/field[@name=\'postcode\']/text()');
-    $latitude = $club->xpath('fields/field[@name=\'latitude\']/text()');
-    $longtitude = $club->xpath('fields/field[@name=\'longtitude\']/text()');
-    $email = $club->xpath('fields/field[@name=\'email\']/text()');
-    $phone = $club->xpath('fields/field[@name=\'Telephone\']/text()');
-    $website_local = $club->xpath('fields/field[@name=\'path\']/text()');
-    $website_remote = $club->xpath('fields/field[@name=\'website\']/text()');
-    $comment_short = $club->xpath('fields/field[@name=\'short\']/text()');
-    $comment_long  = $club->xpath('fields/field[@name=\'long\']/text()');
-    $sport = $club->xpath('fields/field[@name=\'sport\']/text()');
-    $time_mon = $club->xpath('fields/field[@name=\'montime\']/text()');
-    $time_tue = $club->xpath('fields/field[@name=\'tuetime\']/text()');
-    $time_wed = $club->xpath('fields/field[@name=\'wedtime\']/text()');
-    $time_thu = $club->xpath('fields/field[@name=\'thutime\']/text()');
-    $time_fri = $club->xpath('fields/field[@name=\'fritime\']/text()');
-    $time_sat = $club->xpath('fields/field[@name=\'sattime\']/text()');
-    $time_sun = $club->xpath('fields/field[@name=\'suntime\']/text()');
-    $times = [1 => $time_mon, 2 => $time_tue, 3 => $time_wed, 4 => $time_thu,
-              5 => $time_fri, 6 => $time_sat, 7 => $time_sun];
-    $latitude = trim (get_first_element ($latitude));
-    $longtitude = trim (get_first_element ($longtitude));
+    $name = $club->xpath('title/text()');
+    $email = $club->xpath('email/text()');
+    $phone = $club->xpath('telephone/text()');
+    $website_local = $club->xpath('path/text()');
+    $website_remote = $club->xpath('website/text()');
+    $comment_short = $club->xpath('short/text()');
+    $comment_long  = $club->xpath('long/text()');
+    $sport = $club->xpath('sport/text()');
     $name = trim (get_first_element ($name));
-    $address = trim (get_first_element ($address));
     $email= trim (get_first_element ($email));
     $phone = trim (get_first_element ($phone));
     $website_local = trim (get_first_element ($website_local));
@@ -249,8 +233,6 @@
     $sport = trim (get_first_element ($sport));
     $name = str_replace ( ["\r", "\n", "\t"], ' ', $name );
     $name = preg_replace ( '/\s+/', ' ', $name );
-    $address = str_replace ( ["\r", "\n", "\t"], ' ', $address );
-    $address = preg_replace ( '/\s+/', ' ', $address );
     $email = str_replace ( ["\r", "\t"], ' ', $email );
     $email = preg_replace ( '/\s+/', ' ', $email );
     $email = str_replace ( "\n", ', ', $email );
@@ -267,22 +249,58 @@
 #   $comment = str_replace ( "\n", ', ', $comment );
     $sport = str_replace ( ["\r", "\n", "\t"], ' ', $sport );
     $matches = null;
-    if ($address != '' &&
-        preg_match ('/EH\d\d? [A-Z0-9]{3}/', $address, $matches) )
-    {
-      $current ['postcode'] = $matches [0];
-      $matches = null;
-    }
     $current ['name'] = $name;
-    $current ['address'] = $address;
     $current ['email'] = $email;
     $current ['phone'] = $phone;
     $current ['website'] = $website;
     $current ['comment'] = $comment;
-    $current ['latitude'] = (double) $latitude;
-    $current ['longtitude'] = (double) $longtitude;
-    $current ['time'] = $times;
     $current ['sports'] = $sport;
+    $current ['venue'] = [];
+    foreach ( $club->xpath('venue') as $venue )
+    {
+      $venue_name = $venue->xpath('name/text()');
+      $address = $venue->xpath('address/text()');
+#     $postcode = $venue->xpath('postcode/text()');
+      $latitude = $venue->xpath('latitude/text()');
+      $longtitude = $venue->xpath('longtitude/text()');
+      $venue_name = trim (get_first_element ($venue_name));
+      $address = trim (get_first_element ($address));
+      $venue_name = str_replace ( ["\r", "\n", "\t"], ' ', $venue_name );
+      $venue_name = preg_replace ( '/\s+/', ' ', $venue_name );
+      $address = str_replace ( ["\r", "\n", "\t"], ' ', $address );
+      $address = preg_replace ( '/\s+/', ' ', $address );
+      $latitude = trim (get_first_element ($latitude));
+      $longtitude = trim (get_first_element ($longtitude));
+      $postcode = null;
+      if ($address != '' &&
+          preg_match ('/EH\d\d? [A-Z0-9]{3}/', $address, $matches) )
+      {
+        $postcode = $matches [0];
+        $matches = null;
+      }
+      $time_mon = $venue->xpath('montime/text()');
+      $time_tue = $venue->xpath('tuetime/text()');
+      $time_wed = $venue->xpath('wedtime/text()');
+      $time_thu = $venue->xpath('thutime/text()');
+      $time_fri = $venue->xpath('fritime/text()');
+      $time_sat = $venue->xpath('sattime/text()');
+      $time_sun = $venue->xpath('suntime/text()');
+      $times = [1 => $time_mon, 2 => $time_tue, 3 => $time_wed, 4 => $time_thu,
+                5 => $time_fri, 6 => $time_sat, 7 => $time_sun];
+      foreach ( $times as &$time )
+      {
+        $time = strtolower (trim (get_first_element ($time)));
+      }
+      unset ($time);
+      $current ['venue'] [] = [
+          'name'=> $venue_name,
+          'address' => $address,
+          'postcode' => $postcode,
+          'latitude' => (double) $latitude,
+          'longtitude' => (double) $longtitude,
+          'time' => $times
+      ];
+    }
     return $current;
   }
 
@@ -297,10 +315,10 @@
       $data = $current_club;
 
       // These are raw unparsed fields and should not be submitted
-      unset ($data['time']);
-      unset ($data['price']);
-      unset ($data['sports']);
-      unset ($data['facilities']);
+      unset ($data ['time']);
+      unset ($data ['price']);
+      unset ($data ['sports']);
+      unset ($data ['facilities']);
 
       echo '<p><strong>' , wh_output_string_protected ($current_club ['name']) ,
            '</strong></p>' , PHP_EOL;
@@ -433,95 +451,97 @@
     foreach ( $xml->xpath('/xml/club') as $club )
     {
       $current_club = process_current_club_club_sport_edinburgh ($club);
-
-      $data = $current_club;
-
-      // These are raw unparsed fields and should not be submitted
-      unset ($data['time']);
-      unset ($data['price']);
-      unset ($data['sports']);
-      unset ($data['facilities']);
-
-      echo '<p><strong>' , wh_output_string_protected ($current_club ['name']) ,
-           '</strong></p>' , PHP_EOL;
-
-      if ( $current_club ['name'] === '' ) {
-        wh_error ('No name for the club');
-      }
-
-      foreach ( $arr as $club_t ) {
-        if ( $club_t ['name'] == $current_club['name'] ) {
-#         wh_error ('There is another club with the same name');
-          $error = 'There is another club with the same name - ' .
-                   $current_club ['name'];
-          echo '<div style="color:red">',
-                '<h1>' , nl2br ( $error ) , '</h1>', PHP_EOL,
-                '</div>';
-          break;
-        }
-      }
-      if ( isset ($error) && $error !== '' ) {
-        $error = '';
-        continue;
-      }
-
-      $times = $current_club ['time'];
-      $times = process_time_club_sport_edinburgh ($times);
-      $times = wh_times_prices_num_to_assoc (
-          $times, wh_determine_best_view_times ($times));
-      if ( isset ($times [8]) ) {
-        $data ['opening_time'] = $times [8] ['open'];
-        $data ['closing_time'] = $times [8] ['close'];
-      }
-
-      wh_db_perform ( 'clubs', $data, 'insert' );
-      $id = wh_db_insert_id ();
-      $data = [ 'club_id' => $id ];
-
-      // TODO The queries can be made in one query
-
-      if ( (count ($times) > 0) && (! isset ($times [8])) )
+      $current_club_main = $current_club;
+      unset ($current_club_main ['venue']);
+      foreach ( $current_club ['venue'] as &$venue )
       {
-        foreach ( $times as $day => $time )
-        {
-          $data ['day_id'] = $day;
-          if ( $time ['open'] === true && $time ['close'] === true ) {
-            $data ['opening_time'] = 'null';
-            $data ['closing_time'] = 'null';
-          } else if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
-            $data ['opening_time'] = $time ['open'];
-            $data ['closing_time'] = $time ['close'];
-          } else continue;
-          wh_db_perform ( 'club_schedule', $data, 'insert' );
+        $data = $current_club_main;
+
+        // These are raw unparsed fields and should not be submitted
+        unset ($data ['time']);
+        unset ($data ['price']);  // does not exist
+        unset ($data ['sports']);
+        unset ($data ['facilities']);  // does not exist
+
+        echo '<p><strong>' , wh_output_string_protected (
+            $current_club_main ['name']), '</strong></p>' , PHP_EOL;
+        if ( $current_club_main ['name'] === '' ) {
+          wh_error ('No name for the club');
         }
-      }
 
-      $data = [ 'club_id' => $id ];
+        echo '<p><strong>' , wh_output_string_protected ($venue ['name']),
+            '</strong></p>' , PHP_EOL;
+        if ( $venue ['name'] === '' ) {
+          wh_error ('No name for the venue');
+        }
 
-      $sports_club = parse_sports ($sports, $current_club ['sports']);
-      foreach ( $sports_club  as $entry )
-      {
-        $data ['sport_id'] = $entry ['sport'];
-        foreach ( $entry ['times'] as $day => $time )
-        {
-          $data ['day_id'] = $day;
-          if ( $time ['open'] === true && $time ['close'] === true ) {
-            $data ['opening_time'] = 'null';
-            $data ['closing_time'] = 'null';
-          } else if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
-            $data ['opening_time'] = $time ['open'];
-            $data ['closing_time'] = $time ['close'];
-          } else {
-            $data ['opening_time'] = 'null';
-            $data ['closing_time'] = 'null';
+        if ($venue ['name'] === '') {
+          $venue ['name'] = $current_club_main ['name'];
+        } else if ($current_club_main ['name'] !== $venue ['name']) {
+          $venue ['name'] = $current_club_main ['name'] . ', ' . $venue['name'];
+        }
+        $data ['name'] = $venue ['name'];
+
+        foreach ( $arr as $club_t ) {
+          if ( $club_t ['name'] == $venue ['name'] ) {
+  #         wh_error ('There is another club with the same name');
+            $error = 'There is another club with the same name - ' .
+                    $venue ['name'];
+            echo '<div style="color:red">',
+                  '<h1>' , nl2br ( $error ) , '</h1>', PHP_EOL,
+                  '</div>';
+            break;
           }
+        }
+        if ( isset ($error) && $error !== '' ) {
+          $error = '';
+          continue;
+        }
+
+        $times = $venue ['time'];
+        $times = process_time_club_sport_edinburgh ($times);
+        $times = wh_times_prices_num_to_assoc (
+            $times, wh_determine_best_view_times ($times));
+        if ( isset ($times [8]) ) {
+          $data ['opening_time'] = $times [8] ['open'];
+          $data ['closing_time'] = $times [8] ['close'];
+        }
+
+        wh_db_perform ( 'clubs', $data, 'insert' );
+        $id = wh_db_insert_id ();
+        $data = [ 'club_id' => $id ];
+
+        // TODO The queries can be made in one query
+
+        if ( (count ($times) > 0) && (! isset ($times [8])) )
+        {
+          foreach ( $times as $day => $time )
+          {
+            $data ['day_id'] = $day;
+            if ( $time ['open'] === true && $time ['close'] === true ) {
+              $data ['opening_time'] = 'null';
+              $data ['closing_time'] = 'null';
+            } else if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
+              $data ['opening_time'] = $time ['open'];
+              $data ['closing_time'] = $time ['close'];
+            } else continue;
+            wh_db_perform ( 'club_schedule', $data, 'insert' );
+          }
+        }
+        $data = [ 'club_id' => $id ];
+
+        $sports_club = parse_sports ($sports, $current_club_main ['sports']);
+        foreach ( $sports_club  as $entry )
+        {
+          $data ['sport_id'] = $entry ['sport'];
           wh_db_perform ( 'clubosport', $data, 'insert' );
         }
-      }
-      $data = [ 'club_id' => $id ];
+        $data = [ 'club_id' => $id ];
 
-      $arr[] = $current_club;
-#     var_dump ($current_club);
+        $arr [] = array_merge ($current_club_main, $venue);
+  #     var_dump ($venue);
+      }
+      unset ($venue);
     }
     file_put_contents ( '/var/www/html/database/newest.txt', time () . PHP_EOL );
     // write the Unix timestamp to newest.txt
@@ -1332,12 +1352,13 @@
    */
   function process_time_club_sport_edinburgh ( $times )
   {
+    global $hour_regex;
     foreach ( $times as &$time )
     {
       if ( $time === [] ) {
         continue;
       }
-      $subject = $time [0];
+      $subject = $time;
       $subject = strtolower ( $subject );
       // Replacing m dashes and other characters
       // Otherwise the parsing did not parse em dash
@@ -1360,6 +1381,7 @@
         }
       }
     }
+    unset ($time);
   }
 
 ?>
