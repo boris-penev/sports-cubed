@@ -308,7 +308,8 @@
       foreach ( $arr as $club_t ) {
         if ( $club_t ['name'] == $current_club['name'] ) {
 #         wh_error ('There is another club with the same name');
-          $error = 'There is another club with the same name';
+          $error = 'There is another club with the same name - ' .
+                   $current_club ['name'];
           echo '<div style="color:red">',
                 '<h1>' , nl2br ( $error ) , '</h1>', PHP_EOL,
                 '</div>';
@@ -437,15 +438,22 @@
 
       // These are raw unparsed fields and should not be submitted
       unset ($data['time']);
+      unset ($data['price']);
       unset ($data['sports']);
+      unset ($data['facilities']);
 
       echo '<p><strong>' , wh_output_string_protected ($current_club ['name']) ,
            '</strong></p>' , PHP_EOL;
 
+      if ( $current_club ['name'] === '' ) {
+        wh_error ('No name for the club');
+      }
+
       foreach ( $arr as $club_t ) {
         if ( $club_t ['name'] == $current_club['name'] ) {
 #         wh_error ('There is another club with the same name');
-          $error = 'There is another club with the same name';
+          $error = 'There is another club with the same name - ' .
+                   $current_club ['name'];
           echo '<div style="color:red">',
                 '<h1>' , nl2br ( $error ) , '</h1>', PHP_EOL,
                 '</div>';
@@ -458,6 +466,7 @@
       }
 
       $times = $current_club ['time'];
+      $times = process_time_club_sport_edinburgh ($times);
       $times = wh_times_prices_num_to_assoc (
           $times, wh_determine_best_view_times ($times));
       if ( isset ($times [8]) ) {
@@ -1312,6 +1321,45 @@
     }
 
     return [];
+  }
+
+  /**
+   * Process the time field for Club Sport Edinburgh and extracts timetable
+   * information from it, filling the times array.
+   * Unlike parse_time, no regular expression matching is done.
+   * @param times array with the input fields
+   * @return associative array with times or empty array
+   */
+  function process_time_club_sport_edinburgh ( $times )
+  {
+    foreach ( $times as &$time )
+    {
+      if ( $time === [] ) {
+        continue;
+      }
+      $subject = $time [0];
+      $subject = strtolower ( $subject );
+      // Replacing m dashes and other characters
+      // Otherwise the parsing did not parse em dash
+      $subject = unicode_fix ( $subject );
+
+      $pattern =
+        "/(?P<open_time>{$hour_regex})\s*-\s*" .
+        "(?P<close_time>{$hour_regex})/";
+      if ( preg_match ($pattern, $subject, $matches) )
+      {
+        if ( isset ($matches['open_time']) &&
+              isset ($matches['close_time']) &&
+              $matches['open_time'] !== '' &&
+              $matches['close_time'] !== '' )
+        {
+          $time = [ 'open'  => $matches['open_time'],
+                    'close' => $matches['close_time'] ];
+        } else {
+          $time = [ 'open'  => null, 'close' => null ];
+        }
+      }
+    }
   }
 
 ?>
