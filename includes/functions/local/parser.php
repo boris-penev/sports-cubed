@@ -519,9 +519,9 @@
           {
             $data ['day_id'] = $day;
             if ( $time ['open'] === true && $time ['close'] === true ) {
-              $data ['opening_time'] = 'null';
-              $data ['closing_time'] = 'null';
-            } else if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
+              continue;
+            }
+            if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
               $data ['opening_time'] = $time ['open'];
               $data ['closing_time'] = $time ['close'];
             } else continue;
@@ -1355,7 +1355,8 @@
     global $hour_regex;
     foreach ( $times as &$time )
     {
-      if ( $time === [] ) {
+      if ( $time === '' ) {
+        $time = [ 'open'  => null, 'close' => null];
         continue;
       }
       $subject = $time;
@@ -1367,21 +1368,20 @@
       $pattern =
         "/(?P<open_time>{$hour_regex})\s*-\s*" .
         "(?P<close_time>{$hour_regex})/";
-      if ( preg_match ($pattern, $subject, $matches) )
+      if ( preg_match ($pattern, $subject, $matches) &&
+            isset ($matches['open_time']) &&
+            isset ($matches['close_time']) &&
+            $matches['open_time'] !== '' &&
+            $matches['close_time'] !== '' )
       {
-        if ( isset ($matches['open_time']) &&
-              isset ($matches['close_time']) &&
-              $matches['open_time'] !== '' &&
-              $matches['close_time'] !== '' )
-        {
-          $time = [ 'open'  => $matches['open_time'],
-                    'close' => $matches['close_time'] ];
-        } else {
-          $time = [ 'open'  => null, 'close' => null ];
-        }
+        $time = [ 'open'  => $matches['open_time'],
+                  'close' => $matches['close_time'] ];
+      } else {
+        $time = [ 'open'  => null, 'close' => null];
       }
     }
     unset ($time);
+    return $times;
   }
 
   /**
