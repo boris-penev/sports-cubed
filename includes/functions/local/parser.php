@@ -530,10 +530,10 @@
         }
         $data = [ 'club_id' => $id ];
 
-        $sports_club = parse_sports ($sports, $current_club_main ['sports']);
+        $sports_club = process_sports_club_sport_edinburgh ($sports, $current_club_main ['sports']);
         foreach ( $sports_club  as $entry )
         {
-          $data ['sport_id'] = $entry ['sport'];
+          $data ['sport_id'] = $entry ['id'];
           wh_db_perform ( 'clubosport', $data, 'insert' );
         }
         $data = [ 'club_id' => $id ];
@@ -1382,6 +1382,48 @@
       }
     }
     unset ($time);
+  }
+
+  /**
+   * Process the sports field for Club Sport Edinburgh.
+   * If a sport is not in the database in the sports table,
+   * it inserts it to it and to the sports array.
+   * Unlike parse_sports, no regular expression matching is done.
+   * It is assumed that there is a single sport because of the xml structure.
+   * @param sports array with all the sports in the database
+   * @param sports_club the input field
+   * @return associative array with sports IDs and names
+   */
+  function process_sports_club_sport_edinburgh ( &$sports, $sports_club )
+  {
+    if ( $sports_club === '' ) {
+      return [];
+    }
+    echo '<p>' , nl2br (wh_output_string_protected ($sports_club)) ,
+         '</p>' , PHP_EOL;
+
+    $subject = $sports_club;
+    $subject = strtolower ( $subject );
+    // Replacing m dashes and other characters
+    // Otherwise the parsing did not parse em dash
+    $subject = unicode_fix ( $subject );
+    $entry = $subject;
+    $sports_club = [];
+
+    foreach ( $sports as $sport )
+    {
+      if ( $sport ['name'] === $entry ) {
+        $sports_club [] = $sport;
+        return $sports_club;  // because there is a single sport
+      }
+    }
+
+    $data = [ 'name' => $entry ];
+    wh_db_perform ( 'sports', $data, 'insert' );
+    $id = wh_db_insert_id ();
+    $sports_club [] = [ 'id' => $id, 'name' => $entry ];
+    $sports [] = $sports_club;
+    return $sports_club;
   }
 
 ?>
