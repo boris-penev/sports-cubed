@@ -262,7 +262,8 @@
       $address = $venue->xpath('address/text()');
 #     $postcode = $venue->xpath('postcode/text()');
       $latitude = $venue->xpath('latitude/text()');
-      $longtitude = $venue->xpath('longtitude/text()');
+      // this is wrong but it is fix for an error in the input xml
+      $longtitude = $venue->xpath('longitude/text()');
       $venue_name = trim (get_first_element ($venue_name));
       $address = trim (get_first_element ($address));
       $venue_name = str_replace ( ["\r", "\n", "\t"], ' ', $venue_name );
@@ -481,6 +482,10 @@
           $venue ['name'] = $current_club_main ['name'] . ', ' . $venue['name'];
         }
         $data ['name'] = $venue ['name'];
+        $data ['address'] = $venue ['address'];
+        $data ['postcode'] = $venue ['postcode'];
+        $data ['latitude'] = $venue ['latitude'];
+        $data ['longtitude'] = $venue ['longtitude'];
 
         foreach ( $arr as $club_t ) {
           if ( $club_t ['name'] == $venue ['name'] ) {
