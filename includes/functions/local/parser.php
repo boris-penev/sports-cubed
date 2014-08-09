@@ -500,11 +500,17 @@
 
         $times = $venue ['time'];
         $times = process_time_club_sport_edinburgh ($times);
-        $times = wh_times_prices_num_to_assoc (
-            $times, wh_determine_best_view_times ($times));
-        if ( isset ($times [8]) ) {
-          $data ['opening_time'] = $times [8] ['open'];
-          $data ['closing_time'] = $times [8] ['close'];
+        $times_empty = ! time_check ( $times );
+        if ( $times_empty === false )
+        {
+          $times = wh_times_prices_num_to_assoc (
+              $times, wh_determine_best_view_times ($times));
+          if ( isset ($times [8]) ) {
+            $data ['opening_time'] = $times [8] ['open'];
+            $data ['closing_time'] = $times [8] ['close'];
+          }
+        } else {
+          $times = [];
         }
 
         wh_db_perform ( 'clubs', $data, 'insert' );
@@ -513,7 +519,7 @@
 
         // TODO The queries can be made in one query
 
-        if ( (count ($times) > 0) && (! isset ($times [8])) )
+        if ( $times !== [] && (! isset ($times [8])) )
         {
           foreach ( $times as $day => $time )
           {
@@ -672,7 +678,12 @@
   }
 
   /**
-   * @return false if empty or true otherwise
+   * The function filters the times and modifies the input array,
+   * parsing the am/pm/noon times and nullifying invalid times.
+   * @param times array with 7 associative time arrays (open, close)
+   * @return false if containing non-empty time or true otherwise;
+   *           boolean true is considered a valid time
+   *           because it shows the day is selected
    */
   function time_check ( &$times )
   {
