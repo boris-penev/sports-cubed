@@ -510,7 +510,10 @@
         {
           $times = wh_times_prices_num_to_assoc (
               $times, wh_determine_best_view_times ($times));
-          if ( isset ($times [8]) ) {
+          if ( isset ($times [8]) &&
+                isset ($times [8]['open']) &&  isset ($times [8]['close']) &&
+                $times [8]['open'] !== '' && $times [8]['close'] !== '' &&
+                $times [8]['open'] !== true && $times [8]['close'] !== true ) {
             $data ['opening_time'] = $times [8] ['open'];
             $data ['closing_time'] = $times [8] ['close'];
           }
@@ -529,13 +532,12 @@
           foreach ( $times as $day => $time )
           {
             $data ['day_id'] = $day;
-            if ( $time ['open'] === true && $time ['close'] === true ) {
+            if ( $time ['open'] === '' || $time ['close'] === '' ||
+                  $time ['open'] === true || $time ['close'] === true ) {
               continue;
             }
-            if ( $time ['open'] !== '' && $time ['close'] !== '' ) {
-              $data ['opening_time'] = $time ['open'];
-              $data ['closing_time'] = $time ['close'];
-            } else continue;
+            $data ['opening_time'] = $time ['open'];
+            $data ['closing_time'] = $time ['close'];
             wh_db_perform ( 'club_schedule', $data, 'insert' );
           }
         }
