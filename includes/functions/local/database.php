@@ -904,6 +904,13 @@ MYSQL;
               ', ' . TABLE_CLUBS_OLD;
     wh_db_query ( $query );
 
+    $query = 'optimize table ' . TABLE_CLUBS_PRODUCTION .
+              ', ' . TABLE_CLUB_SCHEDULE_PRODUCTION .
+              ', ' . TABLE_CLUBOSPORT_PRODUCTION .
+              ', ' . TABLE_CLUB_FACILITIES_PRODUCTION .
+              ', ' . TABLE_SPORTS;
+    wh_db_query ( $query );
+
     return;
   }
 
