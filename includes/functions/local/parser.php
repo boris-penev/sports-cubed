@@ -352,7 +352,7 @@
         $data ['price_nonmember'] = $prices [8] ['nonmember'];
       }
 
-      wh_db_perform ( 'clubs', $data, 'insert' );
+      wh_db_perform ( TABLE_CLUBS, $data, 'insert' );
       $id = wh_db_insert_id ();
       $data = [ 'club_id' => $id ];
 
@@ -370,7 +370,7 @@
             $data ['opening_time'] = $time ['open'];
             $data ['closing_time'] = $time ['close'];
           } else continue;
-          wh_db_perform ( 'club_schedule', $data, 'insert' );
+          wh_db_perform ( TABLE_CLUB_SCHEDULE, $data, 'insert' );
         }
       }
 
@@ -390,7 +390,7 @@
           if ( $price ['nonmember'] !== '' ) {
             $data ['price_nonmember'] = $price ['nonmember'];
           }
-          wh_db_perform ( 'club_schedule', $data,
+          wh_db_perform ( TABLE_CLUB_SCHEDULE, $data,
                           'insert on duplicate key update' );
         }
       }
@@ -413,7 +413,7 @@
             $data ['opening_time'] = 'null';
             $data ['closing_time'] = 'null';
           }
-          wh_db_perform ( 'clubosport', $data, 'insert' );
+          wh_db_perform ( TABLE_CLUBOSPORT, $data, 'insert' );
         }
         unset ($data ['opening_time']);
         unset ($data ['closing_time']);
@@ -430,7 +430,7 @@
           } else {
             $data ['price_nonmember'] = 'null';
           }
-          wh_db_perform ( 'clubosport', $data,
+          wh_db_perform ( TABLE_CLUBOSPORT, $data,
                           'insert on duplicate key update' );
         }
         unset ($data ['price_member']);
@@ -521,7 +521,7 @@
           $times = [];
         }
 
-        wh_db_perform ( 'clubs', $data, 'insert' );
+        wh_db_perform ( TABLE_CLUBS, $data, 'insert' );
         $id = wh_db_insert_id ();
         $data = [ 'club_id' => $id ];
 
@@ -538,7 +538,7 @@
             }
             $data ['opening_time'] = $time ['open'];
             $data ['closing_time'] = $time ['close'];
-            wh_db_perform ( 'club_schedule', $data, 'insert' );
+            wh_db_perform ( TABLE_CLUB_SCHEDULE, $data, 'insert' );
           }
         }
         $data = [ 'club_id' => $id ];
@@ -547,7 +547,7 @@
         foreach ( $sports_club  as $entry )
         {
           $data ['sport_id'] = $entry ['id'];
-          wh_db_perform ( 'clubosport', $data, 'insert' );
+          wh_db_perform ( TABLE_CLUBOSPORT, $data, 'insert' );
         }
         $data = [ 'club_id' => $id ];
 
@@ -1437,7 +1437,7 @@
     }
 
     $data = [ 'name' => $entry ];
-    wh_db_perform ( 'sports', $data, 'insert' );
+    wh_db_perform ( TABLE_SPORTS, $data, 'insert' );
     $id = wh_db_insert_id ();
     $sports_club [] = [ 'id' => $id, 'name' => $entry ];
     $sports [] = $sports_club;

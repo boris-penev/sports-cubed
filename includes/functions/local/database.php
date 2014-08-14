@@ -242,22 +242,22 @@
 
   function getClubsOrderById ( )
   {
-    return wh_db_query ( 'select * from clubs order by id' );
+    return wh_db_query ( 'select * from ' . TABLE_CLUBS . ' order by id' );
   }
 
   function getClubsOrderByName ( )
   {
-    return wh_db_query ( 'select * from clubs order by name' );
+    return wh_db_query ( 'select * from ' . TABLE_CLUBS . ' order by name' );
   }
 
   function getClubById ( $id )
   {
-    return wh_db_query ( "select * from clubs where id = '{$id}'" );
+    return wh_db_query ('select * from ' . TABLE_CLUBS . " where id = '{$id}'");
   }
 
   function getClubByName ( $name )
   {
-    return wh_db_query ( "select * from clubs where name = '{$name}'" );
+    return wh_db_query ('select * from '.TABLE_CLUBS." where name = '{$name}'");
   }
 
   /**
@@ -269,27 +269,31 @@
   {
     if ( $table == 'sports' )
     {
-      $entity_table = 'sports';
-      $junction_table = 'clubosport';
+      $entity_table = TABLE_SPORTS;
+      $junction_table = TABLE_CLUBOSPORT;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
-      $entity_table = 'facilities';
-      $junction_table = 'club_facilities';
+      $entity_table = TABLE_FACILITIES;
+      $junction_table = TABLE_CLUB_FACILITIES;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
     }
-    $query = 'select clubs.id as id, clubs.name as name';
-    $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
-    $query .= ', clubs.opening_time, clubs.closing_time';
-    $query .= ', clubs.price_member, clubs.price_nonmember';
-    $query .= ' from clubs';
+    $query = 'select ' . TABLE_CLUBS . '.id as id';
+    $query .= ', ' . TABLE_CLUBS . '.name as name';
+    $query .= ', ' . TABLE_CLUBS . '.latitude, ' . TABLE_CLUBS . '.longtitude';
+    $query .= ', ' . TABLE_CLUBS . '.website, ' . TABLE_CLUBS . '.email';
+    $query .= ', ' . TABLE_CLUBS . '.phone, ' . TABLE_CLUBS . '.comment';
+    $query .= ', ' . TABLE_CLUBS . '.opening_time';
+    $query .= ', ' . TABLE_CLUBS . '.closing_time';
+    $query .= ', ' . TABLE_CLUBS . '.price_member';
+    $query .= ', ' . TABLE_CLUBS . '.price_nonmember';
+    $query .= ' from ' . TABLE_CLUBS . '';
     $query .= ", {$junction_table} as " . $junction_table;
     $query .= ' where';
-    $query .= " clubs.id = {$junction_table}.club_id";
+    $query .= ' ' . TABLE_CLUBS . ".id = {$junction_table}.club_id";
     $query .= ' and ';
     $query .= $junction_table . '.' . $entity_id . ' in (';
     $data = array_values ( $data );
@@ -314,28 +318,32 @@
   {
     if ( $table == 'sports' )
     {
-      $entity_table = 'sports';
-      $junction_table = 'clubosport';
+      $entity_table = TABLE_SPORTS;
+      $junction_table = TABLE_CLUBOSPORT;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
-      $entity_table = 'facilities';
-      $junction_table = 'club_facilities';
+      $entity_table = TABLE_FACILITIES;
+      $junction_table = TABLE_CLUB_FACILITIES;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
     }
-    $query = 'select clubs.id as id, clubs.name as name';
-    $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
-    $query .= ', clubs.opening_time, clubs.closing_time';
-    $query .= ', clubs.price_member, clubs.price_nonmember';
-    $query .= ' from clubs';
+    $query = 'select ' . TABLE_CLUBS . '.id as id';
+    $query .= ', ' . TABLE_CLUBS . '.name as name';
+    $query .= ', ' . TABLE_CLUBS . '.latitude, ' . TABLE_CLUBS . '.longtitude';
+    $query .= ', ' . TABLE_CLUBS . '.website, ' . TABLE_CLUBS . '.email';
+    $query .= ', ' . TABLE_CLUBS . '.phone, ' . TABLE_CLUBS . '.comment';
+    $query .= ', ' . TABLE_CLUBS . '.opening_time';
+    $query .= ', ' . TABLE_CLUBS . '.closing_time';
+    $query .= ', ' . TABLE_CLUBS . '.price_member';
+    $query .= ', ' . TABLE_CLUBS . '.price_nonmember';
+    $query .= ' from ' . TABLE_CLUBS . '';
     $query .= ', ' . $junction_table;
     $query .= ', ' . $entity_table;
     $query .= ' where';
-    $query .= " clubs.id = {$junction_table}.club_id";
+    $query .= ' ' . TABLE_CLUBS . ".id = {$junction_table}.club_id";
     $query .= " and {$entity_table}.id = {$junction_table}.{$entity_id}";
     $query .= ' and ';
     $query .= $entity_table . '.name in (';
@@ -380,46 +388,50 @@
     }
     if ( $table == 'sports' )
     {
-      $entity_table = 'sports';
-      $junction_table = 'clubosport';
+      $entity_table = TABLE_SPORTS;
+      $junction_table = TABLE_CLUBOSPORT;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
-      $entity_table = 'facilities';
-      $junction_table = 'club_facilities';
+      $entity_table = TABLE_FACILITIES;
+      $junction_table = TABLE_CLUB_FACILITIES;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
     }
-    $query = 'select clubs.id as id, clubs.name as name';
-    $query .= ', clubs.latitude, clubs.longtitude';
-    $query .= ', clubs.website, clubs.email, clubs.phone, clubs.comment';
-    $query .= ', clubs.opening_time, clubs.closing_time';
-    $query .= ', clubs.price_member, clubs.price_nonmember';
-    $query .= ' from clubs';
+    $query = 'select ' . TABLE_CLUBS . '.id as id';
+    $query .= ', ' . TABLE_CLUBS . '.name as name';
+    $query .= ', ' . TABLE_CLUBS . '.latitude, ' . TABLE_CLUBS . '.longtitude';
+    $query .= ', ' . TABLE_CLUBS . '.website, ' . TABLE_CLUBS . '.email';
+    $query .= ', ' . TABLE_CLUBS . '.phone, ' . TABLE_CLUBS . '.comment';
+    $query .= ', ' . TABLE_CLUBS . '.opening_time';
+    $query .= ', ' . TABLE_CLUBS . '.closing_time';
+    $query .= ', ' . TABLE_CLUBS . '.price_member';
+    $query .= ', ' . TABLE_CLUBS . '.price_nonmember';
+    $query .= ' from ' . TABLE_CLUBS . '';
     $query .= ', ' . $junction_table;
     if ( $data !== [] ) {
       $query .= ', ' . $entity_table;
     }
     $query .= ' where';
     if ( ! is_null ($time) ) {
-      $query .= ' not (clubs.opening_time is not null';
-      $query .= ' and clubs.closing_time is not null';
-      $query .= " and '{$time['close']}' <= clubs.opening_time";
-      $query .= " or clubs.closing_time <= '{$time['open']}') and";
+      $query .= ' not (' . TABLE_CLUBS . '.opening_time is not null';
+      $query .= ' and ' . TABLE_CLUBS . '.closing_time is not null';
+      $query .= " and '{$time['close']}' <= " . TABLE_CLUBS . '.opening_time';
+      $query .= ' or ' . TABLE_CLUBS . ".closing_time <= '{$time['open']}') and";
     }
     if ( isset ($price ['member']) )
     {
-      $query .= " (clubs.price_member is null";
-      $query .= " or clubs.price_member <= {$price ['member']}) and";
+      $query .= ' (' . TABLE_CLUBS . '.price_member is null';
+      $query .= ' or ' . TABLE_CLUBS . ".price_member <= {$price ['member']}) and";
     }
     if ( isset ($price ['nonmember']) )
     {
-      $query .= " (clubs.price_nonmember is null";
-      $query .= " or clubs.price_nonmember <= {$price ['nonmember']}) and";
+      $query .= ' (' . TABLE_CLUBS . '.price_nonmember is null';
+      $query .= ' or ' . TABLE_CLUBS . ".price_nonmember <= {$price ['nonmember']}) and";
     }
-    $query .= " clubs.id = {$junction_table}.club_id and";
+    $query .= ' ' . TABLE_CLUBS . ".id = {$junction_table}.club_id and";
     if ( $data !== [] )
     {
       $query .= " {$entity_table}.id = {$junction_table}.{$entity_id} and";
@@ -450,8 +462,8 @@
         $query .= " or {$junction_table}.price_nonmember <= {$price ['nonmember']}) and";
       }
       if ( ! is_null ($time) ) {
-        $query .= ' not (clubs.opening_time is not null';
-        $query .= ' and clubs.closing_time is not null';
+        $query .= ' not (' . TABLE_CLUBS . '.opening_time is not null';
+        $query .= ' and ' . TABLE_CLUBS . '.closing_time is not null';
         $query .= " and '{$time['close']}' <= {$junction_table}.opening_time";
         $query .= " or {$junction_table}.closing_time <= '{$time['open']}') and";
       }
@@ -471,12 +483,12 @@
 
   function getSports ( )
   {
-    return wh_db_query ( 'select * from sports' );
+    return wh_db_query ( 'select * from ' . TABLE_SPORTS );
   }
 
   function getFacilities ( )
   {
-    return wh_db_query ( 'select * from facilities' );
+    return wh_db_query ( 'select * from ' . TABLE_FACILITIES );
   }
 
   /**
@@ -484,9 +496,10 @@
    */
   function getSportsNotLeaves ( )
   {
-    $query = 'select sports.* from sports, clubosport ' .
-             'where sports.id = clubosport.sport_id ' .
-             'group by sports.id';
+    $query = 'select ' . TABLE_SPORTS . '.*' .
+             ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT .
+             ' where '. TABLE_SPORTS .'.id = '. TABLE_CLUBOSPORT . '.sport_id' .
+             ' group by ' . TABLE_SPORTS . '.id';
     return wh_db_query ( $query );
   }
 
@@ -495,57 +508,62 @@
    */
   function getFacilitiesNotLeaves ( )
   {
-    $query = 'select facilities.* from facilities, club_facilities ' .
-             'where sports.id = club_facilities.facility_id ' .
-             'group by facilities.id';
+    $query = 'select ' . TABLE_FACILITIES . '.*' .
+             ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES .
+             ' where ' . TABLE_SPORTS . '.id = ' .
+             TABLE_CLUB_FACILITIES . '.facility_id' .
+             ' group by ' . TABLE_FACILITIES . '.id';
     return wh_db_query ( $query );
   }
 
   function getSportsOrderById ( )
   {
-    return wh_db_query ( 'select * from sports order by id' );
+    return wh_db_query ( 'select * from ' . TABLE_SPORTS . ' order by id' );
   }
 
   function getFacilitiesOrderById ( )
   {
-    return wh_db_query ( 'select * from facilities order by id' );
+    return wh_db_query ( 'select * from ' . TABLE_FACILITIES . ' order by id' );
   }
 
   function getSportsOrderByName ( )
   {
-    return wh_db_query ( 'select * from sports order by name' );
+    return wh_db_query ( 'select * from ' . TABLE_SPORTS . ' order by name' );
   }
 
   function getFacilitiesOrderByName ( )
   {
-    return wh_db_query ( 'select * from facilities order by name' );
+    return wh_db_query ( 'select * from '. TABLE_FACILITIES .' order by name' );
   }
 
   function getSportByName ( $sport )
   {
-    return wh_db_query ( "select * from sports where name='{$sport}'" );
+    return wh_db_query ('select * from '.TABLE_SPORTS." where name='{$sport}'");
   }
 
   function getFacilityByName ( $facility )
   {
-    return wh_db_query ( "select * from facilities where name='{$facility}'" );
+    return wh_db_query ( 'select * from ' . TABLE_FACILITIES .
+                         " where name='{$facility}'" );
   }
 
   function getSportsByClub ( $club )
   {
-    $query = 'select sports.name from sports, clubosport ' .
-      'where clubosport.club_id = ' . $club .
-      ' and sports.id = clubosport.sport_id';
-    $query .= ' group by sports.name';
+    $query = 'select ' . TABLE_SPORTS . '.name' .
+      ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT .
+      ' where ' . TABLE_CLUBOSPORT . '.club_id = ' . $club .
+      ' and ' . TABLE_SPORTS . '.id = ' . TABLE_CLUBOSPORT . '.sport_id';
+    $query .= ' group by ' . TABLE_SPORTS . '.name';
     return wh_db_query ( $query );
   }
 
   function getFacilitiesByClub ( $club )
   {
-    $query = 'select facilities.name from sports, club_facilities ' .
-      'where club_facilities.club_id = ' . $club .
-      ' and facilities.id = club_facilities.facility_id';
-    $query .= ' group by facilities.name';
+    $query = 'select ' . TABLE_FACILITIES . '.name' .
+      ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES .
+      ' where ' . TABLE_CLUB_FACILITIES . '.club_id = ' . $club .
+      ' and '. TABLE_FACILITIES.'.id = '. TABLE_CLUB_FACILITIES .'.facility_id';
+    $query .= ' group by ' . TABLE_FACILITIES . '.name';
     return wh_db_query ( $query );
   }
 
@@ -553,11 +571,11 @@
   {
     $query = 'select distinct sport_id, day_id, ' .
       'price_member, price_nonmember, opening_time, closing_time' .
-      ' from sports, clubosport' .
-      ' where clubosport.club_id = ' . $club .
-      ' and sports.id = clubosport.sport_id';
-#   $query .= ' group by sports.name, clubosport.day_id';
-    $query .= ' order by sports.name, day_id';
+      ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT . '' .
+      ' where ' . TABLE_CLUBOSPORT . '.club_id = ' . $club .
+      ' and ' . TABLE_SPORTS . '.id = ' . TABLE_CLUBOSPORT . '.sport_id';
+#   $query .= ' group by '. TABLE_SPORTS.'.name, '. TABLE_CLUBOSPORT .'.day_id';
+    $query .= ' order by ' . TABLE_SPORTS . '.name, day_id';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
@@ -566,11 +584,12 @@
   {
     $query = 'select distinct sport_id, day_id, ' .
       'price_member, price_nonmember, opening_time, closing_time' .
-      ' from facilities, club_facilities' .
-      ' where club_facilities.club_id = ' . $club .
-      ' and facilities.id = club_facilities.sport_id';
-#   $query .= ' group by facilities.name, club_facilities.day_id';
-    $query .= ' order by facilities.name, day_id';
+      ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES .
+      ' where ' . TABLE_CLUB_FACILITIES . '.club_id = ' . $club .
+      ' and '. TABLE_FACILITIES .'.id = ' . TABLE_CLUB_FACILITIES . '.sport_id';
+#   $query .= ' group by ' . TABLE_FACILITIES . '.name, ' .
+#             TABLE_CLUB_FACILITIES . '.day_id';
+    $query .= ' order by ' . TABLE_FACILITIES . '.name, day_id';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
@@ -586,12 +605,12 @@
   {
     if ( $table == 'sports' )
     {
-      $junction_table = 'clubosport';
+      $junction_table = TABLE_CLUBOSPORT;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
-      $junction_table = 'club_facilities';
+      $junction_table = TABLE_CLUB_FACILITIES;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
@@ -609,7 +628,7 @@
     }
     $query = rtrim($query, ',');
     $query .= ' on duplicate key update opening_time=values(opening_time), '
-            . 'closing_time=values(closing_time)' . PHP_EOL;
+            . 'closing_time=values(closing_time);';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
@@ -625,12 +644,12 @@
   {
     if ( $table == 'sports' )
     {
-      $junction_table = 'clubosport';
+      $junction_table = TABLE_CLUBOSPORT;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
-      $junction_table = 'club_facilities';
+      $junction_table = TABLE_CLUB_FACILITIES;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
@@ -648,7 +667,7 @@
     }
     $query = rtrim($query, ',');
     $query .= ' on duplicate key update price_member=values(price_member), '
-            . 'price_nonmember=values(price_nonmember)' . PHP_EOL;
+            . 'price_nonmember=values(price_nonmember);';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
@@ -665,12 +684,12 @@
   {
     if ( $table == 'sports' )
     {
-      $junction_table = 'clubosport';
+      $junction_table = TABLE_CLUBOSPORT;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
-      $junction_table = 'club_facilities';
+      $junction_table = TABLE_CLUB_FACILITIES;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
@@ -703,7 +722,7 @@
             . 'opening_time=values(opening_time), '
             . 'closing_time=values(closing_time), '
             . 'price_member=values(price_member), '
-            . 'price_nonmember=values(price_nonmember);' . PHP_EOL;
+            . 'price_nonmember=values(price_nonmember);';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
@@ -718,19 +737,19 @@
   {
     if ( $table == 'sports' )
     {
-      $junction_table = 'clubosport';
+      $junction_table = TABLE_CLUBOSPORT;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
-      $junction_table = 'club_facilities';
+      $junction_table = TABLE_CLUB_FACILITIES;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
     }
     $query = "update {$junction_table} set opening_time=null, closing_time=null, "
            . 'price_member=null, price_nonmember=null '
-           . "where club_id = {$club} and {$entity_id} = {$entity};" . PHP_EOL;
+           . "where club_id = {$club} and {$entity_id} = {$entity};";
     wh_db_query ( $query );
   }
 
@@ -739,10 +758,10 @@
    */
   function cleanClubosport ( $club )
   {
-    $query = "delete from clubosport where club_id = {$club} "
-           . 'and (opening_time is null or opening_time = \'00:00:00\' or '
+    $query = 'delete from ' . TABLE_CLUBOSPORT . ' where club_id = ' . $club
+           . ' and (opening_time is null or opening_time = \'00:00:00\' or '
            . 'closing_time is null or closing_time = \'00:00:00\') '
-           . 'and price_member is null and price_nonmember is null;' . PHP_EOL;
+           . 'and price_member is null and price_nonmember is null;';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
@@ -752,22 +771,140 @@
    */
   function cleanClub_facilities ( $club )
   {
-    $query = "delete from club_facilities where club_id = {$club} "
+    $query = 'delete from '. TABLE_CLUB_FACILITIES .' where club_id = ' . $club
            . 'and (opening_time is null or closing_time is null) '
-           . 'and price_member is null and price_nonmember is null;' . PHP_EOL;
+           . 'and price_member is null and price_nonmember is null;';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
   }
 
   /**
-   * Truncates database table clubs and cascades constraints
+   * Creates temporary database tables,
+   * dropping old temporary tables if they exist.
    */
-  function delete_clubs ( )
+  function create_temporary_tables ( )
   {
-    $query = 'delete from clubs';
+    $query = 'drop table if exists ' . TABLE_CLUB_SCHEDULE .
+              ', ' . TABLE_CLUBOSPORT .
+              ', ' . TABLE_CLUB_FACILITIES .
+              ', ' . TABLE_CLUBS .
+              ', ' . TABLE_CLUB_SCHEDULE_OLD .
+              ', ' . TABLE_CLUBOSPORT_OLD .
+              ', ' . TABLE_CLUB_FACILITIES_OLD .
+              ', ' . TABLE_CLUBS_OLD;
     wh_db_query ( $query );
-    $query = 'alter table clubs auto_increment = 1';
-    return wh_db_query ( $query );
+
+    $constant = 'constant';
+
+    $query = <<<MYSQL
+CREATE TABLE `{$constant('TABLE_CLUBS')}` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) COLLATE utf8_bin NOT NULL,
+  `address` varchar(300) COLLATE utf8_bin DEFAULT NULL,
+  `postcode` varchar(16) COLLATE utf8_bin DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `longtitude` double DEFAULT NULL,
+  `website` varchar(200) COLLATE utf8_bin DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `phone` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `comment` varchar(4000) COLLATE utf8_bin DEFAULT NULL,
+  `opening_time` time DEFAULT NULL,
+  `closing_time` time DEFAULT NULL,
+  `price_member` float DEFAULT NULL,
+  `price_nonmember` float DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
+MYSQL;
+
+    wh_db_query ( $query );
+
+    $query = <<<MYSQL
+CREATE TABLE `{$constant('TABLE_CLUB_SCHEDULE')}` (
+  `club_id` int(11) NOT NULL,
+  `day_id` int(11) NOT NULL DEFAULT '8',
+  `opening_time` time DEFAULT NULL,
+  `closing_time` time DEFAULT NULL,
+  `price_member` float DEFAULT NULL,
+  `price_nonmember` float DEFAULT NULL,
+  PRIMARY KEY (`club_id`,`day_id`),
+  KEY `club_id` (`club_id`),
+  KEY `day_id` (`day_id`),
+  CONSTRAINT FOREIGN KEY (`club_id`) REFERENCES `{$constant('TABLE_CLUBS')}` (`id`) ON DELETE CASCADE,
+  CONSTRAINT FOREIGN KEY (`day_id`) REFERENCES `{$constant('TABLE_DAYS')}` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+MYSQL;
+
+    wh_db_query ( $query );
+
+    $query = <<<MYSQL
+CREATE TABLE `{$constant('TABLE_CLUBOSPORT')}` (
+  `club_id` int(11) NOT NULL,
+  `sport_id` int(11) NOT NULL,
+  `day_id` int(11) NOT NULL DEFAULT '8',
+  `opening_time` time DEFAULT NULL,
+  `closing_time` time DEFAULT NULL,
+  `price_member` float DEFAULT NULL,
+  `price_nonmember` float DEFAULT NULL,
+  PRIMARY KEY (`club_id`,`sport_id`,`day_id`),
+  KEY `club_id` (`club_id`),
+  KEY `sport_id` (`sport_id`),
+  KEY `day_id` (`day_id`),
+  CONSTRAINT FOREIGN KEY (`club_id`) REFERENCES `{$constant('TABLE_CLUBS')}` (`id`) ON DELETE CASCADE,
+  CONSTRAINT FOREIGN KEY (`sport_id`) REFERENCES `{$constant('TABLE_SPORTS')}` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT FOREIGN KEY (`day_id`) REFERENCES `{$constant('TABLE_DAYS')}` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+MYSQL;
+
+    wh_db_query ( $query );
+
+    $query = <<<MYSQL
+CREATE TABLE `{$constant('TABLE_CLUB_FACILITIES')}` (
+  `club_id` int(11) NOT NULL,
+  `facility_id` int(11) NOT NULL,
+  `day_id` int(11) NOT NULL DEFAULT '8',
+  `opening_time` time DEFAULT NULL,
+  `closing_time` time DEFAULT NULL,
+  `price_member` float DEFAULT NULL,
+  `price_nonmember` float DEFAULT NULL,
+  PRIMARY KEY (`club_id`,`facility_id`,`day_id`),
+  KEY `club_id` (`club_id`),
+  KEY `facility_id` (`facility_id`),
+  KEY `day_id` (`day_id`),
+  CONSTRAINT FOREIGN KEY (`club_id`) REFERENCES `{$constant('TABLE_CLUBS')}` (`id`) ON DELETE CASCADE,
+  CONSTRAINT FOREIGN KEY (`facility_id`) REFERENCES `{$constant('TABLE_FACILITIES')}` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT FOREIGN KEY (`day_id`) REFERENCES `{$constant('TABLE_DAYS')}` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+MYSQL;
+
+    wh_db_query ( $query );
+    return;
+  }
+
+  /**
+   * Drops production database tables and
+   * renames temporary tables to production tables.
+   */
+  function change_production_tables ( )
+  {
+    $query = 'rename table ' .
+        TABLE_CLUBS_PRODUCTION . ' to ' . TABLE_CLUBS_OLD .
+        ', '. TABLE_CLUB_SCHEDULE_PRODUCTION .' to ' . TABLE_CLUB_SCHEDULE_OLD .
+        ', '. TABLE_CLUBOSPORT_PRODUCTION . ' to ' . TABLE_CLUBOSPORT_OLD .
+        ', '.TABLE_CLUB_FACILITIES_PRODUCTION .' to '.TABLE_CLUB_FACILITIES_OLD.
+        ', ' . TABLE_CLUBS . ' to ' . TABLE_CLUBS_PRODUCTION .
+        ', '. TABLE_CLUB_SCHEDULE . ' to ' . TABLE_CLUB_SCHEDULE_PRODUCTION .
+        ', '. TABLE_CLUBOSPORT . ' to ' . TABLE_CLUBOSPORT_PRODUCTION .
+        ', ' . TABLE_CLUB_FACILITIES .' to ' . TABLE_CLUB_FACILITIES_PRODUCTION;
+    wh_db_query ( $query );
+
+    $query = 'drop table ' . TABLE_CLUB_SCHEDULE_OLD .
+              ', ' . TABLE_CLUBOSPORT_OLD .
+              ', ' . TABLE_CLUB_FACILITIES_OLD .
+              ', ' . TABLE_CLUBS_OLD;
+    wh_db_query ( $query );
+
+    return;
   }
 
   function wh_determine_best_view_prices ( $prices )
