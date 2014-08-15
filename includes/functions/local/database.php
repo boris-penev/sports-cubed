@@ -242,22 +242,26 @@
 
   function getClubsOrderById ( )
   {
-    return wh_db_query ( 'select * from ' . TABLE_CLUBS . ' order by id' );
+    return wh_db_query ('select * from ' . TABLE_CLUBS_PRODUCTION .
+                        ' order by id');
   }
 
   function getClubsOrderByName ( )
   {
-    return wh_db_query ( 'select * from ' . TABLE_CLUBS . ' order by name' );
+    return wh_db_query ('select * from ' . TABLE_CLUBS_PRODUCTION .
+                        ' order by name');
   }
 
   function getClubById ( $id )
   {
-    return wh_db_query ('select * from ' . TABLE_CLUBS . " where id = '{$id}'");
+    return wh_db_query ('select * from ' . TABLE_CLUBS_PRODUCTION .
+                        " where id = '{$id}'");
   }
 
   function getClubByName ( $name )
   {
-    return wh_db_query ('select * from '.TABLE_CLUBS." where name = '{$name}'");
+    return wh_db_query ('select * from ' . TABLE_CLUBS_PRODUCTION .
+                        " where name = '{$name}'");
   }
 
   /**
@@ -270,30 +274,33 @@
     if ( $table == 'sports' )
     {
       $entity_table = TABLE_SPORTS;
-      $junction_table = TABLE_CLUBOSPORT;
+      $junction_table = TABLE_CLUBOSPORT_PRODUCTION;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
       $entity_table = TABLE_FACILITIES;
-      $junction_table = TABLE_CLUB_FACILITIES;
+      $junction_table = TABLE_CLUB_FACILITIES_PRODUCTION;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
     }
-    $query = 'select ' . TABLE_CLUBS . '.id as id';
-    $query .= ', ' . TABLE_CLUBS . '.name as name';
-    $query .= ', ' . TABLE_CLUBS . '.latitude, ' . TABLE_CLUBS . '.longtitude';
-    $query .= ', ' . TABLE_CLUBS . '.website, ' . TABLE_CLUBS . '.email';
-    $query .= ', ' . TABLE_CLUBS . '.phone, ' . TABLE_CLUBS . '.comment';
-    $query .= ', ' . TABLE_CLUBS . '.opening_time';
-    $query .= ', ' . TABLE_CLUBS . '.closing_time';
-    $query .= ', ' . TABLE_CLUBS . '.price_member';
-    $query .= ', ' . TABLE_CLUBS . '.price_nonmember';
-    $query .= ' from ' . TABLE_CLUBS . '';
+    $query = 'select ' . TABLE_CLUBS_PRODUCTION . '.id as id';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.name as name';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.latitude';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.longtitude';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.website';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.email';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.phone';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.comment';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.opening_time';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.closing_time';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.price_member';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.price_nonmember';
+    $query .= ' from ' . TABLE_CLUBS_PRODUCTION . '';
     $query .= ", {$junction_table} as " . $junction_table;
     $query .= ' where';
-    $query .= ' ' . TABLE_CLUBS . ".id = {$junction_table}.club_id";
+    $query .= ' ' . TABLE_CLUBS_PRODUCTION . ".id = {$junction_table}.club_id";
     $query .= ' and ';
     $query .= $junction_table . '.' . $entity_id . ' in (';
     $data = array_values ( $data );
@@ -319,31 +326,34 @@
     if ( $table == 'sports' )
     {
       $entity_table = TABLE_SPORTS;
-      $junction_table = TABLE_CLUBOSPORT;
+      $junction_table = TABLE_CLUBOSPORT_PRODUCTION;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
       $entity_table = TABLE_FACILITIES;
-      $junction_table = TABLE_CLUB_FACILITIES;
+      $junction_table = TABLE_CLUB_FACILITIES_PRODUCTION;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
     }
-    $query = 'select ' . TABLE_CLUBS . '.id as id';
-    $query .= ', ' . TABLE_CLUBS . '.name as name';
-    $query .= ', ' . TABLE_CLUBS . '.latitude, ' . TABLE_CLUBS . '.longtitude';
-    $query .= ', ' . TABLE_CLUBS . '.website, ' . TABLE_CLUBS . '.email';
-    $query .= ', ' . TABLE_CLUBS . '.phone, ' . TABLE_CLUBS . '.comment';
-    $query .= ', ' . TABLE_CLUBS . '.opening_time';
-    $query .= ', ' . TABLE_CLUBS . '.closing_time';
-    $query .= ', ' . TABLE_CLUBS . '.price_member';
-    $query .= ', ' . TABLE_CLUBS . '.price_nonmember';
-    $query .= ' from ' . TABLE_CLUBS . '';
+    $query = 'select ' . TABLE_CLUBS_PRODUCTION . '.id as id';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.name as name';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.latitude';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.longtitude';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.website';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.email';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.phone';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.comment';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.opening_time';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.closing_time';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.price_member';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.price_nonmember';
+    $query .= ' from ' . TABLE_CLUBS_PRODUCTION . '';
     $query .= ', ' . $junction_table;
     $query .= ', ' . $entity_table;
     $query .= ' where';
-    $query .= ' ' . TABLE_CLUBS . ".id = {$junction_table}.club_id";
+    $query .= ' ' . TABLE_CLUBS_PRODUCTION . ".id = {$junction_table}.club_id";
     $query .= " and {$entity_table}.id = {$junction_table}.{$entity_id}";
     $query .= ' and ';
     $query .= $entity_table . '.name in (';
@@ -389,49 +399,52 @@
     if ( $table == 'sports' )
     {
       $entity_table = TABLE_SPORTS;
-      $junction_table = TABLE_CLUBOSPORT;
+      $junction_table = TABLE_CLUBOSPORT_PRODUCTION;
       $entity_id = 'sport_id';
     }
     else if ( $table == 'facilities' )
     {
       $entity_table = TABLE_FACILITIES;
-      $junction_table = TABLE_CLUB_FACILITIES;
+      $junction_table = TABLE_CLUB_FACILITIES_PRODUCTION;
       $entity_id = 'facility_id';
     } else {
       wh_error ('Check your SQL queries');
     }
-    $query = 'select ' . TABLE_CLUBS . '.id as id';
-    $query .= ', ' . TABLE_CLUBS . '.name as name';
-    $query .= ', ' . TABLE_CLUBS . '.latitude, ' . TABLE_CLUBS . '.longtitude';
-    $query .= ', ' . TABLE_CLUBS . '.website, ' . TABLE_CLUBS . '.email';
-    $query .= ', ' . TABLE_CLUBS . '.phone, ' . TABLE_CLUBS . '.comment';
-    $query .= ', ' . TABLE_CLUBS . '.opening_time';
-    $query .= ', ' . TABLE_CLUBS . '.closing_time';
-    $query .= ', ' . TABLE_CLUBS . '.price_member';
-    $query .= ', ' . TABLE_CLUBS . '.price_nonmember';
-    $query .= ' from ' . TABLE_CLUBS . '';
+    $query = 'select ' . TABLE_CLUBS_PRODUCTION . '.id as id';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.name as name';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.latitude';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.longtitude';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.website';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.email';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.phone';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.comment';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.opening_time';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.closing_time';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.price_member';
+    $query .= ', ' . TABLE_CLUBS_PRODUCTION . '.price_nonmember';
+    $query .= ' from ' . TABLE_CLUBS_PRODUCTION . '';
     $query .= ', ' . $junction_table;
     if ( $data !== [] ) {
       $query .= ', ' . $entity_table;
     }
     $query .= ' where';
     if ( ! is_null ($time) ) {
-      $query .= ' not (' . TABLE_CLUBS . '.opening_time is not null';
-      $query .= ' and ' . TABLE_CLUBS . '.closing_time is not null';
-      $query .= " and '{$time['close']}' <= " . TABLE_CLUBS . '.opening_time';
-      $query .= ' or ' . TABLE_CLUBS . ".closing_time <= '{$time['open']}') and";
+      $query .= ' not (' . TABLE_CLUBS_PRODUCTION . '.opening_time is not null';
+      $query .= ' and ' . TABLE_CLUBS_PRODUCTION . '.closing_time is not null';
+      $query .= " and '{$time['close']}' <= " . TABLE_CLUBS_PRODUCTION . '.opening_time';
+      $query .= ' or ' . TABLE_CLUBS_PRODUCTION . ".closing_time <= '{$time['open']}') and";
     }
     if ( isset ($price ['member']) )
     {
-      $query .= ' (' . TABLE_CLUBS . '.price_member is null';
-      $query .= ' or ' . TABLE_CLUBS . ".price_member <= {$price ['member']}) and";
+      $query .= ' (' . TABLE_CLUBS_PRODUCTION . '.price_member is null';
+      $query .= ' or ' . TABLE_CLUBS_PRODUCTION . ".price_member <= {$price ['member']}) and";
     }
     if ( isset ($price ['nonmember']) )
     {
-      $query .= ' (' . TABLE_CLUBS . '.price_nonmember is null';
-      $query .= ' or ' . TABLE_CLUBS . ".price_nonmember <= {$price ['nonmember']}) and";
+      $query .= ' (' . TABLE_CLUBS_PRODUCTION . '.price_nonmember is null';
+      $query .= ' or ' . TABLE_CLUBS_PRODUCTION . ".price_nonmember <= {$price ['nonmember']}) and";
     }
-    $query .= ' ' . TABLE_CLUBS . ".id = {$junction_table}.club_id and";
+    $query .= ' ' . TABLE_CLUBS_PRODUCTION . ".id = {$junction_table}.club_id and";
     if ( $data !== [] )
     {
       $query .= " {$entity_table}.id = {$junction_table}.{$entity_id} and";
@@ -462,8 +475,8 @@
         $query .= " or {$junction_table}.price_nonmember <= {$price ['nonmember']}) and";
       }
       if ( ! is_null ($time) ) {
-        $query .= ' not (' . TABLE_CLUBS . '.opening_time is not null';
-        $query .= ' and ' . TABLE_CLUBS . '.closing_time is not null';
+        $query .= ' not (' . TABLE_CLUBS_PRODUCTION . '.opening_time is not null';
+        $query .= ' and ' . TABLE_CLUBS_PRODUCTION . '.closing_time is not null';
         $query .= " and '{$time['close']}' <= {$junction_table}.opening_time";
         $query .= " or {$junction_table}.closing_time <= '{$time['open']}') and";
       }
@@ -497,8 +510,8 @@
   function getSportsNotLeaves ( )
   {
     $query = 'select ' . TABLE_SPORTS . '.*' .
-             ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT .
-             ' where '. TABLE_SPORTS .'.id = '. TABLE_CLUBOSPORT . '.sport_id' .
+             ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT_PRODUCTION .
+             ' where '. TABLE_SPORTS .'.id = '. TABLE_CLUBOSPORT_PRODUCTION . '.sport_id' .
              ' group by ' . TABLE_SPORTS . '.id';
     return wh_db_query ( $query );
   }
@@ -509,9 +522,9 @@
   function getFacilitiesNotLeaves ( )
   {
     $query = 'select ' . TABLE_FACILITIES . '.*' .
-             ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES .
+             ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES_PRODUCTION .
              ' where ' . TABLE_SPORTS . '.id = ' .
-             TABLE_CLUB_FACILITIES . '.facility_id' .
+             TABLE_CLUB_FACILITIES_PRODUCTION . '.facility_id' .
              ' group by ' . TABLE_FACILITIES . '.id';
     return wh_db_query ( $query );
   }
@@ -550,9 +563,9 @@
   function getSportsByClub ( $club )
   {
     $query = 'select ' . TABLE_SPORTS . '.name' .
-      ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT .
-      ' where ' . TABLE_CLUBOSPORT . '.club_id = ' . $club .
-      ' and ' . TABLE_SPORTS . '.id = ' . TABLE_CLUBOSPORT . '.sport_id';
+      ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT_PRODUCTION .
+      ' where ' . TABLE_CLUBOSPORT_PRODUCTION . '.club_id = ' . $club .
+      ' and ' . TABLE_SPORTS . '.id = ' . TABLE_CLUBOSPORT_PRODUCTION . '.sport_id';
     $query .= ' group by ' . TABLE_SPORTS . '.name';
     return wh_db_query ( $query );
   }
@@ -560,9 +573,9 @@
   function getFacilitiesByClub ( $club )
   {
     $query = 'select ' . TABLE_FACILITIES . '.name' .
-      ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES .
-      ' where ' . TABLE_CLUB_FACILITIES . '.club_id = ' . $club .
-      ' and '. TABLE_FACILITIES.'.id = '. TABLE_CLUB_FACILITIES .'.facility_id';
+      ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES_PRODUCTION .
+      ' where ' . TABLE_CLUB_FACILITIES_PRODUCTION . '.club_id = ' . $club .
+      ' and '. TABLE_FACILITIES.'.id = '. TABLE_CLUB_FACILITIES_PRODUCTION .'.facility_id';
     $query .= ' group by ' . TABLE_FACILITIES . '.name';
     return wh_db_query ( $query );
   }
@@ -571,10 +584,10 @@
   {
     $query = 'select distinct sport_id, day_id, ' .
       'price_member, price_nonmember, opening_time, closing_time' .
-      ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT . '' .
-      ' where ' . TABLE_CLUBOSPORT . '.club_id = ' . $club .
-      ' and ' . TABLE_SPORTS . '.id = ' . TABLE_CLUBOSPORT . '.sport_id';
-#   $query .= ' group by '. TABLE_SPORTS.'.name, '. TABLE_CLUBOSPORT .'.day_id';
+      ' from ' . TABLE_SPORTS . ', ' . TABLE_CLUBOSPORT_PRODUCTION . '' .
+      ' where ' . TABLE_CLUBOSPORT_PRODUCTION . '.club_id = ' . $club .
+      ' and ' . TABLE_SPORTS . '.id = ' . TABLE_CLUBOSPORT_PRODUCTION . '.sport_id';
+#   $query .= ' group by '. TABLE_SPORTS.'.name, '. TABLE_CLUBOSPORT_PRODUCTION .'.day_id';
     $query .= ' order by ' . TABLE_SPORTS . '.name, day_id';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
@@ -584,11 +597,11 @@
   {
     $query = 'select distinct sport_id, day_id, ' .
       'price_member, price_nonmember, opening_time, closing_time' .
-      ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES .
-      ' where ' . TABLE_CLUB_FACILITIES . '.club_id = ' . $club .
-      ' and '. TABLE_FACILITIES .'.id = ' . TABLE_CLUB_FACILITIES . '.sport_id';
+      ' from ' . TABLE_FACILITIES . ', ' . TABLE_CLUB_FACILITIES_PRODUCTION .
+      ' where ' . TABLE_CLUB_FACILITIES_PRODUCTION . '.club_id = ' . $club .
+      ' and '. TABLE_FACILITIES .'.id = ' . TABLE_CLUB_FACILITIES_PRODUCTION . '.sport_id';
 #   $query .= ' group by ' . TABLE_FACILITIES . '.name, ' .
-#             TABLE_CLUB_FACILITIES . '.day_id';
+#             TABLE_CLUB_FACILITIES_PRODUCTION . '.day_id';
     $query .= ' order by ' . TABLE_FACILITIES . '.name, day_id';
 #   echoQuery ( $query );
     return wh_db_query ( $query );
