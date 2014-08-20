@@ -134,7 +134,7 @@
           throw new Exception ($errstr, $errno);
         });
         try {
-          new SimpleXMLElement (DIR_WS_DATABASE.$file, null, true);
+          new SimpleXMLElement ($remote);
         } catch (Exception $e) {
           restore_error_handler ();
           continue;
