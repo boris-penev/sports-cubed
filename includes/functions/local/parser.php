@@ -38,6 +38,11 @@
       return false;
   }
 
+  /**
+   * @param url fetch url
+   * @return remote file, string
+   * Fetch remote file
+   */
   function curl_get_html_file_contents_custom($url)
   {
     $curl = curl_init($url);
@@ -52,12 +57,22 @@
     return $data;
   }
 
+  /**
+   * @param entity input array
+   * @return first element
+   * Get first element from array and cast to string
+   */
   function get_first_element ( $entity )
   {
     return count ( $entity ) > 0 ?
               (string) $entity[0] : '';
   }
 
+  /**
+   * @param entity club, sport or time
+   * @return xpath query
+   * Build xpath query, uses GET to fill the values
+   */
   function build_query_council_edinburgh ( $entity )
   {
     if ( $entity == 'club' )
