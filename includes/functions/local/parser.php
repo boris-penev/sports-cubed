@@ -24,18 +24,18 @@
   $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?(?:\s*(?:am|pm))?)|(?:12(?:(?::|\.)\d\d)?(?:\s*(?:noon))?)';
   $price_regex = '(?:free|(?:\d+(?:\.\d\d)*))';
 
-  function curl_get_file_contents_custom($URL)
+  function curl_get_file_contents_custom ($url)
   {
     $c = curl_init();
     curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($c, CURLOPT_URL, $URL);
+    curl_setopt($c, CURLOPT_URL, $url);
     $contents = curl_exec($c);
     curl_close($c);
 
-    if ($contents)
+    if ($contents !== false)
       return $contents;
     else
-      return FALSE;
+      return false;
   }
 
   function curl_get_html_file_contents_custom($url)
@@ -99,17 +99,68 @@
     return '';
   }
 
-  function loadXML ( $url )
+  /**
+   * Fetch remote xmls and update local xmls if changed and if valid xml
+   * @param xmls array with origin file and remote url as key and value
+   * @return boolean, whether updated or not
+   */
+  function update_xmls ( $xmls )
   {
-    $xml = curl_get_html_file_contents_custom ( $url );
+    $updated = false;
+    foreach ( $xmls as $file => $url )
+    {
+      $remote = curl_get_html_file_contents_custom ( $url );
+      if ( ! file_exists (DIR_WS_DATABASE.$file) ||
+            $remote !== file_get_contents (DIR_WS_DATABASE.$file) )
+      {
+        // parse remote xml
+        set_error_handler (function ($errno, $errstr, $errfile, $errline) {
+          throw new Exception ($errstr, $errno);
+        });
+        try {
+          new SimpleXMLElement (DIR_WS_DATABASE.$file, null, true);
+        } catch (Exception $e) {
+          restore_error_handler ();
+          continue;
+        }
+        restore_error_handler ();
+
+        // write remote to origin
+        try {
+          file_put_contents (DIR_WS_DATABASE.$file, $remote);
+        } catch (Exception $e) {
+          $error = 'The XML could not be written.<br />' .
+                  'Possibly there is a permission problem.<br />' .
+                  'Delete the XML files and try again.';
+          wh_error ( $error );
+        }
+        $updated = true;
+      }
+    }
+    return $updated;
+  }
+
+  /**
+   * Parse xml and create SimpleXMLElement
+   * @param file name of input file
+   * @return SimpleXMLElement
+   */
+  function loadXML ( $file )
+  {
+    set_error_handler (function ($errno, $errstr, $errfile, $errline) {
+      throw new Exception ($errstr, $errno);
+    });
 
     try {
-      return new SimpleXMLElement($xml);
+      $xml = new SimpleXMLElement (DIR_WS_DATABASE.$file, null, true);
     } catch (Exception $e) {
       $error = 'The XML could not be loaded.<br />' .
                'Possibly the contacted server is down.';
       wh_error ( $error );
     }
+
+    restore_error_handler ();
+    return $xml;
   }
 
   function process_current_club_council_edinburgh ( $club )
@@ -441,7 +492,7 @@
       $arr[] = $current_club;
 #     var_dump ($current_club);
     }
-    file_put_contents ( '/var/www/html/database/newest.txt', time () . PHP_EOL );
+    file_put_contents ( DIR_WS_DATABASE . 'newest.txt', time () . PHP_EOL );
     // write the Unix timestamp to newest.txt
   }
 
@@ -556,7 +607,7 @@
       }
       unset ($venue);
     }
-    file_put_contents ( '/var/www/html/database/newest.txt', time () . PHP_EOL );
+    file_put_contents ( DIR_WS_DATABASE . 'newest.txt', time () . PHP_EOL );
     // write the Unix timestamp to newest.txt
   }
 
