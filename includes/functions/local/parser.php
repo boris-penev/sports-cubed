@@ -24,24 +24,25 @@
   $hour_regex = '(?:\d\d?(?:(?::|\.)\d\d)?(?:\s*(?:am|pm))?)|(?:12(?:(?::|\.)\d\d)?(?:\s*(?:noon))?)';
   $price_regex = '(?:free|(?:\d+(?:\.\d\d)*))';
 
+  /**
+   * @param url fetch url
+   * @return remote file, string
+   * Fetch remote file
+   */
   function curl_get_file_contents_custom ($url)
   {
     $c = curl_init();
     curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($c, CURLOPT_URL, $url);
-    $contents = curl_exec($c);
+    $data = curl_exec($c);
     curl_close($c);
-
-    if ($contents !== false)
-      return $contents;
-    else
-      return false;
+    return $data;
   }
 
   /**
    * @param url fetch url
    * @return remote file, string
-   * Fetch remote file
+   * Fetch remote page
    */
   function curl_get_html_file_contents_custom($url)
   {
