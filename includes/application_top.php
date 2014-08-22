@@ -8,12 +8,6 @@
 
   date_default_timezone_set (CFG_TIME_ZONE);
 
-// set the type of request (secure or not)
-  $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
-
-// set php_self in the local scope
-  $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($_SERVER['SCRIPT_NAME'])) ? basename($_SERVER['PHP_SELF']) : basename($_SERVER['SCRIPT_NAME']);
-
 // include the list of project filenames
   require(DIR_WS_INCLUDES . 'filenames.php');
 
