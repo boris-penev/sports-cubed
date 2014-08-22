@@ -48,7 +48,4 @@
 // include the language translations
   require(DIR_WS_LANGUAGES . $language . '.php');
 
-  require(DIR_WS_CLASSES . 'wh_template.php');
-  $whTemplate = new whTemplate();
-
 ?>

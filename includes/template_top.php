@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  require(DIR_WS_CLASSES . 'wh_template.php');
+  $whTemplate = new whTemplate();
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
