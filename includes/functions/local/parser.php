@@ -828,8 +828,6 @@
    */
   function price_check ( &$prices )
   {
-    // flag indicating whether there are valid prices
-    $empty = true;
     for ( $i = 1; $i < 8; ++$i )
     {
       foreach ( $prices [$i] as $price )
@@ -837,9 +835,7 @@
         if ( $price === '' ) {
           continue;
         }
-        $empty = false;
-        break 2;
-#       return true;
+        return true;
       }
     }
     return false;
