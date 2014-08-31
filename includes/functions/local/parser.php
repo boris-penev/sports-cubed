@@ -223,7 +223,6 @@
     $comment = preg_replace ( '/\n +/', "\n", $comment );
     $comment = preg_replace ( '/ +/', ' ', $comment );
     $comment = preg_replace ( '/\n+/', "\n", $comment );
-#   $comment = str_replace ( "\n", ', ', $comment );
     $times = str_replace ( ["\r", "\t"], '', $times );
 #   $times = str_replace ( "\n", ', ', $times );
     $times = preg_replace ( '/\s+/', ' ', $times );
@@ -313,7 +312,6 @@
     $comment = preg_replace ( '/\n +/', "\n", $comment );
     $comment = preg_replace ( '/ +/', ' ', $comment );
     $comment = preg_replace ( '/\n+/', "\n", $comment );
-#   $comment = str_replace ( "\n", ', ', $comment );
     $sport = str_replace ( ["\r", "\n", "\t"], ' ', $sport );
     $matches = null;
     $current ['name'] = $name;
@@ -327,7 +325,6 @@
     {
       $venue_name = $venue->xpath('name/text()');
       $address = $venue->xpath('address/text()');
-#     $postcode = $venue->xpath('postcode/text()');
       $latitude = $venue->xpath('latitude/text()');
       // this is wrong but it is fix for an error in the input xml
       $longtitude = $venue->xpath('longitude/text()');
@@ -387,9 +384,6 @@
       unset ($data ['price']);
       unset ($data ['sports']);
       unset ($data ['facilities']);
-
-      echo '<p><strong>' , wh_output_string_protected ($current_club ['name']) ,
-           '</strong></p>' , PHP_EOL;
 
       foreach ( $arr as $club_t ) {
         if ( $club_t ['name'] == $current_club['name'] ) {
@@ -506,7 +500,6 @@
       $data = [ 'club_id' => $id ];
 
       $arr[] = $current_club;
-#     var_dump ($current_club);
     }
     file_put_contents ( DIR_WS_DATABASE . 'newest.txt', time () . PHP_EOL );
     // write the Unix timestamp to newest.txt
@@ -531,14 +524,10 @@
         unset ($data ['sports']);
         unset ($data ['facilities']);  // does not exist
 
-        echo '<p><strong>' , wh_output_string_protected (
-            $current_club_main ['name']), '</strong></p>' , PHP_EOL;
         if ( $current_club_main ['name'] === '' ) {
           wh_error ('No name for the club');
         }
 
-        echo '<p><strong>' , wh_output_string_protected ($venue ['name']),
-            '</strong></p>' , PHP_EOL;
         if ( $venue ['name'] === '' ) {
           wh_error ('No name for the venue');
         }
@@ -619,7 +608,6 @@
         $data = [ 'club_id' => $id ];
 
         $arr [] = array_merge ($current_club_main, $venue);
-  #     var_dump ($venue);
       }
       unset ($venue);
     }
@@ -675,7 +663,7 @@
    */
   function day_to_number ( $day )
   {
-#   return (int) date('N', strtotime($matches['left']));
+#   return (int) date('N', strtotime($day));
     switch ( $day )
     {
     case 'mon': case 'monday':
@@ -806,20 +794,6 @@
       }
       unset ($time);
     }
-    echo '<p><strong>times:</strong></p>';
-    for ( $i = 1; $i < 8; ++$i )
-    {
-      echo '<span style="color:initial">',
-            '[', $i, '] ', '</span>';
-      foreach ( $times [$i] as $key => $time )
-      {
-        if ( $time !== '' && $time !== true ) {
-          echo $key, ' - ',
-              '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
-        }
-      }
-      echo '<br />';
-    }
     return ! $empty;
   }
 
@@ -855,9 +829,6 @@
       return;
     }
 
-    echo '<p>' , nl2br (wh_output_string_protected ($time)) ,
-         '</p>' , PHP_EOL;
-
     $subject = $time;
     $subject = strtolower ( $subject );
     // Replacing m dashes and other characters
@@ -875,29 +846,9 @@
     $pattern .= '))' .
         "(?:\s*(?::|,)\s*(?P<open_time>{$hour_regex})\s*-\s*" .
         "(?P<close_time>{$hour_regex}))?/";
-#   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
-#   echo nl2br ( wordwrap ( wh_output_string_protected
-#         ($pattern), 80, PHP_EOL, TRUE));
     if (preg_match_all ($pattern, $subject, $matches))
     {
-#     var_dump($matches[0]);
       $count = count ($matches [0]);
-      echo '<p style="color:#E80000">';
-      foreach ($matches[0] as $key => $match) {
-        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
-        echo wh_output_string ($match), '<br />', PHP_EOL;
-      }
-      foreach ($matches as $key => $match) {
-        if ( is_numeric ($key) ) {
-          continue;
-        }
-        foreach ( $match as $key2 => $value ) {
-          if ( $value === '' ) continue;
-          echo '<span style="color:initial">', $key,
-              ' [', $key2, ']', ' - ', '</span>';
-          echo wh_output_string ($value), '<br />' , PHP_EOL;
-        }
-      }
       // Fills the times array
       $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
       for ( $i = 0; $i < $count; ++$i )
@@ -934,7 +885,6 @@
           }
         }
       }
-      echo '</p>' , PHP_EOL;
 
       // TODO For example, if times are best viewed as 8 and prices as 9 and 10,
       // times should fallback to 9 and 10 using current rows instead of
@@ -950,21 +900,6 @@
         }
       } else {
         $times = [ 8 => ['open' => true, 'close' => true] ];
-      }
-
-      echo '<p><strong>times:</strong></p>';
-      foreach ( $times as $time_key => $time_day )
-      {
-        echo '<span style="color:initial">',
-              '[', $time_key, '] ', '</span>';
-        foreach ( $time_day as $key => $time )
-        {
-          if ( $time !== '' && $time !== true ) {
-            echo $key, ' - ',
-                '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
-          }
-        }
-        echo '<br />';
       }
 
       return $times;
@@ -986,9 +921,6 @@
       return;
     }
 
-    echo '<p>' , nl2br (wh_output_string_protected ($price)) ,
-         '</p>' , PHP_EOL;
-
     $subject = $price;
     $subject = strtolower ( $subject );
     // Replacing m dashes and other characters
@@ -1007,29 +939,9 @@
     $pattern .= '))' .
         "\s*(?::|-|,)?\s*member\s*(?::|-)?\s*£?(?P<price_member>{$price_regex})".
         "\s*,?\s*nonmember\s*(?::|-)?\s*£?(?P<price_nonmember>{$price_regex})/";
-#   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
-#   echo nl2br ( wordwrap ( wh_output_string_protected
-#         ($pattern), 80, PHP_EOL, TRUE));
     if (preg_match_all ($pattern, $subject, $matches))
     {
-#     var_dump($matches[0]);
       $count = count ($matches [0]);
-      echo '<p style="color:#E80000">';
-      foreach ($matches[0] as $key => $match) {
-        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
-        echo wh_output_string ($match), '<br />', PHP_EOL;
-      }
-      foreach ($matches as $key => $match) {
-        if ( is_numeric ($key) ) {
-          continue;
-        }
-        foreach ( $match as $key2 => $value ) {
-          if ( $value === '' ) continue;
-          echo '<span style="color:initial">', $key,
-              ' [', $key2, ']', ' - ', '</span>';
-          echo wh_output_string ($value), '<br />' , PHP_EOL;
-        }
-      }
       // Fills the prices array
       $prices = array_fill_keys ( range(1 , 7), ['member' => '', 'nonmember' => ''] );
       for ( $i = 0; $i < $count; ++$i )
@@ -1066,7 +978,6 @@
           }
         }
       }
-      echo '</p>' , PHP_EOL;
 
       $days_type_price = '';
       $prices_empty = ! price_check ( $prices );
@@ -1076,21 +987,6 @@
         if ($days_type_price !== 'separately') {
           $prices = wh_times_prices_num_to_assoc ($prices, $days_type_price);
         }
-      }
-
-      echo '<p><strong>prices:</strong></p>';
-      foreach ( $prices as $price_key => $price_day )
-      {
-        echo '<span style="color:initial">',
-              '[', $price_key, '] ', '</span>';
-        foreach ( $price_day as $key => $price )
-        {
-          if ( $price !== '' && $price !== true ) {
-            echo $key, ' - ',
-                '<span style="color:#E80000;margin:0.5%">', $price, ' </span>';
-          }
-        }
-        echo '<br />';
       }
 
       return $prices;
@@ -1111,8 +1007,6 @@
     if ( $sports_club === '' ) {
       return [];
     }
-    echo '<p>' , nl2br (wh_output_string_protected ($sports_club)) ,
-         '</p>' , PHP_EOL;
 
     $subject = $sports_club;
     $subject = strtolower ( $subject );
@@ -1149,12 +1043,6 @@
     global $price_regex;
 
     $subject = strtolower ($sports_club);
-    // THIS IS FOR TESTING ONLY
-#   $subject = 'badminton' .
-#       'monday, 10 - 20:30, member - £13, nonmember - £15' .
-#       'tuesday, 2am - 3.30am, member - £24, nonmember - £26' .
-#       'wednesday, 11 - 21.30, member - £13, nonmember - £15' .
-#       'thursday, 4pm - 5.30pm, member - £24, nonmember - £26';
 
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
@@ -1199,9 +1087,6 @@
       '(?:' . $days_pattern . '+|' . $global_pattern .
       ')/';
 
-#   var_dump (wordwrap($pattern, 80, PHP_EOL, TRUE));
-#   echo nl2br ( wordwrap ( wh_output_string_protected
-#         ($pattern), 80, PHP_EOL, TRUE));
     if ( ! preg_match ($pattern, $subject, $matches) ) {
       return [];
     }
@@ -1210,25 +1095,7 @@
 
     if ( preg_match_all ("/{$days_pattern}/", $subject, $matches) )
     {
-//      var_dump ($matches);
-//      die;
       $count = count ($matches [0]);
-      echo '<p style="color:#E80000">';
-      foreach ($matches[0] as $key => $match) {
-        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
-        echo wh_output_string ($match), '<br />', PHP_EOL;
-      }
-      foreach ($matches as $key => $match) {
-        if ( is_numeric ($key) ) {
-          continue;
-        }
-        foreach ( $match as $key2 => $value ) {
-          if ( $value === '' ) continue;
-          echo '<span style="color:initial">', $key,
-              ' [', $key2, ']', ' - ', '</span>';
-          echo wh_output_string ($value), '<br />', PHP_EOL;
-        }
-      }
       $times = array_fill_keys ( range(1 , 7), ['open' => '', 'close' => ''] );
       $prices = array_fill_keys ( range(1 , 7), ['member' => '', 'nonmember' => ''] );
       // Loop through the lines
@@ -1272,7 +1139,6 @@
           }
         }
       }
-      echo '</p>' , PHP_EOL;
 
       $days_type_time = '';
       $times_empty = ! time_check ( $times );
@@ -1286,22 +1152,6 @@
         $times = [ 8 => ['open' => true, 'close' => true] ];
       }
 
-      // Print times
-      echo '<p><strong>'.$sport ['name'].' times:</strong></p>';
-      foreach ( $times as $time_key => $time_day )
-      {
-        echo '<span style="color:initial">',
-              '[', $time_key, '] ', '</span>';
-        foreach ( $time_day as $key => $time )
-        {
-          if ( $time !== '' && $time !== true ) {
-            echo $key, ' - ',
-                '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
-          }
-        }
-        echo '<br />';
-      }
-
       $days_type_price = '';
       $prices_empty = ! price_check ( $prices );
       if ( $prices_empty === false )
@@ -1312,22 +1162,6 @@
         }
       }
 
-      // Print prices
-      echo '<p><strong>'.$sport ['name'].' prices:</strong></p>';
-      foreach ( $prices as $price_key => $price_day )
-      {
-        echo '<span style="color:initial">',
-              '[', $price_key, '] ', '</span>';
-        foreach ( $price_day as $key => $price )
-        {
-          if ( $price !== '' && $price !== true ) {
-            echo $key, ' - ',
-                '<span style="color:#E80000;margin:0.5%">', $price, ' </span>';
-          }
-        }
-        echo '<br />';
-      }
-
       return [ 'sport' => $sport ['id'],
                 'times' => $times,
                 'prices' => $prices ];
@@ -1335,22 +1169,6 @@
 
     if ( preg_match ("/{$sport_pattern}{$global_pattern}/", $subject, $matches) )
     {
-#     var_dump ($matches);
-#     die;
-      echo '<p style="color:#E80000">';
-      foreach ($matches as $key => $match) {
-        echo '<span style="color:initial">', ' [', $key, '] ', '</span>';
-        echo wh_output_string ($match), '<br />', PHP_EOL;
-      }
-      foreach ($matches as $key => $match) {
-        if ( is_numeric ($key) ) {
-          continue;
-        }
-        if ( $match === '' ) continue;
-        echo '<span style="color:initial">', $key,
-            ' - ', '</span>';
-        echo wh_output_string ($match), '<br />', PHP_EOL;
-      }
       // Fills the times and prices arrays
       // If the global entry in matches array contains a valid time
       if ( isset ($matches['open_time_global']) &&
@@ -1383,38 +1201,6 @@
       }
       unset ($price);
       $prices = [ 8 => $prices ];
-
-      // Print times
-      echo '<p><strong>'.$sport ['name'].' times:</strong></p>';
-      foreach ( $times as $time_key => $time_day )
-      {
-        echo '<span style="color:initial">',
-              '[', $time_key, '] ', '</span>';
-        foreach ( $time_day as $key => $time )
-        {
-          if ( $time !== '' && $time !== true ) {
-            echo $key, ' - ',
-                '<span style="color:#E80000;margin:0.5%">', $time, ' </span>';
-          }
-        }
-        echo '<br />';
-      }
-
-      // Print prices
-      echo '<p><strong>'.$sport ['name'].' prices:</strong></p>';
-      foreach ( $prices as $price_key => $price_day )
-      {
-        echo '<span style="color:initial">',
-              '[', $price_key, '] ', '</span>';
-        foreach ( $price_day as $key => $price )
-        {
-          if ( $price !== '' && $price !== true ) {
-            echo $key, ' - ',
-                '<span style="color:#E80000;margin:0.5%">', $price, ' </span>';
-          }
-        }
-        echo '<br />';
-      }
 
       return [ 'sport' => $sport ['id'],
                 'times' => $times,
@@ -1480,8 +1266,6 @@
     if ( $sports_club === '' ) {
       return [];
     }
-    echo '<p>' , nl2br (wh_output_string_protected ($sports_club)) ,
-         '</p>' , PHP_EOL;
 
     $subject = $sports_club;
     $subject = strtolower ( $subject );
