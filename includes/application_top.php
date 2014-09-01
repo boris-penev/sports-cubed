@@ -6,6 +6,13 @@
 // load server configuration parameters
   require('includes/configure.php');
 
+  if (DB_SERVER === '') {
+    if (is_dir ('install')) {
+      header ('Location: install/index.php');
+    }
+    die ('Database server not specified and install directory not found');
+  }
+
   date_default_timezone_set (CFG_TIME_ZONE);
 
 // include the list of project filenames
