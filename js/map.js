@@ -11,7 +11,7 @@ $(document).bind( "mobileinit", function(event) {
 });
 
 $('#backToMap').click(function(){
-	window.location = "http://testpilot.x10.mx/sportscubed/";
+	window.location.href = ".";
 })
 
 $(window).resize(function(){
@@ -126,7 +126,7 @@ else{
 	
 	// making the request to the server
 	request = new XMLHttpRequest();
-	request.open("GET","http://testpilot.x10.mx/sportscubed/query.php?sports=" +
+	request.open("GET","query.php?sports=" +
 				sports + "&days=" + days + "&price=" + price,true);
 	request.send (null);
 	

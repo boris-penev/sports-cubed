@@ -381,8 +381,8 @@ $('#linkToMap').click(function(){
   
   //alert(document.cookie)
   //alert("Sports: " + sportsToBeSubmitted + " Days: " + daysToBeSubmitted + " Price: " + priceToBeSubmitted)
- 
-  window.location = "http://testpilot.x10.mx/sportscubed/map.html";
+
+  window.location.href = "map.html";
 })
 
 $('#top').click(function(){
