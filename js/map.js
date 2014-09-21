@@ -10,7 +10,7 @@ $(document).bind( "mobileinit", function(event) {
     $.extend($.mobile.zoom, {locked:false,enabled:true});
 });
 
-$('#backToMap').click(function(){
+$('#backToCube').click(function(){
   window.location.href = ".";
 });
 
@@ -20,7 +20,7 @@ $(window).resize(function(){
   $('#goBackCard').css('margin-left',(windowWidth/2 - 125).toString()+"px");
 
   windowHeight = $(window).height();
-  $('#backToMap').css('margin-top',(windowHeight/2 - 35).toString()+"px");
+  $('#backToCube').css('margin-top',(windowHeight/2 - 35).toString()+"px");
 });
 
 $(document).ready(function(){
@@ -45,7 +45,7 @@ $(document).ready(function(){
   console.log(cookieArray)
 
   var windowHeight = $(window).height();
-  $('#backToMap').css('margin-top',(windowHeight/2 - 35).toString()+"px");
+  $('#backToCube').css('margin-top',(windowHeight/2 - 35).toString()+"px");
   // creating the map and the info window
   var myLatlng = new google.maps.LatLng(55.950, -3.190);  //Edinburgh center
 

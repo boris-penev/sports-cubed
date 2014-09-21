@@ -1,14 +1,14 @@
 body {
-  overflow:hidden;
+  overflow:auto;
   background: #88BACA;
 
-  /*** disables text marking ***/
+  /*** disables text marking
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -moz-touch-callout: none;
   -ms-user-select: none;
-  user-select: none;
+  user-select: none; ***/
 
   font-family: Verdana;
 
@@ -20,11 +20,22 @@ h1, h2, h3{
 }
 
 #container{
-  width:90%;
+  width:80%;
   margin: 10px auto 10px auto;
   padding: 10px;
   background-color: #810b19;
   border: 2px solid white;
+}
+
+#backToCube{
+  background-image: url(img/backToCube.png);
+  background-size: 90px 45px;
+  position: fixed;
+  top: 0;
+  left: 20;
+  cursor: pointer;
+  width: 90px;
+  height: 45px;
 }
 
 .description{
