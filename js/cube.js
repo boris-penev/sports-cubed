@@ -467,6 +467,9 @@ $('#help').click(function(){
     	  '<a href="about.html">' +
            '<img id="about-auth" class="help-buttons" src="img/about-auth.jpg">'+
         '</a>' +
+    	  '<a href="about-proj.html">' +
+           '<img id="about-proj" class="help-buttons" src="img/about-proj.jpg">'+
+        '</a>' +
       '</div>')
     $('#curtain').fadeIn();
   }
