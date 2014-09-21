@@ -1,6 +1,6 @@
 body {
   overflow:hidden;
-  background: #066AFF;
+  background: #88BACA;
   /*background: linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
   background: -webkit-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
   background: -moz-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);*/
@@ -77,7 +77,7 @@ select[disabled]{
 /*##################################################### */
 
 .face {
-  background:#8C8C8C;
+  background:#810b19;
   position:absolute;
   height:100%;
   width:100%;
@@ -388,6 +388,7 @@ makes the application responsive ***/
   height: 90px;
   background-color: #606060;
   /*border-radius: 10px;*/
+  background-color: black;
   margin: 100px auto 10px auto;
   padding: 10px;
   color: white;

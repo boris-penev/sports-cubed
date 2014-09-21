@@ -1,6 +1,6 @@
 body {
   overflow:hidden;
-  background: #066AFF;
+  background: #88BACA;
 
   /*** disables text marking ***/
   -webkit-touch-callout: none;
@@ -23,7 +23,7 @@ h1, h2, h3{
   width:90%;
   margin: 10px auto 10px auto;
   padding: 10px;
-  background-color: grey;
+  background-color: #810b19;
   border: 2px solid white;
 }
 
@@ -41,7 +41,7 @@ h1, h2, h3{
 
 .avatar{
   width: 150px;
-  height: 150px;
+  height: 200px;
   border: 2px solid white;
   float: left;
   margin: 0 10px 0 0 ;
