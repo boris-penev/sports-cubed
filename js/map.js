@@ -157,11 +157,21 @@ $(document).ready(function(){
             title: 'Marker ' + i
           });
 
+          var email;
+          
+          if(data[i].email){
+             email = data[i].email
+          }
+          else{
+             email = "No email provided."
+          }
+          
           contentStrings[i] = "<div style='color:#939393; font-size: 15px; font-family:Calibri'><span style='color:black;'>" + data[i].name + "</span>" +
-            "<br/><a href=mailto:" + data[i].email + ">" + data[i].email + "</a>" +
+            "<br/><a href=mailto:" + email + ">" + email + "</a>" +
             "<br/><a href=tel:" + data[i].phone + ">" + data[i].phone + "</a>" +
             "<br/><span style='margin-top:10px;' >" + data[i].sports + "</span></div>";
 
+          console.log(email);
           markers[i] = marker;
 
           // event listener for each marker
