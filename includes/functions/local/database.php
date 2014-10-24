@@ -264,6 +264,20 @@
                         " where name = '{$name}'");
   }
 
+  function getClubScheduleTime ($id)
+  {
+    return wh_db_query ('select day_id, opening_time, closing_time' .
+                        ' from ' . TABLE_CLUB_SCHEDULE_PRODUCTION .
+                        " where club_id = '{$id}'");
+  }
+
+  function getClubSchedulePrice ($id)
+  {
+    return wh_db_query ('select day_id, price_member, price_nonmember' .
+                        ' from ' . TABLE_CLUB_SCHEDULE_PRODUCTION .
+                        " where club_id = '{$id}'");
+  }
+
   /**
    * @param $table entity table - sports or facilities
    * @param $data array with entities - sports or facilities
