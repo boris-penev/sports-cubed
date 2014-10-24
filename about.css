@@ -19,6 +19,10 @@ h1, h2, h3{
   text-align: center;
 }
 
+a {
+   color: #BEDEE6;
+}
+
 #container{
   width:80%;
   margin: 10px auto 10px auto;
