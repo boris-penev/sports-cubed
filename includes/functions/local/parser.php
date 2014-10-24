@@ -1044,6 +1044,7 @@
     $interval = '\s*(?::|-|,)?\s*';
     $interval_list = '\s*(?::|,)?\s*';
 
+    $sport['name'] = str_replace( '/', '\/', $sport['name']);
     $sport_pattern = "(?P<sport>{$sport['name']})";
 
     if ( ! preg_match ("/{$sport_pattern}/", $subject) ) {
