@@ -1,7 +1,4 @@
 <?php
-  if ( DB_DATABASE !== 'clubs_xml' ) {
-    wh_error ( 'Using incorrect database' );
-  }
 
   $club_init = [
     'name' => '',
