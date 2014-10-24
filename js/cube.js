@@ -212,7 +212,6 @@ function browserRec( userAgent ){
 
 
 $(document).ready(function() {
-
   sportsToBeSubmitted = new Array();
   cookieArray = []
   initialCookieArray = document.cookie.split('; ').sort();
@@ -253,9 +252,15 @@ $(document).ready(function() {
   determinerDirection = "-";
   currentDeterminerAxis = "Y";
   currentDeterminerDirection = "+";
+  
+  // tries to differentiate between chrome, firefox and default android/safari 
+  // browsers to determine how much closer to bring the cube inwards in case the 
+  // screen is too big. If it is the default android browser and safari the cube
+  // goes out of the viewport when it comes too close, unlike chrome and firefox
+  
+  browserRec(navigator.userAgent.toLowerCase());
 
   adjust();
-  
     
   // draw and populate the activities side
   request = new XMLHttpRequest();
@@ -320,12 +325,6 @@ $(document).ready(function() {
         cubeNotLocked = '';
       }
       
-      // tries to differentiate between chrome, firefox and default android/safari 
-      // browsers to determine how much closer to bring the cube inwards in case the 
-      // screen is too big. If it is the default android browser and safari the cube
-      // goes out of the viewport when it comes too close, unlike chrome and firefox
-      
-      browserRec(navigator.userAgent.toLowerCase());
       // check if we are coming from the map and "click" on the filters
       // that the user had already selected
       // in this way we remember his/her preferences and they don't have to
