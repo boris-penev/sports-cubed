@@ -1283,8 +1283,8 @@
     $data = [ 'name' => $entry ];
     wh_db_perform ( TABLE_SPORTS, $data, 'insert' );
     $id = wh_db_insert_id ();
+    $sports [] = [ 'id' => $id, 'name' => $entry ];
     $sports_club [] = [ 'id' => $id, 'name' => $entry ];
-    $sports [] = $sports_club;
     return $sports_club;
   }
 
