@@ -6,6 +6,61 @@
   //cp query.php ..; cp -r includes ..;
   require('includes/application_top.php');
 
+  // prevent browser from parsing the page as html
+  // it is useful for debugging
+  // also look at the similar comment at the bottom of the file
+  // echo '<!doctype html>', PHP_EOL, '<textarea>', PHP_EOL;
+
+  function set_schedule (&$clubs)
+  {
+    foreach ( $clubs as &$club ) {
+      $club['schedule'] = [];
+      $club['schedule']['time'] = [];
+      $club['schedule']['price'] = [];
+      if ($club['opening_time'] === null && $club['closing_time'] === null) {
+        $club['schedule']['time'] = wh_db_fetch_all_custom(
+                          getClubScheduleTime((int)$club['id']), MYSQLI_ASSOC);
+        if ($club['schedule']['time'] === false) {
+          $club['schedule']['time'] = [];
+        }
+      }
+      if ($club['price_member'] === null && $club['price_nonmember'] === null) {
+        $club['schedule']['price'] = wh_db_fetch_all_custom(
+                          getClubSchedulePrice((int)$club['id']), MYSQLI_ASSOC);
+        if ($club['schedule']['price'] === false) {
+          $club['schedule']['price'] = [];
+        }
+      }
+      foreach ($club['schedule']['time'] as $sch_time) {
+        if ($sch_time['opening_time'] !== null &&
+            ($club['opening_time'] === null ||
+              $club['opening_time'] < $sch_time['opening_time'])) {
+          $club['opening_time'] = $sch_time['opening_time'];
+        }
+        if ($sch_time['closing_time'] !== null &&
+            ($club['closing_time'] === null ||
+              $club['closing_time'] > $sch_time['closing_time'])) {
+          $club['closing_time'] = $sch_time['closing_time'];
+        }
+      }
+      foreach ($club['schedule']['price'] as $sch_price) {
+        if ($sch_price['price_member'] !== null &&
+            ($club['price_member'] === null ||
+              $club['price_member'] > $sch_price['price_member'])) {
+          $club['price_member'] = $sch_price['price_member'];
+        }
+        if ($sch_price['price_nonmember'] !== null &&
+            ($club['price_nonmember'] === null ||
+              $club['price_nonmember'] > $sch_price['price_nonmember'])) {
+          $club['price_nonmember'] = $sch_price['price_nonmember'];
+        }
+      }
+      // NOTE In future we may use schedule to display complete schedule
+      unset($club['schedule']);
+    }
+    unset($club);
+  }
+
 # $array_input = json_decode ( wh_db_get_input_string ( 'array' ) ) or die();
 
   $sports = wh_db_get_input_string ( 'sports' );
@@ -76,8 +131,7 @@
 
   // TODO Fetch the sports and replace their names with their id's, so there to
   // be no joins with the sports table
-  // TODO getClubsBySportsDaysTimePrice should only return club id's, so there
-  // to be no joins with the clubs table
+  // TODO Sports loop can be made a single SQL query
 
   if ( $days !== [] || $time !== [] || $price !== null )
   {
@@ -90,6 +144,7 @@
       $clubs[$key]['sports'] = wh_db_fetch_all_custom (
         getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
     }
+    set_schedule($clubs);
     echo json_encode ( $clubs );
   }
   elseif ( $sports !== [] )
@@ -103,6 +158,7 @@
       $clubs[$key]['sports'] = wh_db_fetch_all_custom (
             getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
     }
+    set_schedule($clubs);
     echo json_encode ( $clubs );
   }
   else
@@ -112,10 +168,17 @@
       $clubs = array ();
     }
     foreach ( $clubs as $key => $value ) {
-      $clubs[$key]['sports'] = wh_db_fetch_all_custom ( getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
+      $clubs[$key]['sports'] = wh_db_fetch_all_custom (
+        getSportsByClub ( (int) $value['id'] ), MYSQLI_NUM );
     }
+    set_schedule($clubs);
     echo json_encode ( $clubs );
   }
+
+  // prevent browser from parsing the page as html
+  // it is useful for debugging
+  // also look at the similar comment at the top of the file
+  // echo '</textarea>', PHP_EOL;
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 
