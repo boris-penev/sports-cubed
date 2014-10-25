@@ -160,14 +160,14 @@ $(document).ready(function(){
           var email;
           
           if(data[i].email){
-             email = data[i].email
+             email = "<a href=mailto:" + data[i].email + ">" + data[i].email + "</a>"
           }
           else{
-             email = "No email provided."
+             email = "<span>No email provided.</span>"
           }
           
           contentStrings[i] = "<div style='color:#939393; font-size: 15px; font-family:Calibri'><span style='color:black;'>" + data[i].name + "</span>" +
-            "<br/><a href=mailto:" + email + ">" + email + "</a>" +
+            "<br/>" + email +
             "<br/><a href=tel:" + data[i].phone + ">" + data[i].phone + "</a>" +
             "<br/><span style='margin-top:10px;' >" + data[i].sports + "</span></div>";
 
