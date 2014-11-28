@@ -1,0 +1,17 @@
+Sports Cubed is a website with simplistic cube design  
+for searching sports clubs in Edinburgh
+
+You can check it here:
+
+http://sportscubed.org.uk/
+
+Sports Cubed lets you filter clubs by sport, time and price.
+
+The interface is a cube whose sides accommodate the different  
+data filters and the map that displays the matching clubs.
+
+Club details are parsed from multiple differently formatted XMLs.
+
+You should check for install instructions in the github wiki:
+
+https://github.com/bob53181/sports-cubed/wiki
