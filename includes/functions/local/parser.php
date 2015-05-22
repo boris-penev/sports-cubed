@@ -1017,6 +1017,13 @@
 
     foreach ( $sports as $sport )
     {
+      if ($sport === 'canoe-kayak') {
+        $sport = 'canoeing / kayaking';
+      } elseif ($sport === 'synchro-swim') {
+        $sport = 'swimming - synchro';
+      } elseif ($sport === 'am. football') {
+        $sport = 'american football';
+      }
       $entry = parse_sport ( $sport, $subject );
       if ( $entry !== [] ) {
         $sports_club [] = $entry;
@@ -1272,6 +1279,16 @@
     $subject = unicode_fix ( $subject );
     $entry = $subject;
     $sports_club = [];
+
+    if ($entry === 'canoeing / kayaking') {
+      $entry = 'canoe-kayak';
+    } elseif ($entry === 'swimming - synchro') {
+      $entry = 'synchro-swim';
+    } elseif ($entry === 'american football') {
+      $entry = 'am. football';
+    } elseif (strlen($entry) > 16) {
+      error_log('Sport too long and omitted - ' . $entry . "\n", 0);
+    }
 
     foreach ( $sports as $sport )
     {
