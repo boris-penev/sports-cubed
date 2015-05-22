@@ -388,7 +388,7 @@
           $error = 'There is another club with the same name - ' .
                    $current_club ['name'];
           if (php_sapi_name() === 'cli') {
-            echo $error;
+            echo $error, PHP_EOL;
           } else {
             echo '<div style="color:red">',
                   '<h1>', nl2br ($error) , '</h1>', PHP_EOL,
@@ -551,7 +551,7 @@
             $error = 'There is another club with the same name - ' .
                     $venue ['name'];
             if (php_sapi_name() === 'cli') {
-              echo $error;
+              echo $error, PHP_EOL;
             } else {
               echo '<div style="color:red">',
                     '<h1>', nl2br ($error) , '</h1>', PHP_EOL,

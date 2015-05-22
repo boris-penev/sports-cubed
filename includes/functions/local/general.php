@@ -7,7 +7,7 @@
   {
     $message = $notice;
     if (php_sapi_name() === 'cli') {
-      echo $message;
+      echo $message, PHP_EOL;
     } else {
       echo '<div style="color:red">',
             '<h1>', nl2br($message), '</h1>', '[CONTINUE]', PHP_EOL,
@@ -23,7 +23,7 @@
   {
     $message = $error;
     if (php_sapi_name() === 'cli') {
-      echo $message;
+      echo $message, PHP_EOL;
     } else {
       echo '<div style="color:red">',
             '<h1>', nl2br($message), '</h1>', '[STOP]', PHP_EOL,

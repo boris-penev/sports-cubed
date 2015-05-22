@@ -9,7 +9,7 @@
   if ( update_xmls ( $xmls ) === false ) {
     $message = 'XMLs are the same, database not updated';
     if (php_sapi_name() === 'cli') {
-      echo $message;
+      echo $message, "\n";
     } else {
       echo '<div style="color:green">',
             '<h1>', $message, '</h1>', PHP_EOL,
@@ -21,7 +21,7 @@
 
   $message = 'Updating databases';
   if (php_sapi_name() === 'cli') {
-    echo $message;
+    echo $message, "\n";
   } else {
     echo '<div style="color:green">',
           '<h1>', $message, '</h1>', PHP_EOL,
