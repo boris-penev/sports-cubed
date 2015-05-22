@@ -5,10 +5,15 @@
    */
   function wh_notice ( $notice )
   {
-    echo '<div style="color:red">',
-          '<h1>' . nl2br ( $notice ) . '</h1>',
-          '[WHALE STOP]', PHP_EOL,
-          '</div>';
+    $message = $notice;
+    if (php_sapi_name() === 'cli') {
+      echo $message;
+    } else {
+      echo '<div style="color:red">',
+            '<h1>', nl2br($message), '</h1>', '[CONTINUE]', PHP_EOL,
+            '</div>';
+    }
+    error_log($message . "\n", 0);
   }
 
   /**
@@ -16,10 +21,15 @@
    */
   function wh_error ( $error )
   {
-    echo '<div style="color:red">',
-          '<h1>' . nl2br ( $error ) . '</h1>',
-          '[WHALE STOP]', PHP_EOL,
-          '</div>';
+    $message = $error;
+    if (php_sapi_name() === 'cli') {
+      echo $message;
+    } else {
+      echo '<div style="color:red">',
+            '<h1>', nl2br($message), '</h1>', '[STOP]', PHP_EOL,
+            '</div>';
+    }
+    error_log($message . "\n", 0);
     die;
   }
 

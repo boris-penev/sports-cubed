@@ -387,9 +387,14 @@
 #         wh_error ('There is another club with the same name');
           $error = 'There is another club with the same name - ' .
                    $current_club ['name'];
-          echo '<div style="color:red">',
-                '<h1>' , nl2br ( $error ) , '</h1>', PHP_EOL,
-                '</div>';
+          if (php_sapi_name() === 'cli') {
+            echo $error;
+          } else {
+            echo '<div style="color:red">',
+                  '<h1>', nl2br ($error) , '</h1>', PHP_EOL,
+                  '</div>';
+          }
+          error_log($error . "\n", 0);
           break;
         }
       }
@@ -545,9 +550,14 @@
   #         wh_error ('There is another club with the same name');
             $error = 'There is another club with the same name - ' .
                     $venue ['name'];
-            echo '<div style="color:red">',
-                  '<h1>' , nl2br ( $error ) , '</h1>', PHP_EOL,
-                  '</div>';
+            if (php_sapi_name() === 'cli') {
+              echo $error;
+            } else {
+              echo '<div style="color:red">',
+                    '<h1>', nl2br ($error) , '</h1>', PHP_EOL,
+                    '</div>';
+            }
+            error_log($error . "\n", 0);
             break;
           }
         }
