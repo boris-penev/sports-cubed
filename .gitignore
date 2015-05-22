@@ -29,3 +29,6 @@ configure.php
 .settings
 .buildpath
 .project
+
+# Hidden files
+.*
