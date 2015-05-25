@@ -273,9 +273,15 @@ $(document).ready(function() {
   	{
       sportsList = JSON.parse(request.responseText);
       console.log(sportsList)
-      
-      for(var i = 0; i < sportsList.length; i++){
-  	  sportsList[i] = capitaliseFirstLetter(sportsList[i])
+
+      for(var i = 0, len = sportsList.length; i < len; ++i){
+        if (sportsList[i] === 'bmx') {
+          sportsList[i] = 'BMX';
+        } else if (sportsList[i] === 'football usa') {
+          sportsList[i] = 'Football USA';
+        } else {
+          sportsList[i] = capitaliseFirstLetter(sportsList[i]);
+        }
       }
       numberOfSportsPages = Math.ceil(sportsList.length / 12);
       drawActivities(sportsList);
