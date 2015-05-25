@@ -1031,7 +1031,7 @@
         $sport = 'canoeing / kayaking';
       } elseif ($sport === 'synchro-swim') {
         $sport = 'swimming - synchro';
-      } elseif ($sport === 'am. football') {
+      } elseif ($sport === 'football usa') {
         $sport = 'american football';
       }
       $entry = parse_sport ( $sport, $subject );
@@ -1295,7 +1295,7 @@
     } elseif ($entry === 'swimming - synchro') {
       $entry = 'synchro-swim';
     } elseif ($entry === 'american football') {
-      $entry = 'am. football';
+      $entry = 'football usa';
     } elseif (strlen($entry) > 16) {
       error_log('Sport too long and omitted - ' . $entry . "\n", 0);
     }
