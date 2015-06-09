@@ -2,168 +2,215 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-  <!-- prevents zooming on double tap and the magnifying rectangle in chrome
+<!-- prevents zooming on double tap and the magnifying rectangle in chrome
        that appears when tapping somewhere -->
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport"
+  content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
-    <title>Sports Cubed</title>
+<title>Sports Cubed</title>
 
-  <link rel="stylesheet" type="text/css" href="cube.css"/>
+<link rel="stylesheet" type="text/css" href="cube.css" />
 
 </head>
 
 <body>
 
   <!-- Dims the screen for the tutorial -->
-    <div id="curtain"></div>
+  <div id="curtain"></div>
 
   <!-- This is the wrapper that basically has the dimensions of the screen and
     that is resized whenever the screen dimensions are changed -->
-    <section id="bigWrapper">
+  <section id="bigWrapper">
 
     <!-- Opens help page that points to the tutorial and the page for the authors -->
-    <img id="help" src="img/help.jpg" title="Help"/>
+    <img id="help" src="img/help.jpg" title="Help" />
 
     <!-- Cube frame is used for the perspective and 3D transformations -->
-      <section id="cubeFrame">
+    <section id="cubeFrame">
 
-    <!-- This is the actual cube positioned in the Cube frame
+      <!-- This is the actual cube positioned in the Cube frame
     The sides are named assuming that we are facing the one with the Map link -->
-        <section id="cube">
+      <section id="cube">
 
-    <!-- Back side of the cube containing the Activities filter -->
-        <section class="face back" id = "back">
-    <div>
-          <div><img src="img/Activities_label.jpg"></div>
+        <!-- Back side of the cube containing the Activities filter -->
+        <section class="face back" id="back">
+          <div>
+            <div>
+              <img src="img/Activities_label.jpg">
+            </div>
 
-      <img src="img/back-expl.jpg" id="back-explanation"  class="tutorial-explanation" />
-      <img id="swipe-back" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px; top:0; left:0"/>
+            <img src="img/back-expl.jpg" id="back-explanation"
+              class="tutorial-explanation" /> <img id="swipe-back"
+              src="img/swipe.png"
+              style="display: none; position: absolute; margin-top: 230px; margin-left: 400px; top: 0; left: 0" />
 
-      <section id="sports-left-navigator">
-      <img src="img/navigate-sports-left.jpg"/>
-      </section>
+            <section id="sports-left-navigator">
+              <img src="img/navigate-sports-left.jpg" />
+            </section>
 
-      <section id="sports-page">
-      <section id="sports-slider">
-      </section>
-      </section>
+            <section id="sports-page">
+              <section id="sports-slider"></section>
+            </section>
 
-      <section id="sports-right-navigator">
-      <img src="img/navigate-sports-right.jpg"/>
-      </section>
-        </div>
+            <section id="sports-right-navigator">
+              <img src="img/navigate-sports-right.jpg" />
+            </section>
+          </div>
         </section>
 
-    <!-- Front side of the cube containing the link to the map with results -->
-        <section class="face front" id = "front">
-    <div>
+        <!-- Front side of the cube containing the link to the map with results -->
+        <section class="face front" id="front">
+          <div>
 
-      <!-- Button redirecting to the map with results -->
-          <div id="linkToMap"><img src="img/mapExplore.jpg"></div>
+            <!-- Button redirecting to the map with results -->
+            <div id="linkToMap">
+              <img src="img/mapExplore.jpg">
+            </div>
 
-          <img src="img/map-screen.jpg" style="z-index:1; margin-top:5px;">
-    </div>
+            <img src="img/map-screen.jpg"
+              style="z-index: 1; margin-top: 5px;">
+          </div>
         </section>
 
-    <!-- Top side of the cube containing the prospective advertisements -->
-        <section class="face top" id = "top">
-    <div>
-          <img src="img/edinburgh-council.jpg" style="margin-top:5px;">
-    </div>
+        <!-- Top side of the cube containing the prospective advertisements -->
+        <section class="face top" id="top">
+          <div>
+            <img src="img/edinburgh-council.jpg"
+              style="margin-top: 5px;">
+          </div>
         </section>
 
-    <!-- Left side of the cube containing the Price filter -->
-        <section class="face left" id = "left">
-    <div>
-      <img src="img/left-expl.jpg" id="left-explanation"  class="tutorial-explanation" />
-      <img id="swipe-left" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px; top:0; left:0"/>
+        <!-- Left side of the cube containing the Price filter -->
+        <section class="face left" id="left">
+          <div>
+            <img src="img/left-expl.jpg" id="left-explanation"
+              class="tutorial-explanation" /> <img id="swipe-left"
+              src="img/swipe.png"
+              style="display: none; position: absolute; margin-top: 230px; margin-left: 400px; top: 0; left: 0" />
 
-      <div><img src="img/Price_label.jpg"></div>
+            <div>
+              <img src="img/Price_label.jpg">
+            </div>
 
-      <div class="price-wrapper">
-        <input type="radio" id="membership" name="radios" value="false" checked>
-          <label for="membership">Membership</label>
-        <select id="membership-select">
-          <option>Free</option>
-          <option>Below £15</option>
-          <option>Below £20</option>
-          <option>Below £25</option>
-          <option>Below £30</option>
-          <option>Below £35</option>
-          <option>Over £35</option>
-        </select>
-      </div>
+            <div class="price-wrapper">
+              <input type="radio" id="membership" name="radios"
+                value="false" checked> <label for="membership">Membership</label>
+              <select id="membership-select">
+                <option>Free</option>
+                <option>Below £15</option>
+                <option>Below £20</option>
+                <option>Below £25</option>
+                <option>Below £30</option>
+                <option>Below £35</option>
+                <option>Over £35</option>
+              </select>
+            </div>
 
-      <div class="price-wrapper">
-      <input type="radio" id="one-time" name="radios" value="all">
-        <label for="one-time">One-time Visit Cost</label>
-        <select id="one-time-select" disabled>
-          <option>Free</option>
-          <option>Below £5</option>
-          <option>Below £8</option>
-          <option>Below £10</option>
-          <option>Below £12</option>
-          <option>Below £15</option>
-          <option>Over £15</option>
-        </select>
-      </div>
+            <div class="price-wrapper">
+              <input type="radio" id="one-time" name="radios"
+                value="all"> <label for="one-time">One-time
+                Visit Cost</label> <select id="one-time-select" disabled>
+                <option>Free</option>
+                <option>Below £5</option>
+                <option>Below £8</option>
+                <option>Below £10</option>
+                <option>Below £12</option>
+                <option>Below £15</option>
+                <option>Over £15</option>
+              </select>
+            </div>
 
-      <div style="clear:both"></div>
+            <div style="clear: both"></div>
 
-      <!--<div id="disclaimer">
+            <!--<div id="disclaimer">
         Disclaimer: venues with unknown price will always be visualised on the map as yellow markers.
       </div>-->
-        </div>
+          </div>
         </section>
 
-    <!-- Right side of the cube containing the Time (days) filter -->
-        <section class="face right" id = "right">
-    <div>
-      <img src="img/right-expl.jpg" id="right-explanation"  class="tutorial-explanation"/>
-      <img id="swipe-right" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px;top0; left:0"/>
+        <!-- Right side of the cube containing the Time (days) filter -->
+        <section class="face right" id="right">
+          <div>
+            <img src="img/right-expl.jpg" id="right-explanation"
+              class="tutorial-explanation" /> <img id="swipe-right"
+              src="img/swipe.png"
+              style="display: none; position: absolute; margin-top: 230px; margin-left: 400px; top0; left: 0" />
 
-          <div><img src="img/Time_label.jpg"></div>
+            <div>
+              <img src="img/Time_label.jpg">
+            </div>
 
-          <section class="time-wrapper">
-            <div class="time-togglers" id="whole_toggler">Whole week<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-            <div class="time-togglers" id="monday_toggler">Monday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-            <div class="time-togglers" id="tuesday_toggler">Tuesday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-            <div class="time-togglers" id="wednesday_toggler">Wednesday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-          </section>
+            <section class="time-wrapper">
+              <div class="time-togglers" id="whole_toggler">
+                Whole week<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+              <div class="time-togglers" id="monday_toggler">
+                Monday<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+              <div class="time-togglers" id="tuesday_toggler">
+                Tuesday<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+              <div class="time-togglers" id="wednesday_toggler">
+                Wednesday<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+            </section>
 
-          <section class="time-wrapper">
-            <div class="time-togglers" id="thursday_toggler">Thursday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-            <div class="time-togglers" id="friday_toggler">Friday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-            <div class="time-togglers" id="saturday_toggler">Saturday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-            <div class="time-togglers" id="sunday_toggler">Sunday<br/><div class="yes-no-button-time" data-clicked="no"></div></div>
-          </section>
-    </div>
+            <section class="time-wrapper">
+              <div class="time-togglers" id="thursday_toggler">
+                Thursday<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+              <div class="time-togglers" id="friday_toggler">
+                Friday<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+              <div class="time-togglers" id="saturday_toggler">
+                Saturday<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+              <div class="time-togglers" id="sunday_toggler">
+                Sunday<br />
+                <div class="yes-no-button-time" data-clicked="no"></div>
+              </div>
+            </section>
+          </div>
         </section>
 
-    <!-- Bottom side of the cube containing the Intro screen -->
-        <section class="face bottom" id = "bottom">
-    <div>
-      <img src="img/front-expl.jpg" id="front-explanation"  class="tutorial-explanation" />
-      <img src="img/intro-expl.jpg" id="bottom-explanation"  class="tutorial-explanation" />
-      <img id="swipe-bottom" src="img/swipe.png" style="display:none;position:absolute; margin-top:230px; margin-left:400px;"/>
+        <!-- Bottom side of the cube containing the Intro screen -->
+        <section class="face bottom" id="bottom">
+          <div>
+            <img src="img/front-expl.jpg" id="front-explanation"
+              class="tutorial-explanation" /> <img
+              src="img/intro-expl.jpg" id="bottom-explanation"
+              class="tutorial-explanation" /> <img id="swipe-bottom"
+              src="img/swipe.png"
+              style="display: none; position: absolute; margin-top: 230px; margin-left: 400px;" />
 
-      <img src="img/intro-image.jpg" style="width:500px; height: 430px;">
-      <img src="img/swipe-me.png" style="float:left;">
-      <a href="#" onclick="alert('Coming Soon...')"><img src="img/google-play.png" style="float:right; margin-right: 5px;"></a>
-    </div>
+            <img src="img/intro-image.jpg"
+              style="width: 500px; height: 430px;"> <img
+              src="img/swipe-me.png" style="float: left;"> <a
+              href="#" onclick="alert('Coming Soon...')"><img
+              src="img/google-play.png"
+              style="float: right; margin-right: 5px;"></a>
+          </div>
         </section>
 
       </section>
 
     </section>
 
-    </section>
+  </section>
 
-    <script type="text/javascript" src="js/ext/jquery/jquery.js"></script>
-    <script type="text/javascript" src="js/ext/jquery/jquery.hammer.min.js"></script>
-    <script type="text/javascript" src="js/cube.js"></script>
+  <script type="text/javascript" src="js/ext/jquery/jquery.js"></script>
+  <script type="text/javascript"
+    src="js/ext/jquery/jquery.hammer.min.js"></script>
+  <script type="text/javascript" src="js/cube.js"></script>
 
 </body>
 </html>

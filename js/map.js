@@ -144,8 +144,7 @@ $(document).ready(function(){
         var i = 0;
 
         // creating the markers and populating the contentStrings array which has
-        // the info window data for each marker
-        // populating the markers array
+        // the info window data for each marker populating the markers array
         for(var obj in data)
         {
           var myLatlng = new google.maps.LatLng(data[i].latitude,

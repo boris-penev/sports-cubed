@@ -1,5 +1,5 @@
 body {
-  overflow:auto;
+  overflow: auto;
   background: #36854E;
 
   /*** disables text marking
@@ -11,27 +11,26 @@ body {
   user-select: none; ***/
 
   font-family: Verdana;
-
   color: white;
 }
 
-h1, h2, h3{
+h1, h2, h3 {
   text-align: center;
 }
 
 a {
-   color: #BEDEE6;
+  color: #BEDEE6;
 }
 
-#container{
-  width:80%;
+#container {
+  width: 80%;
   margin: 10px auto 10px auto;
   padding: 10px;
   background-color: #810b19;
   border: 2px solid white;
 }
 
-#backToCube{
+#backToCube {
   background-image: url(img/backToCube.png);
   background-size: 90px 45px;
   position: fixed;
@@ -42,22 +41,22 @@ a {
   height: 45px;
 }
 
-.description{
+.description {
   text-align: justify;
 }
 
-.contact-details{
+.contact-details {
   text-align: center;
 }
 
-.person{
+.person {
   margin-top: 50px;
 }
 
-.avatar{
+.avatar {
   width: 150px;
   height: 200px;
   border: 2px solid white;
   float: left;
-  margin: 0 10px 0 0 ;
+  margin: 0 10px 0 0;
 }

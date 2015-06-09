@@ -1,5 +1,5 @@
 body {
-  overflow:hidden;
+  overflow: hidden;
   background: #36854E;
   /*background: linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
   background: -webkit-linear-gradient(left, #0D4F8B, #42C0FB, #0D4F8B, #42C0FB, #0D4F8B);
@@ -12,96 +12,90 @@ body {
   -moz-touch-callout: none;
   -ms-user-select: none;
   user-select: none;
-
   font-family: Verdana;
 }
 
 p {
-  font-size:24px;
-  color:#4CBB17;
-  font-weight:bold;
-  text-shadow:1px 1px black;
-  margin-top:5px;
+  font-size: 24px;
+  color: #4CBB17;
+  font-weight: bold;
+  text-shadow: 1px 1px black;
+  margin-top: 5px;
 }
 
-input[type=radio]{
-    display:none;
-  }
+input[type=radio] {
+  display: none;
+}
 
-input[type=radio] + label{
-    width: 220px;
-    display:inline-block;
-    padding: 5px;
-    text-align: center;
-    font-size: 22px;
-    color: #666666;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    background-image: url(img/radio.png);
-    /*background-color: lightgrey;*/
+input[type=radio]+label {
+  width: 220px;
+  display: inline-block;
+  padding: 5px;
+  text-align: center;
+  font-size: 22px;
+  color: #666666;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: url(img/radio.png);
+  /*background-color: lightgrey;*/
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
 
-    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,1);
-    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,1);
-    box-shadow: 1px 1px 1px rgba(0,0,0,1);
-    }
-
-input[type=radio]:checked + label{
-    -webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
-    -moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
-    box-shadow: inset 1px 1px 1px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,0.05);
-
-    color: white;
-    background-image: url(img/radio-clicked.png);
+input[type=radio]:checked+label {
+  -webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 1), 0 1px 2px
+    rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 1), 0 1px 2px
+    rgba(0, 0, 0, 0.05);
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 1), 0 1px 2px
+    rgba(0, 0, 0, 0.05);
+  color: white;
+  background-image: url(img/radio-clicked.png);
 }
 
 select {
-       width: 240px;
-       padding: 5px;
-       font-size: 22px;
-       background-color: white;
-     margin: 50px auto 0 auto;
-     text-align: center;
+  width: 240px;
+  padding: 5px;
+  font-size: 22px;
+  background-color: white;
+  margin: 50px auto 0 auto;
+  text-align: center;
+  border: 0;
+  /*border-radius: 5px;*/
+  box-shadow: 1px 1px 1px black;
+}
 
-       border: 0;
-       /*border-radius: 5px;*/
-       box-shadow: 1px 1px 1px black;
-       }
-select[disabled]{
-
+select[disabled] {
   background-color: lightgrey;
-
 }
 /*##################################################### */
 /*#################   classes   ####################### */
 /*##################################################### */
-
 .face {
-  background:#810b19;
-  position:absolute;
-  height:100%;
-  width:100%;
-  padding:0;
-  font-size:27px;
-  line-height:1em;
-  color:#fff;
-  border:2px solid white;
+  background: #810b19;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  font-size: 27px;
+  line-height: 1em;
+  color: #fff;
+  border: 2px solid white;
   /*border-radius:4px;*/
   /*-moz-border-radius:4px;*/
-  transition:opacity 0.8s linear;
-  -webkit-transition:opacity 0.8s linear;
-  -moz-transition:opacity 0.8s linear;
-
+  transition: opacity 0.8s linear;
+  -webkit-transition: opacity 0.8s linear;
+  -moz-transition: opacity 0.8s linear;
   transform-style: flat;
   backface-visibility: hidden;
   -webkit-transform-style: flat;
   -webkit-backface-visibility: hidden;
   -moz-transform-style: flat;
   -moz-backface-visibility: hidden;
-
   overflow: true;
-
-    /*** disables text marking ***/
+  /*** disables text marking ***/
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -111,53 +105,53 @@ select[disabled]{
 }
 
 /*** These are the cards and the button from the tutorial with explanations ***/
-.tutorial-explanation{
-  display:none;
-  position:absolute;
-  top:0;
-  left:0
+.tutorial-explanation {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0
 }
 
-.tutorial-explanation img{
-  position:absolute;
+.tutorial-explanation img {
+  position: absolute;
 }
 
-.tutorial-button{
+.tutorial-button {
   position: absolute;
   margin: 420px 0 0 0;
 }
 
 .time-wrapper {
-  margin:10px 0 0 0;
-  width:37%;
+  margin: 10px 0 0 0;
+  width: 37%;
   float: left;
-  text-align:center;
-  padding:20px 30px 10px 30px;
+  text-align: center;
+  padding: 20px 30px 10px 30px;
 }
 
 .sports-wrapper {
-  margin:0px 0 0 0;
-  width:219px;
+  margin: 0px 0 0 0;
+  width: 219px;
   float: left;
-  text-align:center;
-  padding:0px;
+  text-align: center;
+  padding: 0px;
 }
 
 /*** time-togglers ***/
 .time-togglers {
-  font-size:25px;
-  color:white;
-  font-weight:bold;
+  font-size: 25px;
+  color: white;
+  font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  margin-top:10px;
+  margin-top: 10px;
   text-align: center;
 }
 
 /*** sports-togglers ***/
 .sports-togglers {
-  font-size:21px;
-  color:white;
-  font-weight:bold;
+  font-size: 21px;
+  color: white;
+  font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin: 4px auto 0 auto;
   text-align: center;
@@ -182,7 +176,7 @@ select[disabled]{
   cursor: pointer;
 }
 
-.price-wrapper{
+.price-wrapper {
   width: 500px;
   height: 60px;
   float: left;
@@ -191,7 +185,7 @@ select[disabled]{
 
 .help-buttons {
   cursor: pointer;
-  width:400px;
+  width: 400px;
   height: 50px;
   /*border-radius: 10px; */
   margin: 50px 50px 0 50px;
@@ -210,156 +204,151 @@ select[disabled]{
 makes the application responsive ***/
 #bigWrapper {
   overflow: hidden;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
 }
 
 /*** Responsible for creating the perspective and the 3D effects ***/
 #cubeFrame {
   text-align: center;
-  perspective:1800px;
-  perspective-origin:50% 50%;
-  -webkit-perspective:1800px;
-  -webkit-perspective-origin:50% 50%;
-  -moz-perspective:1800px;
-  -moz-perspective-origin:50% 50%;
-  -o-perspective:1800px;
-  -o-perspective-origin:50% 50%;
-  top:0;
-  left:0;
+  perspective: 1800px;
+  perspective-origin: 50% 50%;
+  -webkit-perspective: 1800px;
+  -webkit-perspective-origin: 50% 50%;
+  -moz-perspective: 1800px;
+  -moz-perspective-origin: 50% 50%;
+  -o-perspective: 1800px;
+  -o-perspective-origin: 50% 50%;
+  top: 0;
+  left: 0;
   z-index: 3;
 }
 
 /*** The cube with its sides following ***/
 #cube {
-  position:relative;
-  height:500px;
-  width:500px;
+  position: relative;
+  height: 500px;
+  width: 500px;
   margin: 0 auto 0 auto;
-  transition:transform 1s;
-  transform-style:preserve-3d;
-  transform:rotateX(90deg);
-
-  -webkit-transition:-webkit-transform 1s;
-  -webkit-transform-style:preserve-3d;
-  -webkit-transform:rotateX(90deg);
-
-  -moz-transition:-moz-transform 1s;
-  -moz-transform-style:preserve-3d;
-  -moz-transform:rotateX(90deg);
-
+  transition: transform 1s;
+  transform-style: preserve-3d;
+  transform: rotateX(90deg);
+  -webkit-transition: -webkit-transform 1s;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform: rotateX(90deg);
+  -moz-transition: -moz-transform 1s;
+  -moz-transform-style: preserve-3d;
+  -moz-transform: rotateX(90deg);
   z-index: 2;
 }
 
-
 #cube .top {
-  transform:rotateX(90deg) translateZ(280px);
-  -webkit-transform:rotateX(90deg) translateZ(280px);
-  -moz-transform:rotateX(90deg) translateZ(280px);
-  -o-transform:rotateX(90deg) translateZ(280px);
-
+  transform: rotateX(90deg) translateZ(280px);
+  -webkit-transform: rotateX(90deg) translateZ(280px);
+  -moz-transform: rotateX(90deg) translateZ(280px);
+  -o-transform: rotateX(90deg) translateZ(280px);
   cursor: pointer;
 }
 
 #cube .back {
-  transform:translateZ(-280px) rotateY(180deg);
-  -webkit-transform:translateZ(-280px) rotateY(180deg);
-  -moz-transform:translateZ(-280px) rotateY(180deg) ;
-  -o-transform:translateZ(-280px) rotateY(180deg);
+  transform: translateZ(-280px) rotateY(180deg);
+  -webkit-transform: translateZ(-280px) rotateY(180deg);
+  -moz-transform: translateZ(-280px) rotateY(180deg);
+  -o-transform: translateZ(-280px) rotateY(180deg);
 }
 
 #cube .front {
-  transform-style:preserve-3d;
-  transform:translateZ(280px);
-  -webkit-transform-style:preserve-3d;
-  -webkit-transform:translateZ(280px);
-  -moz-transform-style:preserve-3d;
-  -moz-transform:translateZ(280px);
-  -o-transform:translateZ(280px);
+  transform-style: preserve-3d;
+  transform: translateZ(280px);
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform: translateZ(280px);
+  -moz-transform-style: preserve-3d;
+  -moz-transform: translateZ(280px);
+  -o-transform: translateZ(280px);
 }
 
 #cube .right {
-  transform:rotateY(90deg) translateZ(280px);
-  -webkit-transform:rotateY(90deg) translateZ(280px);
-  -moz-transform:rotateY(90deg) translateZ(280px);
-  -o-transform:rotateY(90deg) translateZ(280px);
+  transform: rotateY(90deg) translateZ(280px);
+  -webkit-transform: rotateY(90deg) translateZ(280px);
+  -moz-transform: rotateY(90deg) translateZ(280px);
+  -o-transform: rotateY(90deg) translateZ(280px);
 }
 
 #cube .left {
-  transform:rotateY(-90deg) translateZ(280px);
-  -webkit-transform:rotateY(-90deg) translateZ(280px);
-  -moz-transform:rotateY(-90deg) translateZ(280px);
-  -o-transform:rotateY(-90deg) translateZ(280px);
-  text-align:center;
+  transform: rotateY(-90deg) translateZ(280px);
+  -webkit-transform: rotateY(-90deg) translateZ(280px);
+  -moz-transform: rotateY(-90deg) translateZ(280px);
+  -o-transform: rotateY(-90deg) translateZ(280px);
+  text-align: center;
 }
 
 #cube .bottom {
-  transform:rotateX(-90deg) translateZ(280px);
-  -webkit-transform:rotateX(-90deg) translateZ(280px);
-  -moz-transform:rotateX(-90deg) translateZ(280px);
-  -o-transform:rotateX(-90deg) translateZ(280px);
+  transform: rotateX(-90deg) translateZ(280px);
+  -webkit-transform: rotateX(-90deg) translateZ(280px);
+  -moz-transform: rotateX(-90deg) translateZ(280px);
+  -o-transform: rotateX(-90deg) translateZ(280px);
 }
 
-#start-intro{
-  display:none;
+#start-intro {
+  display: none;
   position: absolute;
   margin: 420px 0 0 0;
 }
 
-#map-explanation{
-  display:none;
-  position:absolute;
-  z-index:5;
+#map-explanation {
+  display: none;
+  position: absolute;
+  z-index: 5;
 }
 
-#sports-left-navigator{
+#sports-left-navigator {
   width: 30px;
   height: 410px;
-  float:left;
+  float: left;
   cursor: pointer;
 }
 
-#sports-right-navigator{
+#sports-right-navigator {
   width: 30px;
   height: 410px;
-  float:left;
+  float: left;
   cursor: pointer;
 }
 
-#sports-left-navigator img{
+#sports-left-navigator img {
   margin: 110px 3px 110px 3px;
 }
 
-#sports-right-navigator img{
+#sports-right-navigator img {
   margin: 110px 3px 110px 3px;
 }
 
-#sports-page{
+#sports-page {
   width: 438px;
   height: 420px;
-  float:left;
+  float: left;
   overflow: hidden;
 }
 
-#sports-slider{
+#sports-slider {
   width: 2200px;
   height: 420px;
 }
 
 /*** the button All on the price filter ***/
 #all_toggler {
-  font-size:50px;
-  color:#4CBB17;
-  font-weight:bold;
+  font-size: 50px;
+  color: #4CBB17;
+  font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  margin-top:20px;
+  margin-top: 20px;
   text-align: center;
 }
 
 /*** button leading to the map with results ***/
 #linkToMap {
-  display:none;
-  z-index:4;
+  display: none;
+  z-index: 4;
   position: absolute;
   width: 250px;
   height: 150px;
@@ -367,23 +356,24 @@ makes the application responsive ***/
   cursor: pointer;
 }
 
-#linkToMap img{
+#linkToMap img {
   /*border-radius: 5px;*/
+  
 }
 
 /*** the curtain that dims the screen for the tutorial ***/
 #curtain {
-  display:none;
-  position:absolute;
+  display: none;
+  position: absolute;
   width: 100%;
   height: 100%;
-  background-color:black;
+  background-color: black;
   opacity: 0.5;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
 }
 
-#disclaimer{
+#disclaimer {
   width: 400px;
   height: 90px;
   background-color: #606060;
@@ -396,19 +386,19 @@ makes the application responsive ***/
   font-size: 20px;
 }
 
-#help{
- width: 40px;
- height: 40px;
- cursor:pointer;
- position: absolute;
- left: 0;
- top: 0;
- margin-top: 10px;
- margin-left: 10px;
- z-index: 10;
+#help {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  z-index: 10;
 }
 
-#help-window{
+#help-window {
   text-align: center;
   color: #white;
   font-size: 70px;
@@ -417,23 +407,21 @@ makes the application responsive ***/
   height: 500px;
 }
 
-#close-help{
-   width: 50px;
-   height: 50px;
-   cursor: pointer;
-   position: absolute;
-   top: 0;
-   left: 0;
-   margin-left: 440px;
-   margin-top: 10px;
+#close-help {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-left: 440px;
+  margin-top: 10px;
 }
 
-#front-explanation{
+#front-explanation {
   width: 500px;
   height: 500px;
 }
-
-
 
 /*##################################################### */
 /*###################   ids   ######################### */
