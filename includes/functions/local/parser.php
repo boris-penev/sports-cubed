@@ -137,11 +137,8 @@
           continue;
         }
         restore_error_handler ();
-
         // write remote to origin
-        try {
-          file_put_contents (DIR_WS_DATABASE.$file, $remote);
-        } catch (Exception $e) {
+        if (!file_put_contents(DIR_WS_DATABASE.$file, $remote)) {
           $error = 'The XML could not be written.<br />' .
                   'Possibly there is a permission problem.<br />' .
                   'Delete the XML files and try again.';
