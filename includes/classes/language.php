@@ -16,7 +16,7 @@
   class language {
     var $languages, $catalog_languages, $browser_languages, $language;
 
-    function language($lng = '') {
+    function __construct($lng = '') {
       $this->languages = array('ar' => 'ar([-_][[:alpha:]]{2})?|arabic',
                                'bg' => 'bg|bulgarian',
                                'br' => 'pt[-_]br|brazilian portuguese',
@@ -64,6 +64,10 @@
       $this->language = '';
 
       $this->set_language('en');
+    }
+
+    function language($lng = '') {
+      self::__construct($lng);
     }
 
     function set_language($language) {
